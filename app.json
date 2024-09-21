@@ -1,0 +1,23 @@
+{
+    "name": "ALI BOT",
+    "description": " اهلا بكم جميعا !",
+    "stack": "container",
+    "repository": "https://github.com/",
+    "keywords": [
+        "telegrambot"
+    ],
+    "website": "https://github.com/",
+    "env": {
+        "TOKEN": {
+            "description": "توكن البوت",
+            "value": "",
+            "required": true
+        }
+    },
+    "formation": {
+      "worker": {
+        "quantity": 1,
+        "size": "basic"
+      }
+    }
+  }
