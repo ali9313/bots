@@ -14,6 +14,6 @@ def reply_func(a):
         bot.reply_to(a, "ها شتريد")
     elif a.text == "طرد" or a.text == "حظر":
 		bnn=bot.ban_chat_member(a.chat.id,a.reply_to_message.from_user.id)
-		if bnn:
+	if bnn:
 			bot.send_message(a.chat.id, "تم دفر: @" + a.reply_to_message.from_user.username)
    
