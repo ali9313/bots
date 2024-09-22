@@ -10,5 +10,4 @@ def reply_func(a):
         bot.reply_to(a, "القطة")
     elif "تمساح" in a.text:
         bot.reply_to(a, "يبحث عن ثلاثينية")
-    else:
-        bot.reply_to(a, "لم افهمك ابدا")
+   
