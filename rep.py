@@ -8,7 +8,7 @@ def reply_func(a):
         bot.reply_to(a, "الله ياخذك")
     elif a.text == "ملاك":
         bot.reply_to(a, "القطة")
-    elif a.text == "تمساح":
+    elif "تمساح" in a.text:
         bot.reply_to(a, "يبحث عن ثلاثينية")
     else:
         bot.reply_to(a, "لم افهمك ابدا")
