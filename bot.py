@@ -8,9 +8,8 @@ def send_welcome(message):
 
 @bot.message_handler(func=lambda a: True)
 def echo_message(message):
-    if:
-    	a.text=="اهلا"
-    bot.reply_to(a, "مرحبا")
+    if a.text=="اهلا":
+          bot.reply_to(a, "مرحبا")
     else:
     	bot.reply_to(a,"لم افهمك ابدا")
     	
