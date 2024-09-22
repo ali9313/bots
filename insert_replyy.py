@@ -1,5 +1,5 @@
 from config import *
-dif insert_rep(a):
+def insert_rep(a):
 	tmsg=a.text
 	tmsg=tmsg.split()[1:]
 	tmsg=" ".join(map(str , tmsg))
