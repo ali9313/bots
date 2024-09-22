@@ -9,6 +9,8 @@ def send_welcome(message):
 def echo_message(a):
     if a.text=="اهلا":
           bot.reply_to(a, "مرحبا")
+          elif a.text=="باي"
+          bot.reply_to(a,"الله ياخذك")
     else:
     	bot.reply_to(a,"لم افهمك ابدا")
     	
