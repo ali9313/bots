@@ -1,6 +1,4 @@
 from config import *
-bot = telebot.TeleBot(TOKEN)
-
 def reply_func(a):
     if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
@@ -13,7 +11,7 @@ def reply_func(a):
     elif a.text == "بوت":
         bot.reply_to(a, "ها شتريد")
     elif a.text == "طرد" or a.text == "حظر":
-		bnn=bot.ban_chat_member(a.chat.id,a.reply_to_message.from_user.id)
-	if bnn:
-			bot.send_message(a.chat.id, "تم دفر: @" + a.reply_to_message.from_user.username)
-   
+            bnn = bot.ban_chat_member(a.chat.id, a.reply_to_message.from_user.id)
+            if bnn:       
+                    bot.send_message(a.chat.id, "تم دفر: @" + a.reply_to_message.from_user.username)
+                
