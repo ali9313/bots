@@ -1,5 +1,4 @@
 from config import *
-import telebot
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -7,8 +6,12 @@ bot = telebot.TeleBot(TOKEN)
 def send_welcome(message):
     bot.reply_to(message, "أهلاً بك! كيف يمكنني مساعدتك؟")
 
-@bot.message_handler(func=lambda message: True)
+@bot.message_handler(func=lambda a: True)
 def echo_message(message):
-    bot.reply_to(message, message.text)
-
+    if:
+    	a.text=="اهلا"
+    bot.reply_to(a, "مرحبا")
+    else:
+    	bot.reply_to(a,"لم افهمك ابدا")
+    	
 bot.polling()
