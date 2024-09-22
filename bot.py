@@ -7,7 +7,7 @@ def send_welcome(message):
     bot.reply_to(message, "أهلاً بك! كيف يمكنني مساعدتك؟")
 
 @bot.message_handler(func=lambda a: True)
-def echo_message(message):
+def echo_message(a):
     if a.text=="اهلا":
           bot.reply_to(a, "مرحبا")
     else:
