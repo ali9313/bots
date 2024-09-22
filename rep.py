@@ -7,7 +7,12 @@ def reply_func(a):
     elif a.text == "باي":
         bot.reply_to(a, "الله ياخذك")
     elif a.text == "ملاك":
-        bot.reply_to(a, "القطة")
+        bot.reply_to(a, "͏
+
+                            ╱|、
+                          (˚ˎ 。7  
+                           |、˜〵          
+                          じしˍ,)ノ")
     elif "تمساح" in a.text:
         bot.reply_to(a, "يبحث عن ثلاثينية")
     elif a.text == "بوت":
