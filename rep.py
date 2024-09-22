@@ -13,7 +13,7 @@ def reply_func(a):
     elif a.text == "تمسوح":
     	bot.send_photo(a.chat.id,open("pic/tmsah.jpg","rb"))
     elif a.text == "موسيقى":
-    	bot.reply_to.send_voice(a.chat.id,open("voice/vv.m4a","rb"))
+    	bot.send_voice(a.chat.id,open("voice/vv.m4a","rb"))
     elif a.text == "طرد" or a.text == "حظر":
             bnn = bot.ban_chat_member(a.chat.id, a.reply_to_message.from_user.id)
             if bnn:       
