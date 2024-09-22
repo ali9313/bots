@@ -5,7 +5,7 @@ def reply_func(a):
         bot.reply_to(a, "مرحبا")
     elif a.text == "باي":
         bot.reply_to(a, "الله ياخذك")
-    elif a.text=="ملاك"
+    elif a.text=="ملاك":
         bot.reply_to(a,"القطة")
     elif a.text =="تمساح":
     	bot.reply_to(a,"يبحث عن ثلاثينية")
