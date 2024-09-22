@@ -1,4 +1,5 @@
 from config import *
+from insert_replyy import *
 def reply_func(a):
     if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
@@ -18,4 +19,6 @@ def reply_func(a):
             bnn = bot.ban_chat_member(a.chat.id, a.reply_to_message.from_user.id)
             if bnn:       
                     bot.send_message(a.chat.id, "تم دفر: @" + a.reply_to_message.from_user.username)
+    elif "اضف" in a.text:
+                insert_rep(a)
                 
