@@ -1,5 +1,5 @@
 from config import *
-
+from rep import *
 bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
@@ -8,15 +8,6 @@ def send_welcome(message):
 
 @bot.message_handler(func=lambda a: True)
 def echo_message(a):
-    if a.text == "اهلا":
-        bot.reply_to(a, "مرحبا")
-    elif a.text == "باي":
-        bot.reply_to(a, "الله ياخذك")
-    elif a.text == "ملاك":
-        bot.reply_to(a, "القطة المشاكسه")
-    elif a.text =="تمساح":
-    	bot.reply_to(a,"يبحث عن ثلاثينية")
-    else:
-        bot.reply_to(a, "لم افهمك ابدا")
+    reply_func(a)
 
 bot.polling()
