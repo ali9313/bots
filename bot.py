@@ -10,6 +10,8 @@ def echo_message(a):
     if a.text=="اهلا":
           bot.reply_to(a, "مرحبا")
           elif a.text=="باي":
+          	elif a.text=="ملاك":
+          		bot.reply_to(a,"القطة المشاكسه")
           bot.reply_to(a,"الله ياخذك")
     else:
     	bot.reply_to(a,"لم افهمك ابدا")
