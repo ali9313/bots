@@ -8,7 +8,7 @@ def is_user_admin(bot, chat_id, user_id):
 def my_cmd(a: Update, context: CallbackContext):
     message = a.message
     user = message.from_user
-    chat_id = message.chat_id
+    chat_id = message.chat.id
 
     if message.text == "/ban" and message.reply_to_message:
         if is_user_admin(context.bot, chat_id, user.id):
