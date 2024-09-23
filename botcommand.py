@@ -1,28 +1,24 @@
-from config import *
-def is_user_admin(chat_id, user_id):
-    try:
-        user_status = bot.get_chat_member(chat_id, user_id).status
-        return user_status in ['administrator', 'creator']
-    except Exception:
-        return False  
-def my_cmd(a):
-    user = a.from_user
-    chat_id = a.chat.id 
+from config import bot
 
-    if a.reply_to_message:
-        if is_user_admin(chat_id, user.id):
-            try:
-                banned_user_id = a.reply_to_message.from_user.id
-                banned_user_status = bot.get_chat_member(chat_id, banned_user_id).status
-                if banned_user_status not in ['administrator', 'creator']:
-                    bot.ban_chat_member(chat_id, banned_user_id)
-                    username = a.reply_to_message.from_user.username or "المستخدم"
-                    bot.send_message(chat_id, f"تم دفر: @{username}")
-                else:
-                    bot.reply_to(a, "ما اكدر احظر مشرف اعذرني ")
-            except Exception as e:
-                bot.reply_to(a, f"اكو شي غلط: {str(e)}")
+def ban_user(a):
+    chat_member = bot.get_chat_member(a.chat.id, message.from_user.id)
+
+    if chat_member.status in ['administrator', 'creator']:
+        if a.reply_to_message:
+            user_to_ban = a.reply_to_message.from_user.id
+            chat_id = a.chat.id
+
+
+            user_to_ban_member = bot.get_chat_member(chat_id, user_to_ban)
+            if user_to_ban_member.status not in ['administrator', 'creator']:
+                try:
+                    bot.ban_chat_member(chat_id, user_to_ban)
+                    bot.send_message(chat_id, f"تم حظر المستخدم @{message.reply_to_message.from_user.username if message.reply_to_message.from_user.username else 'Unknown'}")
+                except Exception as e:
+                    bot.send_message(chat_id, f"حدث خطأ: {str(e)}")
+            else:
+                bot.send_message(chat_id, "لا يمكنك حظر مشرف!")
         else:
-            bot.reply_to(a, "انت مو مشرف يا مطي ")
+            bot.send_message(a.chat.id, "يرجى الرد على رسالة المستخدم الذي تريد حظره.")
     else:
-        bot.reply_to(a, "استخدم الامر بالرد ")
+        bot.send_message(a.chat.id, "ليس لديك الأذونات اللازمة لحظر المستخدمين.")
