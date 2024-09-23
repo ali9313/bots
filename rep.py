@@ -28,7 +28,7 @@ def reply_func(a):
         my_cmd(a)
     elif "اضف" in a.text:
         insert_rep(a)
-	elif a.text=="ايدي":
-	   send_user_info(a)
+    elif a.text in ["ايدي", "ا"]:
+        send_user_info(a)
     else:
         my_txtrep(a)
