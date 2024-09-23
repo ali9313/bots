@@ -8,6 +8,8 @@ def reply_func(a):
         bot.reply_to(a, "مرحبا")
     elif a.text == "باي":
         bot.reply_to(a, "الله ياخذك")
+     elif a.text == "ميكاسا":
+        bot.reply_to(a,"مو عمة حد وميسي عمها")
     elif a.text == "ملاك":
         bot.reply_to(a, """͏
                             ╱|、
