@@ -1,7 +1,7 @@
 from config import bot
 
 def my_cmd(a):
-    chat_member = bot.get_chat_member(a.chat.id, message.from_user.id)
+    chat_member = bot.get_chat_member(a.chat.id, a.from_user.id)
 
     if chat_member.status in ['administrator', 'creator']:
         if a.reply_to_message:
