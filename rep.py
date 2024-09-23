@@ -21,8 +21,8 @@ def reply_func(a):
     elif a.text == "تمسوح":
         bot.reply_to(a, open("pic/tmsah.jpg", "rb"))
     elif a.text == "موسيقى":
-    with open("voice/vv.m4a", "rb") as audio:
-        bot.send_audio(a.chat.id, audio)
+    	with open("voice/vv.m4a", "rb") as audio:
+        bot.send_audio(a.chat.id, audio))
     elif a.text == "طرد" or a.text == "حظر":
         my_cmd(a)
     elif "اضف" in a.text:
