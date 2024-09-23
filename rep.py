@@ -19,11 +19,12 @@ def reply_func(a):
     elif a.text == "بوت":
         bot.reply_to(a, "ها شتريد")
     elif a.text == "تمسوح":
-        bot.reply_to(a, open("pic/tmsah.jpg", "rb"))
+        with open("pic/tmsah.jpg", "rb") as image:
+            bot.send_photo(a.chat.id, image)
     elif a.text == "موسيقى":
-    	with open("voice/vv.m4a", "rb") as audio:
-        bot.send_audio(a.chat.id, audio))
-    elif a.text == "طرد" or a.text == "حظر":
+        with open("voice/vv.m4a", "rb") as audio:
+            bot.send_audio(a.chat.id, audio)
+    elif a.text in ["طرد", "حظر"]:
         my_cmd(a)
     elif "اضف" in a.text:
         insert_rep(a)
