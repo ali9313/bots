@@ -7,7 +7,7 @@ def cmbr(a):
 @bot.message_handler(commands=['start','ban'])
 def my(a):
 	updater = Updater(took, use_context=True)
-    dp = updater.dispatche
+    dp = updater.dispatcher
 	my_cmd(a: Update, context: CallbackContext)
 def send_welcome(message):
     bot.reply_to(message, "ترسل اهلا ارد عليك مرحبا ، ترسل غير شي ما افهم ترا")
