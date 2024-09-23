@@ -6,8 +6,6 @@ def cmbr(a):
 	bot.delete_message(a.chat.id,a.message_id)
 @bot.message_handler(commands=['start','ban'])
 def my(a):
-	updater = Updater(took, use_context=True)
-    dp = updater.dispatcher
 	my_cmd(a: Update, context: CallbackContext)
 def send_welcome(message):
     bot.reply_to(message, "ترسل اهلا ارد عليك مرحبا ، ترسل غير شي ما افهم ترا")
@@ -16,5 +14,4 @@ def echo_message(a):
     reply_func(a)
 
 bot.polling()
-bot.idle()
 
