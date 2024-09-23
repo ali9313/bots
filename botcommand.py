@@ -19,7 +19,7 @@ def my_cmd(a):
                     username = a.reply_to_message.from_user.username or "المستخدم"
                     bot.send_message(chat_id, f"تم دفر: @{username}")
                 else:
-                    bot.reply_to(chat_id, "ما اكدر احظر مشرف اعذرني ")
+                    bot.reply_to(a, "ما اكدر احظر مشرف اعذرني ")
             except Exception as e:
                 bot.send_message(chat_id, f"اكو شي غلط: {str(e)}")
         else:
