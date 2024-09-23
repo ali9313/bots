@@ -2,7 +2,7 @@ from config import *
 from insert_replyy import *
 from read_replyy import *
 from botcommand import *
-
+from idee import *
 def reply_func(a):
     if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
@@ -28,5 +28,7 @@ def reply_func(a):
         my_cmd(a)
     elif "اضف" in a.text:
         insert_rep(a)
+	elif a.text=="ايدي":
+	   send_user_info(a)
     else:
         my_txtrep(a)
