@@ -1,7 +1,4 @@
 from config import * 
-from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
-
 # دالة التحقق من إذا كان المستخدم مشرفًا
 def is_user_admin(bot, chat_id, user_id):
     user_status = bot.get_chat_member(chat_id, user_id).status
