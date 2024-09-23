@@ -13,12 +13,15 @@ def my_cmd(a):
             if user_to_ban_member.status not in ['administrator', 'creator']:
                 try:
                     bot.ban_chat_member(chat_id, user_to_ban)
-                    bot.send_message(chat_id, f"تم حظر المستخدم @{message.reply_to_message.from_user.username if message.reply_to_message.from_user.username else 'Unknown'}")
+                    bot.reply_to(a, f"تم دفر: @{a.reply_to_message.from_user.username if a.reply_to_message.from_user.username else 'Unknown'}")
                 except Exception as e:
-                    bot.send_message(chat_id, f"حدث خطأ: {str(e)}")
-            else:
-                bot.send_message(chat_id, "لا يمكنك حظر مشرف!")
+                    bot.reply_to(a, f"حدث خطأ: {str(e)}")
+              elif user_to_ban_member.status in ['administrator', 'creator']:
+            try:
+                bot.reply_to(a, "مشرف هذا حبي")
+                else:
+                	bot.reply_to(a,"يا مطي تريد تحظر نفسك !")
         else:
-            bot.send_message(a.chat.id, "يرجى الرد على رسالة المستخدم الذي تريد حظره.")
+            bot.reply_to(a, "استخدم الامر بالرد ")
     else:
-        bot.send_message(a.chat.id, "ليس لديك الأذونات اللازمة لحظر المستخدمين.")
+        bot.reply_to(a, "مسكين معندك صلاحيات")
