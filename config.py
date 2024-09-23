@@ -1,4 +1,5 @@
 import os
+import telegram
 import telebot
 import time
 from telebot.types import Message
