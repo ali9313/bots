@@ -21,8 +21,8 @@ def my_cmd(a):
                 else:
                     bot.reply_to(a, "ما اكدر احظر مشرف اعذرني ")
             except Exception as e:
-                bot.send_message(chat_id, f"اكو شي غلط: {str(e)}")
+                bot.reply_to(a, f"اكو شي غلط: {str(e)}")
         else:
-            bot.send_message(chat_id, "انت مو مشرف يا مطي ")
+            bot.reply_to(a, "انت مو مشرف يا مطي ")
     else:
-        bot.send_message(chat_id, "استخدم الامر بالرد ")
+        bot.reply_to(a, "استخدم الامر بالرد ")

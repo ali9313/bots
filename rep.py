@@ -19,9 +19,9 @@ def reply_func(a):
     elif a.text == "بوت":
         bot.reply_to(a, "ها شتريد")
     elif a.text == "تمسوح":
-        bot.send_photo(a.chat.id, open("pic/tmsah.jpg", "rb"))
+        bot.reply_to(a, open("pic/tmsah.jpg", "rb"))
     elif a.text == "موسيقى":
-        bot.send_voice(a.chat.id, open("voice/vv.m4a", "rb"))
+        bot.reply_to(a, open("voice/vv.m4a", "rb"))
     elif a.text == "طرد" or a.text == "حظر":
         my_cmd(a)
     elif "اضف" in a.text:
