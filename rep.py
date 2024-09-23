@@ -1,6 +1,7 @@
 from config import *
 from insert_replyy import *
 from read_replyy import *
+from botcommand import *
 
 def reply_func(a):
     if a.text == "اهلا":
@@ -22,9 +23,7 @@ def reply_func(a):
     elif a.text == "موسيقى":
         bot.send_voice(a.chat.id, open("voice/vv.m4a", "rb"))
     elif a.text == "طرد" or a.text == "حظر":
-        bnn = bot.ban_chat_member(a.chat.id, a.reply_to_message.from_user.id)
-        if bnn:       
-            bot.send_message(a.chat.id, "تم دفر: @" + a.reply_to_message.from_user.username)
+        my_cmd(a)
     elif "اضف" in a.text:
         insert_rep(a)
     else:
