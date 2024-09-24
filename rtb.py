@@ -34,9 +34,9 @@ def promote_user(a):
     user_id = a.from_user.id
     if user_id == MAHIIB_ID:  # فقط المهيب يمكنه منح الرتب
         if a.reply_to_message:
-            target_user_id = a.reply_to_message.from_user.id  # الحصول على ID المستخدم المستهدف من الرسالة المُرد عليها
-            target_user_name = a.reply_to_message.from_user.first_name  # الحصول على اسم الشخص المستهدف
-            new_role = a.text.split()[1] if len(a.text.split()) > 1 else 'عضو'  # الحصول على الرتبة الجديدة أو افتراضيًا 'عضو'
+            target_user_id = a.reply_to_message.from_user.id
+            target_user_name = a.reply_to_message.from_user.first_name
+            new_role = a.text.split()[1] if len(a.text.split()) > 1 else 'عضو'
             
             if new_role in roles:
                 members[target_user_id] = new_role
@@ -53,7 +53,7 @@ def promote_user(a):
 def read_role(a):
     if a.reply_to_message:
         target_user_id = a.reply_to_message.from_user.id
-        target_user_name = a.reply_to_message.from_user.first_name  # الحصول على اسم الشخص المستهدف
+        target_user_name = a.reply_to_message.from_user.first_name
         role = members[target_user_id]
         
         if role == 'عضو':

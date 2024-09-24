@@ -1,12 +1,8 @@
 from config import bot
 from collections import defaultdict
 
-# قائمة الأعضاء مع رتبهم (التي تم تعريفها في الكود الثاني)
-members = defaultdict(lambda: 'عضو')  # افتراضي: عضو
-
-# دالة للتحقق من رتبة المستخدم
-def get_user_role(user_id):
-    return members[user_id]
+# التأكد من استيراد members من الكود الثاني
+from your_roles_file import members  # استبدل your_roles_file باسم ملف الكود الثاني
 
 def send_user_info(a):
     # إذا كان المستخدم يرد على شخص آخر
@@ -19,9 +15,7 @@ def send_user_info(a):
     user_username = user.username if user.username else "معنده"
     user_messages_count = a.message_id
     user_id = user.id  # الحصول على آيدي المستخدم
-
-    # التحقق من رتبة المستخدم من خلال الكود الثاني
-    user_role = get_user_role(user_id)
+    user_role = members[user_id]  # التحقق من رتبة المستخدم من القائمة
 
     # إنشاء الكليشة مع الرتبة
     message_text = f"""
