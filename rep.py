@@ -3,6 +3,7 @@ from insert_replyy import *
 from read_replyy import *
 from botcommand import *
 from idee import *
+from mut import *
 def reply_func(a):
     if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
@@ -28,6 +29,8 @@ def reply_func(a):
             bot.send_audio(a.chat.id, audio)
     elif a.text in ["طرد", "حظر"]:
         my_cmd(a)
+    elif a.text in ["كتم", "لصم"]:
+    	mute_user(a)
     elif "اضف" in a.text:
         insert_rep(a)
     elif a.text in ["ايدي", "ا"]:
