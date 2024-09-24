@@ -1,25 +1,21 @@
 from config import bot
-import os
 
 # التأكد من استيراد members من الكود الثاني
 from rtb import members  # استبدل your_roles_file باسم ملف الكود الثاني
 
-# اسم الملف الذي سيتم تخزين معلومات المستخدمين فيه
-messages_count_file = "backend/user_messages_info.txt"
+# قاموس لتخزين عدد الرسائل لكل مستخدم
+user_message_count = {}
 
-def load_user_messages_info():
-    """تحميل معلومات المستخدمين من الملف (مثل الأسماء والرتب)"""
-    if os.path.exists(messages_count_file):
-        with open(messages_count_file, "r", encoding="utf-8") as f:
-            for line in f:
-                user_id, user_name, user_role = line.strip().split(":")
-                # هنا يمكنك تخزين البيانات في مكان مناسب
-                print(f"Loaded user info - ID: {user_id}, Name: {user_name}, Role: {user_role}")
+def increment_user_message_count(user_id):
+    """زيادة عداد الرسائل لكل مستخدم"""
+    if user_id in user_message_count:
+        user_message_count[user_id] += 1
+    else:
+        user_message_count[user_id] = 1
 
-def save_user_messages_info(user_id, user_name, user_role):
-    """حفظ معلومات المستخدم إلى الملف"""
-    with open(messages_count_file, "a", encoding="utf-8") as f:
-        f.write(f"{user_id}:{user_name}:{user_role}\n")
+def get_user_message_count(user_id):
+    """إرجاع عدد رسائل المستخدم"""
+    return user_message_count.get(user_id, 0)
 
 def send_user_info(a):
     """إرسال معلومات المستخدم"""
@@ -33,14 +29,16 @@ def send_user_info(a):
     user_name = user.first_name
     user_username = user.username if user.username else "معنده"
     user_role = members.get(user_id, "غير محدد")  # التحقق من رتبة المستخدم من القائمة
+    user_messages = get_user_message_count(user_id)  # الحصول على عدد رسائل المستخدم
 
-    # إنشاء الكليشة مع الرتبة
+    # إنشاء الكليشة مع الرتبة وعدد الرسائل
     message_text = f"""
     ⋆─┄─┄─┄─┄─⋆
     ‣ NAME ⇢ {user_name}
     ‣ ID ⇢ {user_id}
     ‣ USER ⇢ @{user_username}
     ‣ RANK ⇢ {user_role}
+    ‣ MESSAGES ⇢ {user_messages}
     ⋆─┄─┄─┄─┄─⋆
     """
 
@@ -52,12 +50,10 @@ def send_user_info(a):
     else:
         bot.send_message(a.chat.id, message_text)
 
-# تحميل معلومات المستخدمين عند بدء تشغيل البوت
-load_user_messages_info()
-
 @bot.message_handler(func=lambda a: True)
 def handle_message(a):
     """معالجة الرسائل الجديدة"""
-    # يمكنك استدعاء send_user_info هنا إذا كانت هناك حاجة لذلك
+    user_id = a.from_user.id
+    increment_user_message_count(user_id)  # زيادة عداد الرسائل
     if a.text.startswith('/info'):  # على سبيل المثال، استخدام /info لاستعراض المعلومات
         send_user_info(a)
