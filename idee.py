@@ -2,7 +2,7 @@ from config import bot
 from collections import defaultdict
 
 # التأكد من استيراد members من الكود الثاني
-from your_roles_file import members  # استبدل your_roles_file باسم ملف الكود الثاني
+from rtb import members  # استبدل your_roles_file باسم ملف الكود الثاني
 
 def send_user_info(a):
     # إذا كان المستخدم يرد على شخص آخر
