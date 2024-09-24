@@ -66,8 +66,10 @@ def delete_response(a):
         del responses[trigger]
         save_responses()  # حفظ التغييرات
         bot.reply_to(a, "تمام مسحنالك الرد")
+        del user_states[a.chat.id]  # حذف حالة المستخدم بعد الحذف
     else:
         bot.reply_to(a, "ماكو هيج رد ولك")
+        del user_states[a.chat.id]  # إلغاء حالة المستخدم
 
 # الردود الديناميكية
 @bot.message_handler(func=lambda a: a.text.strip() in responses)
