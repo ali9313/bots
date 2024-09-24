@@ -67,12 +67,13 @@ def start_deleting_response(a):
 
 @bot.callback_query_handler(func=lambda call: call.data == "cancel_deletion")
 def cancel_deletion(call):
-    # تغيير اسم الزر
+    # تغيير اسم الزر إلى "تم إلغاء الأمر" بدون إرسال رسالة جديدة
     markup = types.InlineKeyboardMarkup()
-    canceled_button = types.InlineKeyboardButton("تم إلغاء الأمر", callback_data="nothing")
+    canceled_button = types.InlineKeyboardButton("تم إلغاء الأمر بنجاح", callback_data="nothing")
     markup.add(canceled_button)
 
-    bot.edit_message_text("تم إلغاء الأمر.", chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=markup)
+    # تحديث الزر فقط بدون تغيير النص الأساسي للرسالة
+    bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=markup)
     del user_states[call.message.chat.id]  # إلغاء حالة المستخدم
 
 @bot.message_handler(func=lambda message: user_states.get(message.chat.id) == "awaiting_deletion")
