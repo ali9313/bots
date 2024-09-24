@@ -1,5 +1,5 @@
 from config import *
-from telebot import types  # تأكد من استيراد مكتبة types
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # متغيرات لتتبع حالة المستخدم
 user_states = {}
@@ -33,42 +33,26 @@ def save_responses():
         for trigger, reply in responses.items():
             f.write(f"{trigger}:{reply}\n")
 
-def start_adding_response(a):
-    bot.reply_to(a, "أهلاً عزيزي! أرسل الآن كلمة الرد.")
-    user_states[a.chat.id] = "awaiting_trigger"
-
-# استقبال كلمة الرد
-@bot.message_handler(func=lambda message: user_states.get(message.chat.id) == "awaiting_trigger")
-def get_trigger(a):
-    user_states[a.chat.id] = "awaiting_reply"
-    responses[a.chat.id] = {"trigger": a.text.strip()}
-    bot.reply_to(a, "الآن قم بإرسال جواب الرد.")
-
-# استقبال جواب الرد
-@bot.message_handler(func=lambda a: user_states.get(a.chat.id) == "awaiting_reply")
-def get_reply(a):
-    trigger = responses[a.chat.id]["trigger"]
-    reply = a.text.strip()
-    responses[trigger] = reply
-    save_responses()  # حفظ الردود الجديدة
-    bot.reply_to(a, "تم إضافة الرد بنجاح!")
-    del user_states[a.chat.id]
-    del responses[a.chat.id]
-
 # دالة لحذف الردود
 def start_deleting_response(a):
-    # إنشاء الزر
-    markup = types.InlineKeyboardMarkup()
-    cancel_button = types.InlineKeyboardButton("إلغاء الأمر", callback_data="cancel_deletion")
-    markup.add(cancel_button)
+    keyboard = InlineKeyboardMarkup()
+    cancel_button = InlineKeyboardButton("إلغاء الأمر", callback_data="cancel_delete")
+    keyboard.add(cancel_button)
 
-    bot.reply_to(a, "دز كلمة الرد الي تريد احذفها:", reply_markup=markup)
+    bot.send_message(a.chat.id, "دز كلمة الرد الي تريد احذفها ", reply_markup=keyboard)
     user_states[a.chat.id] = "awaiting_deletion"
 
-@bot.callback_query_handler(func=lambda call: call.data == "cancel_deletion")
+@bot.callback_query_handler(func=lambda call: call.data == "cancel_delete")
 def cancel_deletion(call):
-    del user_states[call.message.chat.id]  # إلغاء حالة المستخدم
-    bot.send_message(call.message.chat.id, "تم إلغاء الأمر.")
+    user_states[call.message.chat.id] = None  # إلغاء حالة المستخدم
+
+    # تعديل نص الزر ليصبح "تم إلغاء الأمر"
+    keyboard = InlineKeyboardMarkup()
+    cancel_button = InlineKeyboardButton("تم إلغاء الأمر", callback_data="none")
+    keyboard.add(cancel_button)
+
+    # تحديث الرسالة لتغيير الزر فقط
+    bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=keyboard)
 
 @bot.message_handler(func=lambda message: user_states.get(message.chat.id) == "awaiting_deletion")
 def delete_response(a):
@@ -80,6 +64,7 @@ def delete_response(a):
         del user_states[a.chat.id]  # حذف حالة المستخدم بعد الحذف
     else:
         bot.reply_to(a, "ماكو هيج رد ولك")
+        del user_states[a.chat.id]  # إلغاء حالة المستخدم
 
 # الردود الديناميكية
 @bot.message_handler(func=lambda a: a.text.strip() in responses)
