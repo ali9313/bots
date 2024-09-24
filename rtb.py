@@ -36,7 +36,10 @@ def promote_user(a):
         if a.reply_to_message:
             target_user_id = a.reply_to_message.from_user.id
             target_user_name = a.reply_to_message.from_user.first_name
-            new_role = a.text.split()[1] if len(a.text.split()) > 1 else 'مواطن'
+            
+            # الحصول على جميع الكلمات من الرسالة، ثم الانضمام إلى الكلمات التي تمثل الرتبة
+            text_parts = a.text.split()
+            new_role = ' '.join(text_parts[1:]) if len(text_parts) > 1 else 'مواطن'
             
             if new_role in roles:
                 members[target_user_id] = new_role
