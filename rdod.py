@@ -1,4 +1,5 @@
 from config import *
+
 # متغيرات لتتبع حالة المستخدم
 user_states = {}
 responses = {}
@@ -24,13 +25,12 @@ def save_responses():
         for trigger, reply in responses.items():
             f.write(f"{trigger}:{reply}\n")
 
-# عند بدء المحادثة بإرسال كلمة "اضف رد"
 def start_adding_response(a):
     bot.reply_to(a, "أهلاً عزيزي! أرسل الآن كلمة الرد.")
     user_states[a.chat.id] = "awaiting_trigger"
 
 # استقبال كلمة الرد
-@bot.message_handler(func=lambda message: user_states.get(a.chat.id) == "awaiting_trigger")
+@bot.message_handler(func=lambda message: user_states.get(message.chat.id) == "awaiting_trigger")
 def get_trigger(a):
     user_states[a.chat.id] = "awaiting_reply"
     responses[a.chat.id] = {"trigger": a.text.strip()}
@@ -52,7 +52,4 @@ def get_reply(a):
 def dynamic_reply(a):
     reply = responses[a.text.strip()]
     bot.reply_to(a, reply)
-
-# تحميل الردود عند بدء التشغيل
-
 
