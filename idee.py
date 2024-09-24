@@ -5,7 +5,12 @@ from collections import defaultdict
 members = defaultdict(lambda: 'عضو')  # افتراضي: عضو
 
 def send_user_info(a):
-    user = a.from_user
+    # إذا كان المستخدم يرد على شخص آخر
+    if a.reply_to_message:
+        user = a.reply_to_message.from_user  # الحصول على معلومات الشخص المُرد عليه
+    else:
+        user = a.from_user  # الحصول على معلومات الشخص الذي أرسل الأمر
+
     user_name = user.first_name
     user_username = user.username if user.username else "معنده"
     user_messages_count = a.message_id
