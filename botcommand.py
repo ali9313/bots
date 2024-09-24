@@ -1,4 +1,4 @@
-from config import bot
+from config import *
 
 def my_cmd(a):
     chat_member = bot.get_chat_member(a.chat.id, a.from_user.id)
