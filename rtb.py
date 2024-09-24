@@ -70,5 +70,24 @@ def read_role(a):
     else:
         bot.reply_to(a, "يرجى الرد على رسالة المستخدم الذي تريد معرفة رتبته.")
 
+# دالة للتعامل مع الرسائل التي تُوجه للبوت
+def handle_bot_reply(a):
+    if a.reply_to_message and a.reply_to_message.from_user.id == bot.get_me().id:
+        bot.reply_to(a, "اني بوت شتريد تعرف يعني 🙁")
+        return True
+    return False
+
+# تعديل دالة الترويج ليتضمن رد البوت
+def promote_user_with_reply(a):
+    if handle_bot_reply(a):
+        return
+    promote_user(a)
+
+# تعديل دالة قراءة الرتبة لتتضمن رد البوت
+def read_role_with_reply(a):
+    if handle_bot_reply(a):
+        return
+    read_role(a)
+
 # تحميل الرتب عند بدء تشغيل البوت
 load_roles()
