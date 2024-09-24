@@ -44,10 +44,5 @@ def reply_func(a):
         read_role(a)
     elif a.text == "اضف رد":
         start_adding_response(a)
-        # التحقق إذا كانت دالة إضافة الرد قد عملت بشكل صحيح
-        if a.chat.id in user_states and user_states[a.chat.id] == "awaiting_reply":
-            bot.reply_to(a, "يرجى إرسال الرد الذي تود إضافته.")
-        else:
-            bot.reply_to(a, "حدث خطأ أثناء محاولة إضافة الرد. حاول مرة أخرى.")
     else:
         my_txtrep(a)
