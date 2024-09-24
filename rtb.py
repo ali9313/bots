@@ -1,5 +1,6 @@
 from config import *
 from collections import defaultdict
+import os
 
 roles = {
     'عضو': 1,
@@ -8,8 +9,25 @@ roles = {
 }
 MAHIIB_ID = 232499688
 
+# اسم الملف الذي سيتم تخزين الرتب فيه
+roles_file = "backend/user_roles.txt"
+
 # قائمة الأعضاء مع رتبهم
 members = defaultdict(lambda: 'عضو')  # افتراضي: عضو
+
+# دالة لتحميل الرتب من الملف
+def load_roles():
+    if os.path.exists(roles_file):
+        with open(roles_file, "r", encoding="utf-8") as f:
+            for line in f:
+                user_id, role = line.strip().split(":")
+                members[int(user_id)] = role
+
+# دالة لحفظ الرتب إلى الملف
+def save_roles():
+    with open(roles_file, "w", encoding="utf-8") as f:
+        for user_id, role in members.items():
+            f.write(f"{user_id}:{role}\n")
 
 # دالة لمنح رتبة لأحد الأعضاء من خلال الرد على رسالته
 def promote_user(a):
@@ -22,6 +40,7 @@ def promote_user(a):
             
             if new_role in roles:
                 members[target_user_id] = new_role
+                save_roles()  # حفظ الرتبة الجديدة
                 bot.reply_to(a, f"تمت ترقية {target_user_name} إلى رتبة {new_role}.")
             else:
                 bot.reply_to(a, "رتبة غير صحيحة. يمكن أن تكون الرتبة: عضو، مدير، أو مهيب.")
@@ -47,3 +66,6 @@ def read_role(a):
             bot.reply_to(a, f"رتبة غير معروفة: {role}.")
     else:
         bot.reply_to(a, "يرجى الرد على رسالة المستخدم الذي تريد معرفة رتبته.")
+
+# تحميل الرتب عند بدء تشغيل البوت
+load_roles()
