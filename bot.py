@@ -30,8 +30,4 @@ def delete_muted_message(a):
 @bot.message_handler(func=lambda a: True)
 def echo_message(a):
     reply_func(a) 
-
-# تحميل الردود عند بدء تشغيل البوت
-load_responses()  # استدعاء دالة تحميل الردود
-
 bot.polling()
