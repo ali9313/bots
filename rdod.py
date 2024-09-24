@@ -54,6 +54,21 @@ def get_reply(a):
     del user_states[a.chat.id]
     del responses[a.chat.id]
 
+# دالة لحذف الردود
+def start_deleting_response(a):
+    bot.reply_to(a, "دز كلمة الرد الي تريد احذفها ")
+    user_states[a.chat.id] = "awaiting_deletion"
+
+@bot.message_handler(func=lambda message: user_states.get(message.chat.id) == "awaiting_deletion")
+def delete_response(a):
+    trigger = a.text.strip()
+    if trigger in responses:
+        del responses[trigger]
+        save_responses()  # حفظ التغييرات
+        bot.reply_to(a, "تمام مسحنالك الرد")
+    else:
+        bot.reply_to(a, "ماكو هيج رد ولك")
+
 # الردود الديناميكية
 @bot.message_handler(func=lambda a: a.text.strip() in responses)
 def dynamic_reply(a):
@@ -69,9 +84,6 @@ def show_responses(a):
         bot.reply_to(a, response_text, parse_mode='Markdown')
     else:
         bot.reply_to(a, "لا توجد ردود مضافة حتى الآن.")
-
-def handle_show_responses(a):
-    show_responses(a)
 
 # تحميل الردود عند بدء تشغيل البوت
 load_responses()
