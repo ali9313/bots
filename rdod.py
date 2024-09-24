@@ -1,4 +1,5 @@
 from config import *
+from telebot import types  # تأكد من استيراد مكتبة types
 
 # متغيرات لتتبع حالة المستخدم
 user_states = {}
@@ -41,7 +42,7 @@ def start_adding_response(a):
 def get_trigger(a):
     user_states[a.chat.id] = "awaiting_reply"
     responses[a.chat.id] = {"trigger": a.text.strip()}
-    bot.reply_to(a, "الآن قم بإرسال جواب الرد الذي تريده.")
+    bot.reply_to(a, "الآن قم بإرسال جواب الرد.")
 
 # استقبال جواب الرد
 @bot.message_handler(func=lambda a: user_states.get(a.chat.id) == "awaiting_reply")
@@ -56,11 +57,21 @@ def get_reply(a):
 
 # دالة لحذف الردود
 def start_deleting_response(a):
-    bot.reply_to(a, "دز كلمة الرد الي تريد احذفها ")
+    # إنشاء زر شفاف
+    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+    cancel_button = types.KeyboardButton("إلغاء الأمر")
+    markup.add(cancel_button)
+    
+    bot.reply_to(a, "دز كلمة الرد الي تريد احذفها ", reply_markup=markup)
     user_states[a.chat.id] = "awaiting_deletion"
 
 @bot.message_handler(func=lambda message: user_states.get(message.chat.id) == "awaiting_deletion")
 def delete_response(a):
+    if a.text == "إلغاء الأمر":
+        del user_states[a.chat.id]  # إلغاء حالة المستخدم
+        bot.reply_to(a, "تم إلغاء الأمر.")
+        return
+
     trigger = a.text.strip()
     if trigger in responses:
         del responses[trigger]
