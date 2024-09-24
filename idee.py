@@ -1,8 +1,5 @@
 from config import bot
 
-# التأكد من استيراد members من الكود الثاني
-from rtb import members  # استبدل your_roles_file باسم ملف الكود الثاني
-
 # قاموس لتخزين عدد الرسائل لكل مستخدم
 user_message_count = {}
 
@@ -28,16 +25,14 @@ def send_user_info(a):
     user_id = user.id  # الحصول على آيدي المستخدم
     user_name = user.first_name
     user_username = user.username if user.username else "معنده"
-    user_role = members.get(user_id, "غير محدد")  # التحقق من رتبة المستخدم من القائمة
     user_messages = get_user_message_count(user_id)  # الحصول على عدد رسائل المستخدم
 
-    # إنشاء الكليشة مع الرتبة وعدد الرسائل
+    # إنشاء الكليشة بدون الرتبة
     message_text = f"""
     ⋆─┄─┄─┄─┄─⋆
     ‣ NAME ⇢ {user_name}
     ‣ ID ⇢ {user_id}
     ‣ USER ⇢ @{user_username}
-    ‣ RANK ⇢ {user_role}
     ‣ MESSAGES ⇢ {user_messages}
     ⋆─┄─┄─┄─┄─⋆
     """
