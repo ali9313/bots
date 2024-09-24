@@ -2,7 +2,7 @@ from config import *
 from rep import *
 from botcommand import *
 from mut import *
-
+from rdod import *
 @bot.message_handler(content_types=['new_chat_members', 'left_chat_members'])
 def cmbr(a):
     bot.delete_message(a.chat.id, a.message_id)
