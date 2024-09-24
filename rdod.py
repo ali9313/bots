@@ -57,21 +57,21 @@ def get_reply(a):
 
 # دالة لحذف الردود
 def start_deleting_response(a):
-    # إنشاء زر شفاف
-    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    cancel_button = types.KeyboardButton("إلغاء الأمر")
+    # إنشاء الزر
+    markup = types.InlineKeyboardMarkup()
+    cancel_button = types.InlineKeyboardButton("إلغاء الأمر", callback_data="cancel_deletion")
     markup.add(cancel_button)
 
     bot.reply_to(a, "دز كلمة الرد الي تريد احذفها:", reply_markup=markup)
     user_states[a.chat.id] = "awaiting_deletion"
 
+@bot.callback_query_handler(func=lambda call: call.data == "cancel_deletion")
+def cancel_deletion(call):
+    del user_states[call.message.chat.id]  # إلغاء حالة المستخدم
+    bot.send_message(call.message.chat.id, "تم إلغاء الأمر.")
+
 @bot.message_handler(func=lambda message: user_states.get(message.chat.id) == "awaiting_deletion")
 def delete_response(a):
-    if a.text == "إلغاء الأمر":
-        del user_states[a.chat.id]  # إلغاء حالة المستخدم
-        bot.reply_to(a, "تم إلغاء الأمر.")
-        return
-
     trigger = a.text.strip()
     if trigger in responses:
         del responses[trigger]
@@ -80,7 +80,6 @@ def delete_response(a):
         del user_states[a.chat.id]  # حذف حالة المستخدم بعد الحذف
     else:
         bot.reply_to(a, "ماكو هيج رد ولك")
-        del user_states[a.chat.id]  # إلغاء حالة المستخدم
 
 # الردود الديناميكية
 @bot.message_handler(func=lambda a: a.text.strip() in responses)
