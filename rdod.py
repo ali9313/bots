@@ -58,11 +58,11 @@ def get_reply(a):
 # دالة لحذف الردود
 def start_deleting_response(a):
     # إنشاء زر شفاف
-    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     cancel_button = types.KeyboardButton("إلغاء الأمر")
     markup.add(cancel_button)
-    
-    bot.reply_to(a, "دز كلمة الرد الي تريد احذفها ", reply_markup=markup)
+
+    bot.reply_to(a, "دز كلمة الرد الي تريد احذفها:", reply_markup=markup)
     user_states[a.chat.id] = "awaiting_deletion"
 
 @bot.message_handler(func=lambda message: user_states.get(message.chat.id) == "awaiting_deletion")
