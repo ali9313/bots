@@ -7,6 +7,10 @@ from rtb import members  # استبدل your_roles_file باسم ملف الكو
 # قاموس لتتبع عدد الرسائل لكل مستخدم
 user_messages_count = defaultdict(int)
 
+def count_user_messages(message):
+    # زيادة عدد الرسائل لكل مستخدم في المحادثة
+    user_messages_count[message.from_user.id] += 1
+
 def send_user_info(a):
     # إذا كان المستخدم يرد على شخص آخر
     if a.reply_to_message:
@@ -18,9 +22,7 @@ def send_user_info(a):
     user_name = user.first_name
     user_username = user.username if user.username else "معنده"
     user_role = members[user_id]  # التحقق من رتبة المستخدم من القائمة
-
-    # زيادة عدد الرسائل الفعلية للمستخدم
-    user_messages_count[user_id] += 1
+    user_message_count = user_messages_count[user_id]  # الحصول على عدد الرسائل للمستخدم
 
     # إنشاء الكليشة مع الرتبة وعدد الرسائل
     message_text = f"""
@@ -29,7 +31,7 @@ def send_user_info(a):
     ‣ ID ⇢ {user_id}
     ‣ USER ⇢ @{user_username}
     ‣ RANK ⇢ {user_role}
-    ‣ MESSAGE ⇢ {user_messages_count[user_id]}
+    ‣ MESSAGE ⇢ {user_message_count}
     ⋆─┄─┄─┄─┄─⋆
     """
 
@@ -41,6 +43,7 @@ def send_user_info(a):
     else:
         bot.send_message(a.chat.id, message_text)
 
-# دالة لتحديث عدد الرسائل (يمكن استخدامها في مكان آخر عند إرسال رسالة)
-def update_user_message_count(user_id):
-    user_messages_count[user_id] += 1
+# يجب أن تقوم باستدعاء دالة count_user_messages عند تلقي رسالة جديدة
+@bot.message_handler(func=lambda message: True)
+def handle_message(message):
+    count_user_messages(message)
