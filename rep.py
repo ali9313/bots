@@ -4,6 +4,7 @@ from read_replyy import *
 from botcommand import *
 from idee import *
 from mut import *
+from rtb import *
 def reply_func(a):
     if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
@@ -37,5 +38,9 @@ def reply_func(a):
         unmute_user(a)
     elif a.text in ["ايدي", "ا"]:
         send_user_info(a)
+    elif "رفع" in a.text:
+    	promote_user(a)
+    elif a.text == "رتبته":
+    	read_role(a)
     else:
         my_txtrep(a)
