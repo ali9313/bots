@@ -38,7 +38,7 @@ def promote_user(a):
             
             # التحقق مما إذا كان المستخدم المستهدف هو البوت
             if target_user_id == bot.get_me().id:
-                bot.reply_to(a, "أنا بوت، شتريد تعرف عني؟")
+                bot.reply_to(a, "حبيبي اني بوت مو مال رتب")
                 return
             
             target_user_name = a.reply_to_message.from_user.first_name
@@ -65,7 +65,7 @@ def read_role(a):
         
         # التحقق مما إذا كان المستخدم المستهدف هو البوت
         if target_user_id == bot.get_me().id:
-            bot.reply_to(a, "أنا بوت، شتريد تعرف عني؟")
+            bot.reply_to(a, "سالمين، ترا أني بوت.")
             return
         
         target_user_name = a.reply_to_message.from_user.first_name
