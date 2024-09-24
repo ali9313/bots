@@ -29,5 +29,5 @@ def delete_muted_message(a):
 @bot.message_handler(func=lambda a: True)
 def echo_message(a):
     reply_func(a) 
-
+load_responses()
 bot.polling()
