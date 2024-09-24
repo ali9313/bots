@@ -1,5 +1,6 @@
 from config import *
 from telebot.types import ChatPermissions
+
 def mute_user(a):
     try:
         # التأكد من أن المستخدم يرد على رسالة عضو آخر
@@ -13,5 +14,6 @@ def mute_user(a):
             # كتم العضو لمدة معينة (بالثواني) أو إلى أجل غير مسمى إذا لم يتم تحديد وقت
             bot.restrict_chat_member(chat_id, user_id, permissions=permissions)
             
-            bot.reply_to(a, f"نلصم {a.reply_to_message.from_user.first_name}")
-        
+            (a, f"نلصم {a.reply_to_message.from_user.first_name}")
+    except Exception as e:
+        bot.reply_to(a, f"حدث خطأ: {str(e)}")
