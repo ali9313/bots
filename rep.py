@@ -45,3 +45,5 @@ def reply_func(a):
         start_deleting_response(a)
     elif a.text == "الردود":
         show_responses(a)
+	else:
+		bot.reply_to(a,"طيطي")
