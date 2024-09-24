@@ -2,7 +2,8 @@ from config import *
 from rep import *
 from botcommand import *
 from mut import *
-from rdod import *
+from rdod import load_responses  # استيراد دالة تحميل الردود
+
 @bot.message_handler(content_types=['new_chat_members', 'left_chat_members'])
 def cmbr(a):
     bot.delete_message(a.chat.id, a.message_id)
@@ -29,5 +30,8 @@ def delete_muted_message(a):
 @bot.message_handler(func=lambda a: True)
 def echo_message(a):
     reply_func(a) 
-load_responses()
+
+# تحميل الردود عند بدء تشغيل البوت
+load_responses()  # استدعاء دالة تحميل الردود
+
 bot.polling()

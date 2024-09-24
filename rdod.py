@@ -12,12 +12,19 @@ def load_responses():
     global responses
     try:
         with open(file_name, "r", encoding="utf-8") as f:
+            # تحقق مما إذا كان الملف فارغًا
+            if f.readable() and f.read().strip() == "":
+                return  # إنهاء الدالة إذا كان الملف فارغًا
+            
+            # العودة إلى بداية الملف
+            f.seek(0)
+
             for line in f:
                 if line.strip():
                     trigger, reply = line.strip().split(":", 1)
                     responses[trigger.strip()] = reply.strip()
     except FileNotFoundError:
-        print(f"لم يتم العثور على الملف: {file_name}")
+        pass  # تجاهل الخطأ إذا كان الملف غير موجود
 
 # حفظ الردود إلى الملف
 def save_responses():
