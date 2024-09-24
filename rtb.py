@@ -17,28 +17,32 @@ def promote_user(a):
     if user_id == MAHIIB_ID:  # فقط المهيب يمكنه منح الرتب
         if a.reply_to_message:
             target_user_id = a.reply_to_message.from_user.id  # الحصول على ID المستخدم المستهدف من الرسالة المُرد عليها
+            target_user_name = a.reply_to_message.from_user.first_name  # الحصول على اسم الشخص المستهدف
             new_role = a.text.split()[1] if len(a.text.split()) > 1 else 'عضو'  # الحصول على الرتبة الجديدة أو افتراضيًا 'عضو'
             
             if new_role in roles:
                 members[target_user_id] = new_role
-                bot.reply_to(a, f"تمت ترقية المستخدم {target_user_id} إلى رتبة {new_role}.")
+                bot.reply_to(a, f"تمت ترقية {target_user_name} إلى رتبة {new_role}.")
             else:
                 bot.reply_to(a, "رتبة غير صحيحة. يمكن أن تكون الرتبة: عضو، مدير، أو مهيب.")
         else:
             bot.reply_to(a, "يرجى الرد على رسالة المستخدم الذي تريد ترقيته.")
     else:
         bot.reply_to(a, "فقط المهيب يمكنه منح الرتب.")
+
+# دالة لقراءة رتبة مستخدم من خلال الرد على رسالته
 def read_role(a):
     if a.reply_to_message:
         target_user_id = a.reply_to_message.from_user.id
+        target_user_name = a.reply_to_message.from_user.first_name  # الحصول على اسم الشخص المستهدف
         role = members[target_user_id]
         
         if role == 'عضو':
-            bot.reply_to(a, "هذا مجرد عضو الله مطيح حظه.")
+            bot.reply_to(a, f"هذا مجرد عضو الله مطيح حظه.")
         elif role == 'مدير':
-            bot.reply_to(a, "هذا المدير حمبي.")
+            bot.reply_to(a, f"هذا المدير حمبي.")
         elif role == 'مهيب':
-            bot.reply_to(a, "هذا المهيب، له كل الاحترام.")
+            bot.reply_to(a, f"هذا المهيب، له كل الاحترام.")
         else:
             bot.reply_to(a, f"رتبة غير معروفة: {role}.")
     else:
