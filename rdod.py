@@ -63,9 +63,9 @@ def dynamic_reply(a):
 # دالة لجلب وعرض الردود المضافة
 def show_responses(a):
     if responses:
-        response_text = "### الردود المضافة:\n"
-        for trigger, reply in responses.items():
-            response_text += f"- **{trigger}**: {reply}\n"
+        response_text = "**الردود المضافة:**\n"
+        for trigger in responses.keys():
+            response_text += f"- **{trigger}**\n"  # جلب كلمة الرد فقط
         bot.reply_to(a, response_text, parse_mode='Markdown')
     else:
         bot.reply_to(a, "لا توجد ردود مضافة حتى الآن.")

@@ -1,7 +1,4 @@
 from config import *
-from insert_replyy import *
-from read_replyy import *
-from botcommand import *
 from idee import *
 from mut import *
 from rtb import *
