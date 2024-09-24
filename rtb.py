@@ -3,9 +3,9 @@ from collections import defaultdict
 import os
 
 roles = {
-    'عضو': 1,
-    'مدير': 2,
-    'مهيب': 3
+    'مواطن': 1,           # تم تغيير اسم الرتبة إلى مواطن
+    'موظف حكومي': 2,     # تم تغيير اسم الرتبة إلى موظف حكومي
+    'رئيس الجمهورية': 3  # تم تغيير اسم الرتبة إلى رئيس الجمهورية
 }
 MAHIIB_ID = 232499688
 
@@ -13,7 +13,7 @@ MAHIIB_ID = 232499688
 roles_file = "backend/user_roles.txt"
 
 # قائمة الأعضاء مع رتبهم
-members = defaultdict(lambda: 'عضو')  # افتراضي: عضو
+members = defaultdict(lambda: 'مواطن')  # افتراضي: مواطن
 
 # دالة لتحميل الرتب من الملف
 def load_roles():
@@ -32,22 +32,22 @@ def save_roles():
 # دالة لمنح رتبة لأحد الأعضاء من خلال الرد على رسالته
 def promote_user(a):
     user_id = a.from_user.id
-    if user_id == MAHIIB_ID:  # فقط المهيب يمكنه منح الرتب
+    if user_id == MAHIIB_ID:  # فقط رئيس الجمهورية يمكنه منح الرتب
         if a.reply_to_message:
             target_user_id = a.reply_to_message.from_user.id
             target_user_name = a.reply_to_message.from_user.first_name
-            new_role = a.text.split()[1] if len(a.text.split()) > 1 else 'عضو'
+            new_role = a.text.split()[1] if len(a.text.split()) > 1 else 'مواطن'
             
             if new_role in roles:
                 members[target_user_id] = new_role
                 save_roles()  # حفظ الرتبة الجديدة
                 bot.reply_to(a, f"تمت ترقية {target_user_name} إلى رتبة {new_role}.")
             else:
-                bot.reply_to(a, "رتبة غير صحيحة. يمكن أن تكون الرتبة: عضو، مدير، أو مهيب.")
+                bot.reply_to(a, "رتبة غير صحيحة. يمكن أن تكون الرتبة: مواطن، موظف حكومي، أو رئيس الجمهورية.")
         else:
             bot.reply_to(a, "يرجى الرد على رسالة المستخدم الذي تريد ترقيته.")
     else:
-        bot.reply_to(a, "فقط المهيب يمكنه منح الرتب.")
+        bot.reply_to(a, "فقط رئيس الجمهورية يمكنه منح الرتب.")
 
 # دالة لقراءة رتبة مستخدم من خلال الرد على رسالته
 def read_role(a):
@@ -56,12 +56,12 @@ def read_role(a):
         target_user_name = a.reply_to_message.from_user.first_name
         role = members[target_user_id]
         
-        if role == 'عضو':
-            bot.reply_to(a, f"هذا مجرد عضو الله مطيح حظه.")
-        elif role == 'مدير':
-            bot.reply_to(a, f"هذا المدير حمبي.")
-        elif role == 'مهيب':
-            bot.reply_to(a, f"هذا المهيب، له كل الاحترام.")
+        if role == 'مواطن':
+            bot.reply_to(a, f"هذا مواطن، له كل الاحترام.")
+        elif role == 'موظف حكومي':
+            bot.reply_to(a, f"هذا موظف حكومي، يقدم الخدمة العامة.")
+        elif role == 'رئيس الجمهورية':
+            bot.reply_to(a, f"هذا رئيس الجمهورية، له مكانة خاصة.")
         else:
             bot.reply_to(a, f"رتبة غير معروفة: {role}.")
     else:
