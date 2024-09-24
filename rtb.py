@@ -23,6 +23,11 @@ def load_roles():
                 user_id, role = line.strip().split(":")
                 members[int(user_id)] = role
 
+    # إضافة رئيس الجمهورية إذا لم يكن موجودًا
+    if MAHIIB_ID not in members:
+        members[MAHIIB_ID] = 'رئيس الجمهورية'
+        save_roles()  # حفظ الرتبة الجديدة
+
 # دالة لحفظ الرتب إلى الملف
 def save_roles():
     with open(roles_file, "w", encoding="utf-8") as f:
@@ -38,7 +43,7 @@ def promote_user(a):
             
             # التحقق مما إذا كان المستخدم المستهدف هو البوت
             if target_user_id == bot.get_me().id:
-                bot.reply_to(a, "حبيبي اني بوت مو مال رتب")
+                bot.reply_to(a, "حبيبي، اني بوت مو مال رتب.")
                 return
             
             target_user_name = a.reply_to_message.from_user.first_name
