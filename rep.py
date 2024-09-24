@@ -13,10 +13,10 @@ def reply_func(a):
         bot.reply_to(a, "مو عمة حد وميسي عمها")
     elif a.text == "ملاك":
         bot.reply_to(a, """͏
-                            ╱|、
-                          (˚ˎ 。7  
-                           |、˜〵          
-                          じしˍ,)ノ""")
+                          ╱|、
+                         (˚ˎ 。7  
+                          |、˜〵          
+                         じしˍ,)ノ""")
     elif "تمساح" in a.text:
         bot.reply_to(a, "يبحث عن ثلاثينية")
     elif a.text == "بوت":
@@ -45,5 +45,5 @@ def reply_func(a):
         start_deleting_response(a)
     elif a.text == "الردود":
         show_responses(a)
-	else:
-		bot.reply_to(a,"طيطي")
+    else:
+        bot.reply_to(a, "طيطي")
