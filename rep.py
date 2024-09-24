@@ -33,6 +33,8 @@ def reply_func(a):
     	mute_user(a)
     elif "اضف" in a.text:
         insert_rep(a)
+    elif a.text == "الغاء كتم":
+        unmute_user(a)
     elif a.text in ["ايدي", "ا"]:
         send_user_info(a)
     else:
