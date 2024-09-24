@@ -1,15 +1,29 @@
 from config import bot
 from collections import defaultdict
+import os
 
 # التأكد من استيراد members من الكود الثاني
 from rtb import members  # استبدل your_roles_file باسم ملف الكود الثاني
 
+# اسم الملف الذي سيتم تخزين عدد الرسائل فيه
+messages_count_file = "backend/user_messages_count.txt"
+
 # قاموس لتتبع عدد الرسائل لكل مستخدم
 user_messages_count = defaultdict(int)
 
-def count_user_messages(message):
-    """زيادة عدد الرسائل لكل مستخدم في المحادثة"""
-    user_messages_count[message.from_user.id] += 1
+def load_user_messages_count():
+    """تحميل عدد الرسائل من الملف"""
+    if os.path.exists(messages_count_file):
+        with open(messages_count_file, "r", encoding="utf-8") as f:
+            for line in f:
+                user_id, count = line.strip().split(":")
+                user_messages_count[int(user_id)] = int(count)
+
+def save_user_messages_count():
+    """حفظ عدد الرسائل إلى الملف"""
+    with open(messages_count_file, "w", encoding="utf-8") as f:
+        for user_id, count in user_messages_count.items():
+            f.write(f"{user_id}:{count}\n")
 
 def send_user_info(a):
     """إرسال معلومات المستخدم"""
@@ -44,8 +58,11 @@ def send_user_info(a):
     else:
         bot.send_message(a.chat.id, message_text)
 
-# يجب أن تقوم باستدعاء دالة count_user_messages عند تلقي رسالة جديدة
+# تحميل عدد الرسائل عند بدء تشغيل البوت
+load_user_messages_count()
+
 @bot.message_handler(func=lambda a: True)
 def handle_message(a):
     """معالجة الرسائل الجديدة"""
-    count_user_messages(a)
+    user_messages_count[a.from_user.id] += 1  # زيادة عدد الرسائل للمستخدم
+    save_user_messages_count()  # حفظ العدد بعد الزيادة
