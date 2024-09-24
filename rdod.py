@@ -60,5 +60,18 @@ def dynamic_reply(a):
     reply = responses[a.text.strip()]
     bot.reply_to(a, reply)
 
+# دالة لجلب وعرض الردود المضافة
+def show_responses(a):
+    if responses:
+        response_text = "### الردود المضافة:\n"
+        for trigger, reply in responses.items():
+            response_text += f"- **{trigger}**: {reply}\n"
+        bot.reply_to(a, response_text, parse_mode='Markdown')
+    else:
+        bot.reply_to(a, "لا توجد ردود مضافة حتى الآن.")
+
+def handle_show_responses(a):
+    show_responses(a)
+
 # تحميل الردود عند بدء تشغيل البوت
 load_responses()
