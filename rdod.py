@@ -4,8 +4,8 @@ from config import *
 user_states = {}
 responses = {}
 
-# اسم الملف الذي سيتم حفظ الردود فيه
-file_name = "responses.txt"
+# اسم الملف الذي سيتم تحميل الردود منه
+file_name = "backend/m_replyy.txt"  # استبدل هذا بالمسار الصحيح
 
 # تحميل الردود المحفوظة من الملف
 def load_responses():
@@ -17,7 +17,7 @@ def load_responses():
                     trigger, reply = line.strip().split(":", 1)
                     responses[trigger.strip()] = reply.strip()
     except FileNotFoundError:
-        pass
+        print(f"لم يتم العثور على الملف: {file_name}")
 
 # حفظ الردود إلى الملف
 def save_responses():
@@ -53,3 +53,5 @@ def dynamic_reply(a):
     reply = responses[a.text.strip()]
     bot.reply_to(a, reply)
 
+# تحميل الردود عند بدء تشغيل البوت
+load_responses()
