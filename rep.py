@@ -6,13 +6,14 @@ from idee import *
 from mut import *
 from rtb import *
 from rdod import *
+
 def reply_func(a):
     if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
     elif a.text == "باي":
         bot.reply_to(a, "الله ياخذك")
     elif a.text == "ميكاسا":
-        bot.reply_to(a,"مو عمة حد وميسي عمها")
+        bot.reply_to(a, "مو عمة حد وميسي عمها")
     elif a.text == "ملاك":
         bot.reply_to(a, """͏
                             ╱|、
@@ -32,18 +33,21 @@ def reply_func(a):
     elif a.text in ["طرد", "حظر"]:
         my_cmd(a)
     elif a.text in ["كتم", "لصم"]:
-    	mute_user(a)
+        mute_user(a)
     elif a.text == "الغاء كتم":
         unmute_user(a)
     elif a.text in ["ايدي", "ا"]:
         send_user_info(a)
     elif "رفع" in a.text:
-    	promote_user(a)
+        promote_user(a)
     elif a.text == "رتبته":
-    	read_role(a)
+        read_role(a)
     elif a.text == "اضف رد":
-    	start_adding_response(a)
-    	else:
-    		my_txtrep(a)
+        start_adding_response(a)
+        # التحقق إذا كانت دالة إضافة الرد قد عملت بشكل صحيح
+        if a.chat.id in user_states and user_states[a.chat.id] == "awaiting_reply":
+            bot.reply_to(a, "يرجى إرسال الرد الذي تود إضافته.")
+        else:
+            bot.reply_to(a, "حدث خطأ أثناء محاولة إضافة الرد. حاول مرة أخرى.")
     else:
         my_txtrep(a)
