@@ -28,13 +28,18 @@ def promote_user(a):
             bot.reply_to(a, "يرجى الرد على رسالة المستخدم الذي تريد ترقيته.")
     else:
         bot.reply_to(a, "فقط المهيب يمكنه منح الرتب.")
-
-# دالة لقراءة رتبة مستخدم من خلال الرد على رسالته
 def read_role(a):
-    user_id = a.from_user.id
     if a.reply_to_message:
         target_user_id = a.reply_to_message.from_user.id
         role = members[target_user_id]
-        bot.reply_to(a, f"رتبة المستخدم {target_user_id} هي: {role}.")
+        
+        if role == 'عضو':
+            bot.reply_to(a, "هذا مجرد عضو الله مطيح حظه.")
+        elif role == 'مدير':
+            bot.reply_to(a, "هذا المدير حمبي.")
+        elif role == 'مهيب':
+            bot.reply_to(a, "هذا المهيب، له كل الاحترام.")
+        else:
+            bot.reply_to(a, f"رتبة غير معروفة: {role}.")
     else:
         bot.reply_to(a, "يرجى الرد على رسالة المستخدم الذي تريد معرفة رتبته.")
