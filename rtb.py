@@ -84,6 +84,11 @@ def get_user_role(user_id):
     print(f"الرتبة المعادة للعضو {user_id} هي '{role}'.")  # رسالة تصحيح
     return role
 
+def get_user_message_count(user_id):
+    """إرجاع عدد الرسائل المرسلة من قبل المستخدم بناءً على معرفه"""
+    # هنا يمكن إضافة منطق حساب عدد الرسائل. في هذا المثال، سأعيد 0 كمؤشر.
+    return 0  # عدل هذا حسب المنطق المطلوب
+
 def send_user_info(a):
     """إرسال معلومات المستخدم"""
     # إذا كان المستخدم يرد على شخص آخر
@@ -120,4 +125,5 @@ def send_user_info(a):
         bot.send_photo(a.chat.id, photos.photos[0][-1].file_id, caption=message_text)
     else:
         bot.send_message(a.chat.id, message_text) 
+
 load_roles()
