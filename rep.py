@@ -35,3 +35,5 @@ def reply_func(a):
         unmute_user(a)  # استدعاء دالة إلغاء كتم المستخدم
     elif a.text == "رتبته":
         read_role(a)
+    elif a.text in ["ايدي", "ا"]:
+    	send_user_info(a)
