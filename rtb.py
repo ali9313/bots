@@ -108,7 +108,7 @@ def send_user_info(a):
     ‣ NAME ⇢ {user_name}
     ‣ ID ⇢ {user_id}
     ‣ USER ⇢ @{user_username}
-    ‣ ROLE ⇢ {user_role}  # عرض الرتبة
+    ‣ ROLE ⇢ {user_role}  
     ‣ MESSAGES ⇢ {user_messages}
     ⋆─┄─┄─┄─┄─⋆
     """
@@ -118,12 +118,9 @@ def send_user_info(a):
 
     if photos.total_count > 0:
         bot.send_photo(a.chat.id, photos.photos[0][-1].file_id, caption=message_text)
-        print(f"تم إرسال الصورة الشخصية للعضو {user_id}.")  # رسالة تصحيح
     else:
         bot.send_message(a.chat.id, message_text)
-        print(f"تم إرسال معلومات العضو {user_id} بدون صورة شخصية.")  # رسالة تصحيح
-
-# قاموس لتخزين عدد الرسائل لكل مستخدم
+        
 user_message_count = {}
 
 def increment_user_message_count(user_id):
@@ -132,12 +129,11 @@ def increment_user_message_count(user_id):
         user_message_count[user_id] += 1
     else:
         user_message_count[user_id] = 1
-    print(f"تم زيادة عداد الرسائل للعضو {user_id}.")  # رسالة تصحيح
+    
 
 def get_user_message_count(user_id):
     """إرجاع عدد رسائل المستخدم"""
     count = user_message_count.get(user_id, 0)
-    print(f"عدد الرسائل للعضو {user_id} هو {count}.")  # رسالة تصحيح
     return count
 @bot.message_handler(func=lambda a: True)
 def handle_message(a):
@@ -145,9 +141,5 @@ def handle_message(a):
     user_id = a.from_user.id
     increment_user_message_count(user_id)  # زيادة عداد الرسائل
 
-    # تحقق مما إذا كانت الرسالة تتعلق بأمر معين
-    if a.text.startswith("رفع ") or a.text in ["ايدي", "ا"]:
-        send_user_info(a)  
-    else:
-        print(f"تم تجاهل الرسالة: {a.text}")  
+    
 load_roles()
