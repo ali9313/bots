@@ -119,27 +119,5 @@ def send_user_info(a):
     if photos.total_count > 0:
         bot.send_photo(a.chat.id, photos.photos[0][-1].file_id, caption=message_text)
     else:
-        bot.send_message(a.chat.id, message_text)
-        
-user_message_count = {}
-
-def increment_user_message_count(user_id):
-    """زيادة عداد الرسائل لكل مستخدم"""
-    if user_id in user_message_count:
-        user_message_count[user_id] += 1
-    else:
-        user_message_count[user_id] = 1
-    
-
-def get_user_message_count(user_id):
-    """إرجاع عدد رسائل المستخدم"""
-    count = user_message_count.get(user_id, 0)
-    return count
-@bot.message_handler(func=lambda a: True)
-def handle_message(a):
-    """معالجة الرسائل الجديدة فقط إذا كانت تحتوي على أمر محدد"""
-    user_id = a.from_user.id
-    increment_user_message_count(user_id)  # زيادة عداد الرسائل
-
-    
+        bot.send_message(a.chat.id, message_text) 
 load_roles()
