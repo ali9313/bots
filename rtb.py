@@ -3,9 +3,9 @@ from collections import defaultdict
 import os
 
 roles = {
-    'مواطن': 1,           # تم تغيير اسم الرتبة إلى مواطن
-    'موظف حكومي': 2,     # تم تغيير اسم الرتبة إلى موظف حكومي
-    'رئيس الجمهورية': 3  # تم تغيير اسم الرتبة إلى رئيس الجمهورية
+    'مواطن': 1,
+    'موظف حكومي': 2,
+    'رئيس الجمهورية': 3
 }
 MAHIIB_ID = 232499688  # معرف رئيس الجمهورية
 
@@ -33,9 +33,14 @@ def save_roles():
         for member_id, role_name in members.items():
             file.write(f"{member_id},{role_name}\n")
 
-# دالة لمنح رتبة لأحد الأعضاء من خلال الرد على رسالته
-def promote_user(member_id, role_name):
-    if role_name in roles:
+# دالة لمنح رتبة لأحد الأعضاء من خلال الرسالة
+def promote_user(a):
+    member_id = a.reply_to_message.from_user.id if a.reply_to_message else a.from_user.id  # الحصول على معرّف المستخدم
+    role_name = a.text  # اعتبار نص الرسالة هو الرتبة المطلوب منحها
+
+    if role_name == 'رئيس الجمهورية':
+        return "رئيس الجمهورية واحد ميصير ثنين"
+    elif role_name in roles:
         members[member_id] = role_name
         save_roles()  # حفظ التغييرات
         return f"تم منح الرتبة '{role_name}' للعضو {member_id}."

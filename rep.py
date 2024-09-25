@@ -30,4 +30,6 @@ def reply_func(a):
     elif a.text in ["الغاء كتم", "الغاء لصم"]:
         unmute_user(a)  # استدعاء دالة إلغاء كتم المستخدم
     elif a.text == "رتبته":
-    	read_role(a)
+        read_role(a)
+    elif a.text == "رفع":
+        promote_user(a)  
