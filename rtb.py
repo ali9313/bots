@@ -61,9 +61,19 @@ def promote_user(a):
     if role_name == 'رئيس الجمهورية':
         bot.reply_to(a, "رئيس الجمهورية واحد ميصير ثنين")
     elif role_name in roles:  # فقط الرتب المعرفة في القائمة
-        if role_name not in members[member_id]:
-            members[member_id].append(role_name)  # إضافة الرتبة إذا لم تكن موجودة مسبقًا
-            print(f"تم منح الرتبة '{role_name}' للعضو {member_id}.")  # رسالة تصحيح
+        current_roles = members[member_id]
+
+        # تحقق مما إذا كانت الرتبة الجديدة أعلى من الرتبة الحالية
+        current_rank = max(roles[role] for role in current_roles if role in roles)
+        if roles[role_name] > current_rank:
+            # إذا كانت الرتبة الجديدة أعلى، قم بإزالة جميع الرتب القديمة
+            members[member_id] = [role_name]  # الاحتفاظ فقط بالرتبة الجديدة
+            print(f"تم رفع رتبة '{role_name}' للعضو {member_id} بعد إزالة الرتب السابقة.")  # رسالة تصحيح
+        else:
+            # إذا كانت الرتبة الجديدة ليست أعلى، فلا تقم بأي شيء
+            bot.reply_to(a, f"لا يمكن رفع الرتبة '{role_name}' للعضو {a.reply_to_message.from_user.first_name} لأنها ليست أعلى من الرتب الحالية.")
+            return
+
         save_roles()  # حفظ التغييرات
 
         # تحديد الرد المناسب بناءً على الرتبة الجديدة
@@ -124,6 +134,6 @@ def send_user_info(a):
     if photos.total_count > 0:
         bot.send_photo(a.chat.id, photos.photos[0][-1].file_id, caption=message_text)
     else:
-        bot.send_message(a.chat.id, message_text) 
+        bot.send_message(a.chat.id, message_text)
 
 load_roles()
