@@ -33,8 +33,8 @@ def load_roles():
                         print(f"خطأ في قراءة السطر: {line}")  # تسجيل الخطأ في قراءة السطر
 
     # تعيين رتبة رئيس الجمهورية عند بداية تشغيل البوت
-    if MAHIIB_ID not in members:
-        members[MAHIIB_ID] = ['رئيس الجمهورية']
+    if str(MAHIIB_ID) not in members:
+        members[str(MAHIIB_ID)] = ['رئيس الجمهورية']
 
 # دالة لحفظ الرتب إلى الملف
 def save_roles():
@@ -45,7 +45,7 @@ def save_roles():
 
 # دالة لمنح رتبة لأحد الأعضاء من خلال الرسالة
 def promote_user(a):
-    member_id = a.reply_to_message.from_user.id if a.reply_to_message else a.from_user.id  # الحصول على معرّف المستخدم
+    member_id = str(a.reply_to_message.from_user.id if a.reply_to_message else a.from_user.id)  # الحصول على معرّف المستخدم
 
     # استخراج الرتبة من نص الرسالة (إزالة الكلمة الأولى "رفع")
     role_name = ' '.join(a.text.split()[1:])  # أخذ كل الكلمات بعد الكلمة الأولى
@@ -75,7 +75,7 @@ def read_role(a):
         bot.reply_to(a, "الرجاء الرد على رسالة العضو لقراءة رتبته.")
         return
     
-    member_id = a.reply_to_message.from_user.id  # الحصول على معرف المستخدم
+    member_id = str(a.reply_to_message.from_user.id)  # الحصول على معرف المستخدم
     user_roles = members.get(member_id, ['مواطن'])  # استرجاع قائمة الرتب
 
     # البحث عن الرتبة الأعلى بناءً على القيم المعرفة في قاموس `roles`
