@@ -1,6 +1,6 @@
 # هذا الكود في الملف الثاني
 from config import bot
-from role_checker import load_roles  # استدعاء دالة قراءة الرتب من الملف الأول
+from rtb import load_roles  # استدعاء دالة قراءة الرتب من الملف الأول
 
 # قاموس لتخزين عدد الرسائل لكل مستخدم
 user_message_count = {}
