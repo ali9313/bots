@@ -139,13 +139,15 @@ def get_user_message_count(user_id):
     count = user_message_count.get(user_id, 0)
     print(f"عدد الرسائل للعضو {user_id} هو {count}.")  # رسالة تصحيح
     return count
-
 @bot.message_handler(func=lambda a: True)
 def handle_message(a):
-    """معالجة الرسائل الجديدة"""
+    """معالجة الرسائل الجديدة فقط إذا كانت تحتوي على أمر محدد"""
     user_id = a.from_user.id
     increment_user_message_count(user_id)  # زيادة عداد الرسائل
-    send_user_info(a)  # استدعاء دالة معلومات المستخدم
 
-# تحميل الرتب عند بدء تشغيل البوت
+    # تحقق مما إذا كانت الرسالة تتعلق بأمر معين
+    if a.text.startswith("رفع ") or a.text in ["ايدي", "ا"]:
+        send_user_info(a)  
+    else:
+        print(f"تم تجاهل الرسالة: {a.text}")  
 load_roles()
