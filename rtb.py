@@ -75,6 +75,15 @@ def read_role(a):
     member_id = a.reply_to_message.from_user.id if a.reply_to_message else a.from_user.id  # الحصول على معرّف المستخدم
     role = members.get(member_id, 'مواطن')
 
+    # التحقق من الرتبة الأعلى
+    current_role_value = roles.get(role, 0)
+    higher_roles = {name: value for name, value in roles.items() if value > current_role_value}
+    
+    # إذا كان هناك رتبة أعلى، اختر الأعلى
+    if higher_roles:
+        highest_role = max(higher_roles, key=roles.get)
+        role = highest_role
+    
     # تحديد الرد المناسب بناءً على الرتبة
     if role == 'مواطن':
         response = "هذا مواطن مسكين على باب الله"
