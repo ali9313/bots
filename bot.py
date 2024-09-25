@@ -1,9 +1,5 @@
 from config import *
 from rep import *
-from botcommand import *
-from mut import *
-from rdod import load_responses  # استيراد دالة تحميل الردود
-
 @bot.message_handler(content_types=['new_chat_members', 'left_chat_members'])
 def cmbr(a):
     pass  # تم تعليق هذه الدالة
