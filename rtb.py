@@ -18,13 +18,18 @@ members = defaultdict(lambda: 'مواطن')  # افتراضي: مواطن
 # دالة لتحميل الرتب من الملف
 def load_roles():
     if os.path.exists(roles_file):
-        # فتح الملف والتحقق من محتوياته
         with open(roles_file, 'r', encoding='utf-8') as file:
             lines = file.readlines()
             if lines:  # تحقق مما إذا كان الملف غير فارغ
                 for line in lines:
-                    member_id, role_name = line.strip().split(',', 1)  # استخدام 1 فقط لتفادي تقسيم الرتبة إلى كلمات متعددة
-                    members[member_id] = role_name
+                    line = line.strip()
+                    if not line:  # تجاهل السطر الفارغ
+                        continue
+                    try:
+                        member_id, role_name = line.split(',', 1)
+                        members[member_id] = role_name
+                    except ValueError:
+                        print(f"خطأ في قراءة السطر: {line}")  # تسجيل الخطأ في قراءة السطر
 
     # تعيين رتبة رئيس الجمهورية عند بداية تشغيل البوت
     if MAHIIB_ID not in members:
@@ -45,7 +50,8 @@ def promote_user(a):
 
     if role_name == 'رئيس الجمهورية':
         bot.reply_to(a, "رئيس الجمهورية واحد ميصير ثنين")
-    elif role_name in roles or role_name not in roles:  # السماح برتب جديدة
+    elif role_name in roles:
+        # تغيير الرتبة المعروفة فقط
         current_role = members[member_id]
         members[member_id] = role_name
         save_roles()  # حفظ التغييرات
@@ -58,7 +64,11 @@ def promote_user(a):
         else:
             bot.reply_to(a, f"تم منح الرتبة '{role_name}' للعضو {a.reply_to_message.from_user.first_name}.")
     else:
-        bot.reply_to(a, f"خطأ: الرتبة '{role_name}' غير موجودة.")
+        # السماح بإضافة رتبة جديدة
+        current_role = members[member_id]
+        members[member_id] = role_name
+        save_roles()  # حفظ التغييرات
+        bot.reply_to(a, f"تم منح الرتبة الجديدة '{role_name}' للعضو {a.reply_to_message.from_user.first_name}.")
 
 # دالة لقراءة رتبة مستخدم من خلال الرسالة
 def read_role(a):
