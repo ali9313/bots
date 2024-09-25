@@ -1,5 +1,6 @@
 from config import *
 from collections import defaultdict
+import os
 
 roles = {
     'مواطن': 1,           # تم تغيير اسم الرتبة إلى مواطن
@@ -44,7 +45,15 @@ def promote_user(member_id, role_name):
 # دالة لقراءة رتبة مستخدم من خلال الرد على رسالته
 def read_role(member_id):
     role = members.get(member_id, 'مواطن')
-    return f"رتبة العضو {member_id} هي: '{role}'."
+    
+    if role == 'مواطن':
+        return "هذا مواطن مسكين على باب الله"
+    elif role == 'موظف حكومي':
+        return "هذا موظف ماشي حاله"
+    elif role == 'رئيس الجمهورية':
+        return "هذا رئيس الجمهورية تاج راسي وراسك"
+    else:
+        return "هذه رتبة غير معروفة"
 
 # تحميل الرتب عند بدء تشغيل البوت
 load_roles()
