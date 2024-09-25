@@ -12,8 +12,8 @@ MAHIIB_ID = 232499688  # معرف رئيس الجمهورية
 # اسم الملف الذي سيتم تخزين الرتب فيه
 roles_file = "backend/user_roles.txt"
 
-# قائمة الأعضاء مع رتبهم
-members = defaultdict(lambda: 'مواطن')  # افتراضي: مواطن
+# قائمة الأعضاء مع رتبهم (تحتوي على قائمة من الرتب)
+members = defaultdict(lambda: ['مواطن'])  # افتراضي: قائمة تحتوي على "مواطن"
 
 # دالة لتحميل الرتب من الملف
 def load_roles():
@@ -27,19 +27,21 @@ def load_roles():
                         continue
                     try:
                         member_id, role_name = line.split(',', 1)
-                        members[member_id] = role_name
+                        if role_name in roles:  # إضافة الرتبة فقط إذا كانت معرفة
+                            members[member_id].append(role_name)
                     except ValueError:
                         print(f"خطأ في قراءة السطر: {line}")  # تسجيل الخطأ في قراءة السطر
 
     # تعيين رتبة رئيس الجمهورية عند بداية تشغيل البوت
     if MAHIIB_ID not in members:
-        members[MAHIIB_ID] = 'رئيس الجمهورية'
+        members[MAHIIB_ID] = ['رئيس الجمهورية']
 
 # دالة لحفظ الرتب إلى الملف
 def save_roles():
     with open(roles_file, 'w', encoding='utf-8') as file:
-        for member_id, role_name in members.items():
-            file.write(f"{member_id},{role_name}\n")
+        for member_id, role_list in members.items():
+            for role_name in role_list:
+                file.write(f"{member_id},{role_name}\n")
 
 # دالة لمنح رتبة لأحد الأعضاء من خلال الرسالة
 def promote_user(a):
@@ -50,10 +52,9 @@ def promote_user(a):
 
     if role_name == 'رئيس الجمهورية':
         bot.reply_to(a, "رئيس الجمهورية واحد ميصير ثنين")
-    elif role_name in roles:
-        # تغيير الرتبة المعروفة فقط
-        current_role = members[member_id]
-        members[member_id] = role_name
+    elif role_name in roles:  # فقط الرتب المعرفة في القائمة
+        if role_name not in members[member_id]:
+            members[member_id].append(role_name)  # إضافة الرتبة إذا لم تكن موجودة مسبقًا
         save_roles()  # حفظ التغييرات
 
         # تحديد الرد المناسب بناءً على الرتبة الجديدة
@@ -64,32 +65,28 @@ def promote_user(a):
         else:
             bot.reply_to(a, f"تم منح الرتبة '{role_name}' للعضو {a.reply_to_message.from_user.first_name}.")
     else:
-        # السماح بإضافة رتبة جديدة
-        current_role = members[member_id]
-        members[member_id] = role_name
-        save_roles()  # حفظ التغييرات
-        bot.reply_to(a, f"تم منح الرتبة الجديدة '{role_name}' للعضو {a.reply_to_message.from_user.first_name}.")
+        # إذا كانت الرتبة غير معرفة
+        bot.reply_to(a, f"خطأ: الرتبة '{role_name}' غير موجودة في القائمة.")
 
 # دالة لقراءة رتبة مستخدم من خلال الرسالة
 def read_role(a):
-    member_id = a.reply_to_message.from_user.id if a.reply_to_message else a.from_user.id  # الحصول على معرّف المستخدم
-    role = members.get(member_id, 'مواطن')
+    # الحصول على معرف المستخدم الذي تم الرد على رسالته
+    if not a.reply_to_message:
+        bot.reply_to(a, "الرجاء الرد على رسالة العضو لقراءة رتبته.")
+        return
+    
+    member_id = a.reply_to_message.from_user.id  # الحصول على معرف المستخدم
+    user_roles = members.get(member_id, ['مواطن'])  # استرجاع قائمة الرتب
 
-    # التحقق من الرتبة الأعلى
-    current_role_value = roles.get(role, 0)
-    higher_roles = {name: value for name, value in roles.items() if value > current_role_value}
-    
-    # إذا كان هناك رتبة أعلى، اختر الأعلى
-    if higher_roles:
-        highest_role = max(higher_roles, key=roles.get)
-        role = highest_role
-    
+    # البحث عن الرتبة الأعلى بناءً على القيم المعرفة في قاموس `roles`
+    highest_role = max(user_roles, key=lambda role: roles.get(role, 0))
+
     # تحديد الرد المناسب بناءً على الرتبة
-    if role == 'مواطن':
+    if highest_role == 'مواطن':
         response = "هذا مواطن مسكين على باب الله"
-    elif role == 'موظف حكومي':
+    elif highest_role == 'موظف حكومي':
         response = "هذا موظف ماشي حاله"
-    elif role == 'رئيس الجمهورية':
+    elif highest_role == 'رئيس الجمهورية':
         response = "هذا رئيس الجمهورية تاج راسي وراسك"
     else:
         response = "هذه رتبة غير معروفة"
