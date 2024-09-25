@@ -47,14 +47,18 @@ def read_role(a):
     member_id = a.reply_to_message.from_user.id if a.reply_to_message else a.from_user.id  # الحصول على معرّف المستخدم
     role = members.get(member_id, 'مواطن')
 
+    # تحديد الرد المناسب بناءً على الرتبة
     if role == 'مواطن':
-        return "هذا مواطن مسكين على باب الله"
+        response = "هذا مواطن مسكين على باب الله"
     elif role == 'موظف حكومي':
-        return "هذا موظف ماشي حاله"
+        response = "هذا موظف ماشي حاله"
     elif role == 'رئيس الجمهورية':
-        return "هذا رئيس الجمهورية تاج راسي وراسك"
+        response = "هذا رئيس الجمهورية تاج راسي وراسك"
     else:
-        return "هذه رتبة غير معروفة"
+        response = "هذه رتبة غير معروفة"
+    
+    # إرجاع الرد إلى المستخدم
+    bot.reply_to(a, response)
 
 # تحميل الرتب عند بدء تشغيل البوت
 load_roles()
