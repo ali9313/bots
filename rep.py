@@ -1,4 +1,5 @@
-from config import *
+from config import *  # تأكد من أن mute_user و unmute_user مستوردتان من الملف المناسب
+from mut import *
 def reply_func(a):
     if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
@@ -22,5 +23,8 @@ def reply_func(a):
     elif a.text == "موسيقى":
         with open("voice/vv.m4a", "rb") as audio:
             bot.send_audio(a.chat.id, audio)
-    else:
-        bot.reply_to(a, "طيطي")
+    elif a.text in ["كتم", "لصم"]:
+        mute_user(a)  # استدعاء دالة كتم المستخدم
+    elif a.text in ["الغاء كتم", "الغاء لصم"]:
+        unmute_user(a)  # استدعاء دالة إلغاء كتم المستخدم
+  
