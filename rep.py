@@ -1,7 +1,6 @@
 from config import *  # تأكد من أن mute_user و unmute_user مستوردتان من الملف المناسب
 from mut import *
 from rtb import *
-from idee import *
 
 def reply_func(a):
     # التحقق مما إذا كانت الجملة تبدأ بكلمة "رفع"
