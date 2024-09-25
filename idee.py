@@ -1,33 +1,9 @@
+# هذا الكود في الملف الثاني
 from config import bot
-from collections import defaultdict
-import os
+from role_checker import load_roles  # استدعاء دالة قراءة الرتب من الملف الأول
+
 # قاموس لتخزين عدد الرسائل لكل مستخدم
 user_message_count = {}
-
-# نقوم بتحميل الرتب من الملف الأول
-roles_file = "backend/user_roles.txt"
-
-# قائمة الأعضاء مع رتبهم (تحتوي على قائمة من الرتب)
-members = defaultdict(lambda: ['مواطن'])  # افتراضي: قائمة تحتوي على "مواطن"
-
-# تحميل الرتب من الملف الأول
-def load_roles():
-    if os.path.exists(roles_file):
-        with open(roles_file, 'r', encoding='utf-8') as file:
-            lines = file.readlines()
-            if lines:
-                for line in lines:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    try:
-                        member_id, role_name = line.split(',', 1)
-                        members[member_id].append(role_name)
-                    except ValueError:
-                        print(f"خطأ في قراءة السطر: {line}")
-
-# استدعاء دالة تحميل الرتب عند بدء تشغيل البرنامج
-load_roles()
 
 def increment_user_message_count(user_id):
     """زيادة عداد الرسائل لكل مستخدم"""
@@ -40,16 +16,10 @@ def get_user_message_count(user_id):
     """إرجاع عدد رسائل المستخدم"""
     return user_message_count.get(user_id, 0)
 
-def get_highest_role(user_id):
-    """إرجاع أعلى رتبة للمستخدم"""
-    user_roles = members.get(str(user_id), ['مواطن'])  # الحصول على الرتب للمستخدم
-    roles = {
-        'مواطن': 1,
-        'موظف حكومي': 2,
-        'رئيس الجمهورية': 3
-    }
-    highest_role = max(user_roles, key=lambda role: roles.get(role, 0))  # اختيار أعلى رتبة
-    return highest_role
+def get_user_role(user_id):
+    """إرجاع رتبة المستخدم بناءً على معرفه"""
+    members = load_roles()  # استدعاء دالة قراءة الرتب من الملف الأول
+    return members.get(str(user_id), 'مواطن')  # إذا لم يكن له رتبة، افتراضي "مواطن"
 
 def send_user_info(a):
     """إرسال معلومات المستخدم"""
@@ -63,7 +33,7 @@ def send_user_info(a):
     user_name = user.first_name
     user_username = user.username if user.username else "معنده"
     user_messages = get_user_message_count(user_id)  # الحصول على عدد رسائل المستخدم
-    user_role = get_highest_role(user_id)  # الحصول على أعلى رتبة للمستخدم
+    user_role = get_user_role(user_id)  # استدعاء دالة لجلب رتبة المستخدم
 
     # إنشاء الكليشة مع الرتبة
     message_text = f"""
@@ -71,7 +41,7 @@ def send_user_info(a):
     ‣ NAME ⇢ {user_name}
     ‣ ID ⇢ {user_id}
     ‣ USER ⇢ @{user_username}
-    ‣ RANK ⇢ {user_role}  # عرض الرتبة
+    ‣ ROLE ⇢ {user_role}  # عرض الرتبة
     ‣ MESSAGES ⇢ {user_messages}
     ⋆─┄─┄─┄─┄─⋆
     """
@@ -89,5 +59,4 @@ def handle_message(a):
     """معالجة الرسائل الجديدة"""
     user_id = a.from_user.id
     increment_user_message_count(user_id)  # زيادة عداد الرسائل
-    if a.text.startswith('/info'):  # على سبيل المثال، استخدام /info لاستعراض المعلومات
-        send_user_info(a)
+    send_user_info(a)  # استدعاء دالة معلومات المستخدم
