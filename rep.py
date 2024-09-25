@@ -3,7 +3,11 @@ from mut import *
 from rtb import *
 
 def reply_func(a):
-    if a.text == "اهلا":
+    # التحقق مما إذا كانت الجملة تبدأ بكلمة "رفع"
+    if a.text.startswith("رفع "):
+        promote_user(a)  # استدعاء دالة رفع الرتبة
+
+    elif a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
     elif a.text == "باي":
         bot.reply_to(a, "الله ياخذك")
@@ -31,5 +35,3 @@ def reply_func(a):
         unmute_user(a)  # استدعاء دالة إلغاء كتم المستخدم
     elif a.text == "رتبته":
         read_role(a)
-    elif a.text == "رفع":
-        promote_user(a)  
