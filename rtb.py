@@ -87,7 +87,38 @@ def promote_user(a):
         # إذا كانت الرتبة غير معرفة
         bot.reply_to(a, f"خطأ: الرتبة '{role_name}' غير موجودة في القائمة.")
 
+# دالة لتنزيل رتبة موظف حكومي
+def demote_user(a):
+    member_id = str(a.reply_to_message.from_user.id)  # الحصول على معرّف المستخدم المُرد عليه
+
+    current_roles = members[member_id]
+    if 'موظف حكومي' in current_roles:
+        # إزالة رتبة "موظف حكومي"
+        members[member_id].remove('موظف حكومي')
+        members[member_id].append('مواطن')  # إضافة رتبة "مواطن"
+        save_roles()  # حفظ التغييرات
+        bot.reply_to(a, f"تم تحويل {a.reply_to_message.from_user.first_name} من موظف حكومي إلى مواطن.")
+    else:
+        bot.reply_to(a, f"العضو {a.reply_to_message.from_user.first_name} ليس لديه رتبة موظف حكومي.")
+
 # دالة لقراءة رتبة مستخدم من خلال الرسالة
+def check_user_role(a):
+    if a.reply_to_message:
+        user_id = a.reply_to_message.from_user.id  # الحصول على معرف المستخدم المُرد عليه
+        user_role = get_user_role(user_id)  # استدعاء دالة لجلب رتبة المستخدم
+
+        # تحديد الرد بناءً على الرتبة
+        if user_role == 'مواطن':
+            bot.reply_to(a, "مواطن مسكين خطيه")
+        elif user_role == 'موظف حكومي':
+            bot.reply_to(a, "موظف عايش مرتاح")
+        elif user_role == 'رئيس الجمهورية':
+            bot.reply_to(a, "رئيس الجمهورية هذا تاج راسي وراسك")
+        else:
+            bot.reply_to(a, "هذه رتبة غير معروفة.")
+    else:
+        bot.reply_to(a, "يرجى الرد على رسالة مستخدم للتحقق من رتبته.")
+
 def get_user_role(user_id):
     """إرجاع رتبة المستخدم بناءً على معرفه"""
     role = members.get(str(user_id), ['مواطن'])[0]  # إذا لم يكن له رتبة، افتراضي "مواطن"
