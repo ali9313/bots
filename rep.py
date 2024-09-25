@@ -1,12 +1,10 @@
 from config import *  # تأكد من أن mute_user و unmute_user مستوردتان من الملف المناسب
 from mut import *
 from rtb import *
-
+from rdod import *
 def reply_func(a):
-    # التحقق مما إذا كانت الجملة تبدأ بكلمة "رفع"
     if a.text.startswith("رفع "):
-        promote_user(a)  # استدعاء دالة رفع الرتبة
-
+        promote_user(a)  
     elif a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
     elif a.text == "باي":
@@ -41,3 +39,9 @@ def reply_func(a):
     	send_user_info(a)
     elif a.text == "تنزيل":
     	demote_user(a)
+    elif a.text == "اضف رد":
+    	start_adding_response(a)
+    elif a.text == "حذف رد":
+    	start_deleting_response(a)
+    elif a.text == "الردود":
+    	show_responses(a)
