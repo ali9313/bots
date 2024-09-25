@@ -6,38 +6,19 @@ from rdod import load_responses  # استيراد دالة تحميل الردو
 
 @bot.message_handler(content_types=['new_chat_members', 'left_chat_members'])
 def cmbr(a):
-    try:
-        bot.delete_message(a.chat.id, a.message_id)
-    except Exception as e:
-        print(f"Error in 'cmbr' function: {str(e)}")
-        bot.reply_to(a, f"حدث خطأ عند محاولة حذف الرسالة: {str(e)}")
+    pass  # تم تعليق هذه الدالة
 
 @bot.message_handler(commands=['start', 'ban'])
 def my(a):
-    try:
-        if a.text == "/ban" and a.reply_to_message:
-            my_cmd(a)
-        else:
-            send_welcome(a)
-    except Exception as e:
-        print(f"Error in 'my' function: {str(e)}")
-        bot.reply_to(a, f"حدث خطأ في تنفيذ الأمر: {str(e)}")
+    pass  # تم تعليق هذه الدالة
 
 def send_welcome(a):
-    try:
-        bot.reply_to(a, "ترسل اهلا ارد عليك مرحبا ، ترسل غير شي ما افهم ترا")
-    except Exception as e:
-        print(f"Error in 'send_welcome' function: {str(e)}")
-        bot.reply_to(a, f"حدث خطأ عند محاولة الرد: {str(e)}")
+    pass  # تم تعليق هذه الدالة
 
 # معالج حذف الرسائل للمستخدمين المكتمين
 @bot.message_handler(func=lambda a: a.from_user.id in muted_users)
 def delete_muted_message(a):
-    try:
-        bot.delete_message(a.chat.id, a.message_id)
-    except Exception as e:
-        print(f"Error in 'delete_muted_message' function: {str(e)}")
-        bot.reply_to(a, f"حدث خطأ عند محاولة حذف الرسالة: {str(e)}")
+    pass  # تم تعليق هذه الدالة
 
 # معالج الرسائل العامة (يجب أن يأتي بعد معالج حذف الرسائل)
 @bot.message_handler(func=lambda a: True)
