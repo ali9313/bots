@@ -36,18 +36,26 @@ def save_roles():
 # دالة لمنح رتبة لأحد الأعضاء من خلال الرسالة
 def promote_user(a):
     member_id = a.reply_to_message.from_user.id if a.reply_to_message else a.from_user.id  # الحصول على معرّف المستخدم
-    
+
     # استخراج الرتبة من نص الرسالة (إزالة الكلمة الأولى "رفع")
     role_name = ' '.join(a.text.split()[1:])  # أخذ كل الكلمات بعد الكلمة الأولى
 
     if role_name == 'رئيس الجمهورية':
-        return "رئيس الجمهورية واحد ميصير ثنين"
+        bot.reply_to(a, "رئيس الجمهورية واحد ميصير ثنين")
     elif role_name in roles:
+        current_role = members[member_id]
         members[member_id] = role_name
         save_roles()  # حفظ التغييرات
-        return f"تم منح الرتبة '{role_name}' للعضو {member_id}."
+
+        # تحديد الرد المناسب بناءً على الرتبة الجديدة
+        if role_name == 'مواطن':
+            bot.reply_to(a, f"هذا اصلا مواطن {a.reply_to_message.from_user.first_name}.")
+        elif role_name == 'موظف حكومي':
+            bot.reply_to(a, f"حلو صار موظف {a.reply_to_message.from_user.first_name}.")
+        else:
+            bot.reply_to(a, f"تم منح الرتبة '{role_name}' للعضو {a.reply_to_message.from_user.first_name}.")
     else:
-        return f"خطأ: الرتبة '{role_name}' غير موجودة."
+        bot.reply_to(a, f"خطأ: الرتبة '{role_name}' غير موجودة.")
 
 # دالة لقراءة رتبة مستخدم من خلال الرسالة
 def read_role(a):
