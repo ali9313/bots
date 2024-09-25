@@ -18,10 +18,13 @@ members = defaultdict(lambda: 'مواطن')  # افتراضي: مواطن
 # دالة لتحميل الرتب من الملف
 def load_roles():
     if os.path.exists(roles_file):
+        # فتح الملف والتحقق من محتوياته
         with open(roles_file, 'r', encoding='utf-8') as file:
-            for line in file:
-                member_id, role_name = line.strip().split(',')
-                members[member_id] = role_name
+            lines = file.readlines()
+            if lines:  # تحقق مما إذا كان الملف غير فارغ
+                for line in lines:
+                    member_id, role_name = line.strip().split(',', 1)  # استخدام 1 فقط لتفادي تقسيم الرتبة إلى كلمات متعددة
+                    members[member_id] = role_name
 
     # تعيين رتبة رئيس الجمهورية عند بداية تشغيل البوت
     if MAHIIB_ID not in members:
@@ -42,7 +45,7 @@ def promote_user(a):
 
     if role_name == 'رئيس الجمهورية':
         bot.reply_to(a, "رئيس الجمهورية واحد ميصير ثنين")
-    elif role_name in roles:
+    elif role_name in roles or role_name not in roles:  # السماح برتب جديدة
         current_role = members[member_id]
         members[member_id] = role_name
         save_roles()  # حفظ التغييرات
