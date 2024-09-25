@@ -76,26 +76,42 @@ def demote_user(a):
     else:
         bot.reply_to(a, f"العضو {a.reply_to_message.from_user.first_name} ليس لديه رتبة موظف حكومي.")
 
-# دالة للتحقق من رتبة مستخدم آخر
-def check_user_role(a):
-    if a.reply_to_message:
-        user_id = a.reply_to_message.from_user.id  
-        user_role = get_user_role(user_id)  
-        if user_role == 'مواطن':
-            bot.reply_to(a, "مواطن مسكين خطيه")
-        elif user_role == 'موظف حكومي':
-            bot.reply_to(a, "موظف عايش مرتاح")
-        elif user_role == 'رئيس الجمهورية':
-            bot.reply_to(a, "رئيس الجمهورية هذا تاج راسي وراسك")
-        else:
-            bot.reply_to(a, "هذه رتبة غير معروفة.")
-    else:
-        bot.reply_to(a, "يرجى الرد على رسالة مستخدم للتحقق من رتبته.")
-
 # دالة للحصول على رتبة المستخدم
 def get_user_role(user_id):
     role = members.get(str(user_id), ['مواطن'])[0]  
     return role
+
+# دالة للتحقق من رتبة المستخدم في الكروب
+def check_sender_role(a):
+    sender_id = a.from_user.id  # الحصول على معرف مرسل الأمر
+    sender_role = get_user_role(sender_id)  # الحصول على رتبة المرسل
+    
+    # التحقق من كونه مشرفاً أو مالكاً للكروب
+    chat_member = bot.get_chat_member(a.chat.id, sender_id)  # الحصول على معلومات العضو في الكروب
+    
+    if chat_member.status in ['administrator', 'creator']:  # إذا كان مشرفاً أو مالكاً
+        is_admin = 'مشرف'
+    else:
+        is_admin = 'عضو'
+        
+    # إرسال رسالة توضح الرتبة في الكروب والبوت
+    bot.reply_to(a, f"رتبتك بالكروب: {is_admin}\nرتبتك بالبوت: {sender_role}")
+
+# دالة للتحقق من رتبة المستخدم الذي تم الرد على رسالته
+def check_user_role(a):
+    if a.reply_to_message:
+        user_id = a.reply_to_message.from_user.id  
+        user_role = get_user_role(user_id)  
+        chat_member = bot.get_chat_member(a.chat.id, user_id)  # الحصول على معلومات العضو في الكروب
+        
+        if chat_member.status in ['administrator', 'creator']:
+            is_admin = 'مشرف'
+        else:
+            is_admin = 'عضو'
+        
+        bot.reply_to(a, f"رتبته بالكروب: {is_admin}\nرتبته بالبوت: {user_role}")
+    else:
+        bot.reply_to(a, "يرجى الرد على رسالة مستخدم للتحقق من رتبته.")
 
 # دالة للحصول على عدد الرسائل
 def get_user_message_count(user_id):
@@ -129,14 +145,5 @@ def send_user_info(a):
         bot.send_photo(a.chat.id, photos.photos[0][-1].file_id, caption=message_text)
     else:
         bot.send_message(a.chat.id, message_text)
-
-# دالة جديدة للتحقق من رتبة مرسل الأمر
-def check_sender_role(a):
-    sender_id = a.from_user.id  # الحصول على معرف مرسل الأمر
-    sender_role = get_user_role(sender_id)  # الحصول على رتبة المرسل
-    is_admin = 'مشرف' if sender_id in members and 'مشرف' in members[str(sender_id)] else 'عضو'  # التحقق إذا كان مشرفًا
-
-    # إرسال رسالة توضح الرتبة في الكروب والبوت
-    bot.reply_to(a, f"رتبتك بالكروب: {is_admin}\nرتبتك بالبوت: {sender_role}")
 
 load_roles()
