@@ -42,10 +42,11 @@ def promote_user(member_id, role_name):
     else:
         return f"خطأ: الرتبة '{role_name}' غير موجودة."
 
-# دالة لقراءة رتبة مستخدم من خلال الرد على رسالته
-def read_role(member_id):
+# دالة لقراءة رتبة مستخدم من خلال الرسالة
+def read_role(a):
+    member_id = a.reply_to_message.from_user.id if a.reply_to_message else a.from_user.id  # الحصول على معرّف المستخدم
     role = members.get(member_id, 'مواطن')
-    
+
     if role == 'مواطن':
         return "هذا مواطن مسكين على باب الله"
     elif role == 'موظف حكومي':

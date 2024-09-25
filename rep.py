@@ -29,7 +29,5 @@ def reply_func(a):
         mute_user(a)  # استدعاء دالة كتم المستخدم
     elif a.text in ["الغاء كتم", "الغاء لصم"]:
         unmute_user(a)  # استدعاء دالة إلغاء كتم المستخدم
-    elif a.text == "رتبته":  # إذا كتب المستخدم "رتبته"
-        member_id = a.from_user.id  # الحصول على معرّف المستخدم
-        response = read_role(member_id)  # استدعاء دالة قراءة رتبة المستخدم
-        bot.reply_to(a, response)  # إرجاع الرتبة إلى المستخدم
+    elif a.text == "رتبته":
+    	read_role(a)
