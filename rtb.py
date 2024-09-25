@@ -31,6 +31,8 @@ def load_roles():
                             members[member_id].append(role_name)
                     except ValueError:
                         print(f"خطأ في قراءة السطر: {line}")  # تسجيل الخطأ في قراءة السطر
+            else:
+                print("الملف فارغ، سيتم تعيين رتبة افتراضية 'مواطن' لجميع المستخدمين.")
 
     # تعيين رتبة رئيس الجمهورية عند بداية تشغيل البوت
     if str(MAHIIB_ID) not in members:
@@ -77,6 +79,10 @@ def read_role(a):
     
     member_id = str(a.reply_to_message.from_user.id)  # الحصول على معرف المستخدم
     user_roles = members.get(member_id, ['مواطن'])  # استرجاع قائمة الرتب
+
+    # التأكد من أن المستخدم لديه رتب
+    if not user_roles:
+        user_roles = ['مواطن']  # تعيين الرتبة الافتراضية إذا لم يكن لدى المستخدم أي رتب
 
     # البحث عن الرتبة الأعلى بناءً على القيم المعرفة في قاموس `roles`
     highest_role = max(user_roles, key=lambda role: roles.get(role, 0))
