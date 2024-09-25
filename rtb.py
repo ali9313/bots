@@ -36,7 +36,9 @@ def save_roles():
 # دالة لمنح رتبة لأحد الأعضاء من خلال الرسالة
 def promote_user(a):
     member_id = a.reply_to_message.from_user.id if a.reply_to_message else a.from_user.id  # الحصول على معرّف المستخدم
-    role_name = a.text  # اعتبار نص الرسالة هو الرتبة المطلوب منحها
+    
+    # استخراج الرتبة من نص الرسالة (إزالة الكلمة الأولى "رفع")
+    role_name = ' '.join(a.text.split()[1:])  # أخذ كل الكلمات بعد الكلمة الأولى
 
     if role_name == 'رئيس الجمهورية':
         return "رئيس الجمهورية واحد ميصير ثنين"
