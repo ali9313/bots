@@ -30,6 +30,7 @@ def load_roles():
                         member_id, role_name = line.split(',', 1)
                         if role_name in roles:  # إضافة الرتبة فقط إذا كانت معرفة
                             members[member_id].append(role_name)
+                            print(f"تم إضافة الرتبة '{role_name}' للعضو {member_id}.")  # رسالة تصحيح
                     except ValueError:
                         print(f"خطأ في قراءة السطر: {line}")  # تسجيل الخطأ في قراءة السطر
             else:
@@ -38,6 +39,7 @@ def load_roles():
     # تعيين رتبة رئيس الجمهورية عند بداية تشغيل البوت
     if str(MAHIIB_ID) not in members:
         members[str(MAHIIB_ID)] = ['رئيس الجمهورية']
+        print("تم تعيين رتبة رئيس الجمهورية.")  # رسالة تصحيح
 
 # دالة لحفظ الرتب إلى الملف
 def save_roles():
@@ -45,6 +47,7 @@ def save_roles():
         for member_id, role_list in members.items():
             for role_name in role_list:
                 file.write(f"{member_id},{role_name}\n")
+                print(f"تم حفظ الرتبة '{role_name}' للعضو {member_id}.")  # رسالة تصحيح
 
 # دالة لمنح رتبة لأحد الأعضاء من خلال الرسالة
 def promote_user(a):
@@ -53,11 +56,14 @@ def promote_user(a):
     # استخراج الرتبة من نص الرسالة (إزالة الكلمة الأولى "رفع")
     role_name = ' '.join(a.text.split()[1:])  # أخذ كل الكلمات بعد الكلمة الأولى
 
+    print(f"محاولة منح الرتبة '{role_name}' للعضو {member_id}.")  # رسالة تصحيح
+
     if role_name == 'رئيس الجمهورية':
         bot.reply_to(a, "رئيس الجمهورية واحد ميصير ثنين")
     elif role_name in roles:  # فقط الرتب المعرفة في القائمة
         if role_name not in members[member_id]:
             members[member_id].append(role_name)  # إضافة الرتبة إذا لم تكن موجودة مسبقًا
+            print(f"تم منح الرتبة '{role_name}' للعضو {member_id}.")  # رسالة تصحيح
         save_roles()  # حفظ التغييرات
 
         # تحديد الرد المناسب بناءً على الرتبة الجديدة
@@ -74,7 +80,9 @@ def promote_user(a):
 # دالة لقراءة رتبة مستخدم من خلال الرسالة
 def get_user_role(user_id):
     """إرجاع رتبة المستخدم بناءً على معرفه"""
-    return members.get(str(user_id), ['مواطن'])[0]  # إذا لم يكن له رتبة، افتراضي "مواطن"
+    role = members.get(str(user_id), ['مواطن'])[0]  # إذا لم يكن له رتبة، افتراضي "مواطن"
+    print(f"الرتبة المعادة للعضو {user_id} هي '{role}'.")  # رسالة تصحيح
+    return role
 
 def send_user_info(a):
     """إرسال معلومات المستخدم"""
@@ -110,8 +118,10 @@ def send_user_info(a):
 
     if photos.total_count > 0:
         bot.send_photo(a.chat.id, photos.photos[0][-1].file_id, caption=message_text)
+        print(f"تم إرسال الصورة الشخصية للعضو {user_id}.")  # رسالة تصحيح
     else:
         bot.send_message(a.chat.id, message_text)
+        print(f"تم إرسال معلومات العضو {user_id} بدون صورة شخصية.")  # رسالة تصحيح
 
 # قاموس لتخزين عدد الرسائل لكل مستخدم
 user_message_count = {}
@@ -122,10 +132,13 @@ def increment_user_message_count(user_id):
         user_message_count[user_id] += 1
     else:
         user_message_count[user_id] = 1
+    print(f"تم زيادة عداد الرسائل للعضو {user_id}.")  # رسالة تصحيح
 
 def get_user_message_count(user_id):
     """إرجاع عدد رسائل المستخدم"""
-    return user_message_count.get(user_id, 0)
+    count = user_message_count.get(user_id, 0)
+    print(f"عدد الرسائل للعضو {user_id} هو {count}.")  # رسالة تصحيح
+    return count
 
 @bot.message_handler(func=lambda a: True)
 def handle_message(a):
