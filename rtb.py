@@ -62,7 +62,7 @@ def promote_user(a):
         else:
             bot.reply_to(a, f"تم منح الرتبة '{role_name}' للعضو {a.reply_to_message.from_user.first_name}.")
     else:
-        bot.reply_to(a, f"خطأ: الرتبة '{role_name}' غير موجودة في القائمة.")
+        bot.reply_to(a, f"تم رفع {a.reply_to_message.from_user.first_name} '{role_name}'الكروب بنجاح")
 
 # دالة لتنزيل رتبة موظف حكومي
 def demote_user(a):
