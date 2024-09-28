@@ -162,6 +162,7 @@ def programmer_ali(user_id):
 # اختبار الوظائف على الرسائل
 @bot.message_handler(commands=['check_dev'])
 def check_dev(a):
+    print(f"Received command /check_dev from user: {a.from_user.id}")
     if dev(a.from_user.id):
         bot.reply_to(a, "أنت مطور!")
     else:
@@ -169,6 +170,7 @@ def check_dev(a):
 
 @bot.message_handler(commands=['check_owner'])
 def check_owner(a):
+    print(f"Received command /check_owner from user: {a.from_user.id}, chat: {a.chat.id}")
     if owner(a.from_user.id, str(a.chat.id)):
         bot.reply_to(a, "أنت مالك!")
     else:
@@ -176,6 +178,7 @@ def check_owner(a):
 
 @bot.message_handler(commands=['check_basic_creator'])
 def check_basic_creator(a):
+    print(f"Received command /check_basic_creator from user: {a.from_user.id}")
     if is_basic_creator(a.from_user.id):
         bot.reply_to(a, "أنت منشئ أساسي!")
     else:
@@ -183,6 +186,7 @@ def check_basic_creator(a):
 
 @bot.message_handler(commands=['check_admin'])
 def check_admin(a):
+    print(f"Received command /check_admin from user: {a.from_user.id}, chat: {a.chat.id}")
     if admin(a.from_user.id, str(a.chat.id)):
         bot.reply_to(a, "أنت أدمن!")
     else:
@@ -190,9 +194,11 @@ def check_admin(a):
 
 @bot.message_handler(commands=['check_owner_id'])
 def check_owner_id(a):
+    print(f"Received command /check_owner_id from user: {a.from_user.id}")
     if owner_id_ali(a.from_user.id):
         bot.reply_to(a, "أنت مالك البوت!")
     else:
         bot.reply_to(a, "أنت لست مالك البوت.")
 
-bot.polling()
+print("Bot is starting...")  # لإعلامنا ببدء تشغيل البوت
+bot.polling(none_stop=True)
