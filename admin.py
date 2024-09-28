@@ -8,11 +8,21 @@ def load_ali_admin():
         with open('backend/ali_admin.json', 'r') as file:
             return json.load(file)
     except FileNotFoundError:
+        print("الملف 'ali_admin.json' غير موجود.")
+        return {'admin': {}}
+    except json.JSONDecodeError:
+        print("خطأ في قراءة بيانات JSON من 'ali_admin.json'.")
+        return {'admin': {}}
+    except Exception as e:
+        print(f"حدث خطأ غير متوقع أثناء تحميل البيانات: {e}")
         return {'admin': {}}
 
 def dump_ali_admin(ali_admin):
-    with open('backend/ali_admin.json', 'w') as file:
-        json.dump(ali_admin, file)
+    try:
+        with open('backend/ali_admin.json', 'w') as file:
+            json.dump(ali_admin, file)
+    except Exception as e:
+        print(f"حدث خطأ أثناء تفريغ البيانات إلى 'ali_admin.json': {e}")
 
 @bot.message_handler(commands=['رفع ادمن'])
 def promote_admin(a):
@@ -24,7 +34,8 @@ def promote_admin(a):
         try:
             user = bot.get_chat(target)
             user_id = str(user.id)
-        except:
+        except Exception as e:
+            print(f"خطأ في استدعاء المستخدم: {e}")
             bot.reply_to(a, "لا يمكن العثور على المستخدم")
             return
     else:
@@ -58,7 +69,8 @@ def demote_admin(a):
         try:
             user = bot.get_chat(target)
             user_id = str(user.id)
-        except:
+        except Exception as e:
+            print(f"خطأ في استدعاء المستخدم: {e}")
             bot.reply_to(a, "لا يمكن العثور على المستخدم")
             return
     else:
@@ -117,7 +129,8 @@ def get_admins(a):
             try:
                 user = bot.get_chat_member(chat_id, admin_id).user
                 admin_names.append(f"[{user.first_name}](tg://user?id={user.id})")
-            except:
+            except Exception as e:
+                print(f"خطأ في استدعاء معلومات المشرف: {e}")
                 continue
 
         if admin_names:
