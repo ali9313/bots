@@ -6,7 +6,8 @@ import os
 roles = {
     'مواطن': 1,
     'موظف حكومي': 2,
-    'رئيس الجمهورية': 3
+    'وزير': 3,  # إضافة رتبة وزير
+    'رئيس الجمهورية': 4
 }
 MAHIIB_ID = 232499688  
 roles_file = "backend/user_roles.txt"
@@ -59,6 +60,8 @@ def promote_user(a):
             bot.reply_to(a, f"هذا اصلا مواطن {a.reply_to_message.from_user.first_name}.")
         elif role_name == 'موظف حكومي':
             bot.reply_to(a, f"حلو صار موظف {a.reply_to_message.from_user.first_name}.")
+        elif role_name == 'وزير':
+            bot.reply_to(a, f"الحلو {a.reply_to_message.from_user.first_name} صار وزير الكروب.")
         else:
             bot.reply_to(a, f"تم منح الرتبة '{role_name}' للعضو {a.reply_to_message.from_user.first_name}.")
     else:
