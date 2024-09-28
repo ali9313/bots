@@ -1,6 +1,8 @@
 from config import *
 import json
 from telebot import TeleBot, types
+
+# تحميل وتفريغ بيانات المميزين
 def load_ali_distinct():
     try:
         with open('backend/ali_distinct.json', 'r') as file:
@@ -12,36 +14,24 @@ def dump_ali_distinct(ali_distinct):
     with open('backend/ali_distinct.json', 'w') as file:
         json.dump(ali_distinct, file)
 
-def ALI(bot, a):
-    # تحقق من أن المستخدم هو المطور الأساسي
-    return False
-
-def OWNER_ID(bot, a):
-    # تحقق من أن المستخدم هو المالك
-    return False
-
-def basic_dev(bot, a):
-    # تحقق مما إذا كان المستخدم مطوراً ثانوياً
-    return False
-
-def is_basic_creator(bot, a):
-    # تحقق مما إذا كان المستخدم هو المنشئ الأساسي
-    return False
-
-def owner(bot, a):
-    # تحقق مما إذا كان المستخدم هو المالك
-    return False
-
-def creator(bot, a):
-    # تحقق مما إذا كان المستخدم هو المنشئ
-    return False
-
-def admin(bot, a):
-    # تحقق مما إذا كان المستخدم هو إداري
-    return False
+# دالة للتحقق من صلاحيات المستخدم
+def is_authorized_user(user_id, a):
+    return (
+        ALI(bot, a) or 
+        basic_dev(bot, a) or 
+        OWNER_ID(bot, a) or 
+        admin(bot, a) or 
+        is_basic_creator(bot, a) or 
+        owner(bot, a) or 
+        creator(bot, a)
+    )
 
 @bot.message_handler(commands=['رفع مميز'])
 def promote_distinct(a):
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
+        return
+
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
@@ -59,12 +49,6 @@ def promote_distinct(a):
 
     chat_id = str(a.chat.id)
     ali_distinct = load_ali_distinct()
-
-    if (not ALI(bot, a) and not basic_dev(bot, a) and not OWNER_ID(bot, a) and 
-        not admin(bot, a) and not is_basic_creator(bot, a) and 
-        not owner(bot, a) and not creator(bot, a)):
-        bot.reply_to(a, "◍ يجب ان تكون ادمن على الاقل لكى تستطيع رفع مميز\n√")
-        return
 
     if chat_id not in ali_distinct['admin']:
         ali_distinct['admin'][chat_id] = {'admin_id': []}
@@ -78,6 +62,10 @@ def promote_distinct(a):
 
 @bot.message_handler(commands=['تنزيل مميز'])
 def demote_distinct(a):
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
+        return
+
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
@@ -95,12 +83,6 @@ def demote_distinct(a):
 
     chat_id = str(a.chat.id)
     ali_distinct = load_ali_distinct()
-
-    if (not ALI(bot, a) and not basic_dev(bot, a) and not OWNER_ID(bot, a) and 
-        not admin(bot, a) and not is_basic_creator(bot, a) and 
-        not owner(bot, a) and not creator(bot, a)):
-        bot.reply_to(a, "◍ يجب ان تكون ادمن على الاقل لكى تستطيع تنزيل مميز\n√")
-        return
 
     if chat_id not in ali_distinct['admin']:
         bot.reply_to(a, "لا يوجد مميزين حتى الأن")
@@ -115,14 +97,12 @@ def demote_distinct(a):
 
 @bot.message_handler(commands=['مسح المميزين'])
 def clear_distinct(a):
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
+        return
+
     chat_id = str(a.chat.id)
     ali_distinct = load_ali_distinct()
-
-    if (not ALI(bot, a) and not basic_dev(bot, a) and not OWNER_ID(bot, a) and 
-        not admin(bot, a) and not is_basic_creator(bot, a) and 
-        not owner(bot, a) and not creator(bot, a)):
-        bot.reply_to(a, "◍ يجب ان تكون ادمن على الاقل لكى تستطيع استخدام الأمر\n√")
-        return
 
     if chat_id in ali_distinct['admin']:
         ali_distinct['admin'][chat_id]['admin_id'] = []
@@ -133,6 +113,10 @@ def clear_distinct(a):
 
 @bot.message_handler(commands=['المميزين'])
 def get_distinct(a):
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
+        return
+
     chat_id = str(a.chat.id)
     ali_distinct = load_ali_distinct()
 

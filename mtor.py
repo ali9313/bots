@@ -1,6 +1,7 @@
 from config import *
 import json
 from telebot import TeleBot, types
+
 def load_ali_devs():
     try:
         with open('backend/ali_devs.json', 'r') as file:
@@ -12,17 +13,28 @@ def dump_ali_devs(ali_devs):
     with open('backend/ali_devs.json', 'w') as file:
         json.dump(ali_devs, file)
 
+def load_ali_owners():
+    try:
+        with open('backend/ali_owners.json', 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {'owners': []}
+
+def is_owner(user_id):
+    owners = load_ali_owners()
+    return str(user_id) in owners['owners']
+
 def ALI(bot, a):
     # تحقق من أن المستخدم هو المطور الأساسي
-    return False
+    return False  # يمكن تعديلها لاحقاً حسب الحاجة
 
 def OWNER_ID(bot, a):
-    # تحقق من أن المستخدم هو المالك
-    return False
+    # تحقق مما إذا كان المستخدم هو المالك
+    return is_owner(a.from_user.id)
 
 def basic_dev(bot, a):
     # تحقق مما إذا كان المستخدم مطوراً ثانوياً
-    return False
+    return False  # يمكن تعديلها لاحقاً حسب الحاجة
 
 @bot.message_handler(commands=['رفع مطور'])
 def promote_devs(a):

@@ -5,17 +5,17 @@ DEVELOPERS = [232499688]
 OWNER_BOT = 232499688
 
 # دوال تحميل وتفريغ الملفات
-def load_user_role():
+def load_ali_basic_devs():
     try:
-        with open('backend/user_role.json', 'r') as file:
-            user_role = json.load(file)
+        with open('backend/ali_basic_devs.json', 'r') as file:
+            ali_basic_devs = json.load(file)
     except FileNotFoundError:
-        user_role = {'basic_devs': {}}
-    return user_role
+        ali_basic_devs = {'basic_devs': {}}
+    return ali_basic_devs
 
-def dump_user_role(user_role):
-    with open('backend/user_role.json', 'w') as file:
-        json.dump(user_role, file)
+def dump_ali_basic_devs(ali_basic_devs):
+    with open('backend/ali_basic_devs.json', 'w') as file:
+        json.dump(ali_basic_devs, file)
 
 def load_ali_devs():
     try:
@@ -78,42 +78,36 @@ def dump_ali_admin(ali_admin):
         json.dump(ali_admin, file)
 
 # دوال للتحقق من الرتب باستخدام المتغير a بدلاً من message
-def basic_dev(a):
-    user_role = load_user_role()
-    user_id = str(a)  # استخدام المتغير a
-    return user_id in user_role['basic_devs']
+def basic_dev(user_id):
+    ali_basic_devs = load_ali_basic_devs()
+    return user_id in ali_basic_devs['basic_devs']
 
-def dev(a):
+def dev(user_id):
     ali_devs = load_ali_devs()
-    user_id = str(a)  # استخدام المتغير a
     return user_id in ali_devs['devs']
 
-def is_basic_creator(a):
+def is_basic_creator(user_id):
     ali_basic_creators = load_ali_basic_creators()
-    user_id = str(a)  # استخدام المتغير a
     return user_id in ali_basic_creators['basic_creators']
 
-def owner(a, chat_id):
+def owner(user_id, chat_id):
     ali_owners = load_ali_owners()
-    user_id = str(a)  # استخدام المتغير a
     return chat_id in ali_owners['owners'] and user_id in ali_owners['owners'][chat_id]['owner_id']
 
-def creator(a, chat_id):
+def creator(user_id, chat_id):
     ali_creators = load_ali_creators()
-    user_id = str(a)  # استخدام المتغير a
     return chat_id in ali_creators['creators'] and user_id in ali_creators['creators'][chat_id]['creator_id']
 
-def admin(a, chat_id):
+def admin(user_id, chat_id):
     ali_admin = load_ali_admin()
-    user_id = str(a)  # استخدام المتغير a
     return chat_id in ali_admin['admin'] and user_id in ali_admin['admin'][chat_id]['admin_id']
 
 # فحص ما إذا كان المستخدم مطورًا أو مالكًا باستخدام المتغير a
-def owner_id_tom(a):
-    return a == OWNER_BOT
+def owner_id_ali(user_id):
+    return user_id == OWNER_BOT
 
-def programmer_tom(a):
-    return a in DEVELOPERS
+def programmer_ali(user_id):
+    return user_id in DEVELOPERS
 
 # اختبار الوظائف على الرسائل
 @bot.message_handler(commands=['check_dev'])
@@ -146,7 +140,7 @@ def check_admin(a):
 
 @bot.message_handler(commands=['check_owner_id'])
 def check_owner_id(a):
-    if owner_id_tom(a.from_user.id):
+    if owner_id_ali(a.from_user.id):
         bot.reply_to(a, "أنت مالك البوت!")
     else:
         bot.reply_to(a, "أنت لست مالك البوت.")

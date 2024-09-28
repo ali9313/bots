@@ -14,8 +14,23 @@ def dump_ali_owners(ali_owners):
     with open('backend/ali_owners.json', 'w') as file:
         json.dump(ali_owners, file)
 
+# دالة للتحقق من صلاحيات المستخدم
+def is_authorized_user(user_id, a):
+    return (
+        ALI(bot, a) or 
+        basic_dev(bot, a) or 
+        OWNER_ID(bot, a) or 
+        dev(bot, a) or 
+        is_basic_creator(bot, a)
+    )
+
+# معالج لرفع المالك
 @bot.message_handler(commands=['رفع مالك'])
 def promote_owner(a):
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
+        return
+
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
@@ -33,11 +48,6 @@ def promote_owner(a):
 
     chat_id = str(a.chat.id)
     ali_owners = load_ali_owners()
-
-    if (not ALI(bot, a) and not basic_dev(bot, a) and not OWNER_ID(bot, a) and 
-        not dev(bot, a) and not is_basic_creator(bot, a)):
-        bot.reply_to(a, "◍ انت لست المنشئ الاساسي\n√")
-        return
 
     if chat_id not in ali_owners['owners']:
         ali_owners['owners'][chat_id] = {'owner_id': []}
@@ -49,8 +59,13 @@ def promote_owner(a):
         dump_ali_owners(ali_owners)
         bot.reply_to(a, "◍ تم رفع المستخدم ليصبح مالك\n√")
 
+# معالج لتنزيل المالك
 @bot.message_handler(commands=['تنزيل مالك'])
 def demote_owner(a):
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
+        return
+
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
@@ -68,11 +83,6 @@ def demote_owner(a):
 
     chat_id = str(a.chat.id)
     ali_owners = load_ali_owners()
-
-    if (not ALI(bot, a) and not basic_dev(bot, a) and not OWNER_ID(bot, a) and 
-        not dev(bot, a) and not is_basic_creator(bot, a)):
-        bot.reply_to(a, "◍ انت لست المنشئ الاساسي\n√")
-        return
 
     if chat_id not in ali_owners['owners']:
         bot.reply_to(a, "لا يوجد مالكين في هذه الدردشة حتى الأن")
@@ -85,15 +95,15 @@ def demote_owner(a):
         dump_ali_owners(ali_owners)
         bot.reply_to(a, "◍ تم تنزيل المستخدم من المالكين بنجاح\n√")
 
+# معالج لمسح المالكين
 @bot.message_handler(commands=['مسح المالكين'])
 def clear_owner(a):
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
+        return
+
     chat_id = str(a.chat.id)
     ali_owners = load_ali_owners()
-
-    if (not ALI(bot, a) and not basic_dev(bot, a) and not OWNER_ID(bot, a) and 
-        not dev(bot, a) and not is_basic_creator(bot, a)):
-        bot.reply_to(a, "◍ انت لست المنشئ الاساسي\n√")
-        return
 
     if chat_id in ali_owners['owners']:
         ali_owners['owners'][chat_id]['owner_id'] = []
@@ -102,15 +112,15 @@ def clear_owner(a):
     else:
         bot.reply_to(a, "لا يوجد مالكين ليتم مسحهم")
 
+# معالج للحصول على قائمة المالكين
 @bot.message_handler(commands=['المالكين'])
 def get_owner(a):
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
+        return
+
     chat_id = str(a.chat.id)
     ali_owners = load_ali_owners()
-
-    if (not ALI(bot, a) and not basic_dev(bot, a) and not OWNER_ID(bot, a) and 
-        not dev(bot, a) and not is_basic_creator(bot, a)):
-        bot.reply_to(a, "◍ يجب ان تكون مالك على الاقل لستخدام الامر\n√")
-        return
 
     if chat_id not in ali_owners['owners']:
         bot.reply_to(a, "لا يوجد مالكين حتى الأن")

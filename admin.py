@@ -25,28 +25,28 @@ def promote_admin(a):
             user = bot.get_chat(target)
             user_id = str(user.id)
         except:
-            a.reply_text("لا يمكن العثور على المستخدم")
+            bot.reply_to(a, "لا يمكن العثور على المستخدم")
             return
     else:
-        a.reply_text("يرجى الرد على رسالة المستخدم أو إدخال معرفه.")
+        bot.reply_to(a, "يرجى الرد على رسالة المستخدم أو إدخال معرفه.")
         return
 
     chat_id = str(a.chat.id)
     ali_admin = load_ali_admin()
 
-    if (not Ali(bot, a) and not basic_dev(bot, a) and not OWNER_ID(bot, a) and not dev(bot, a) and not is_basic_creator(bot, a) and not owner(bot, a) and not creator(bot, a)):
-        a.reply_text("◍ يجب ان تكون منشئ على الاقل لكى تستطيع رفع ادمن\n√")
+    if not is_authorized_user(a.from_user.id, a):  # استخدام الدالة من ملف main
+        bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لكى تستطيع رفع ادمن\n√")
         return
 
     if chat_id not in ali_admin['admin']:
         ali_admin['admin'][chat_id] = {'admin_id': []}
 
     if user_id in ali_admin['admin'][chat_id]['admin_id']:
-        a.reply_text("◍ هذا المستخدم ادمن بالفعل\n√")
+        bot.reply_to(a, "◍ هذا المستخدم ادمن بالفعل\n√")
     else:
         ali_admin['admin'][chat_id]['admin_id'].append(user_id)
         dump_ali_admin(ali_admin)
-        a.reply_text("◍ تم رفع المستخدم ليصبح ادمن\n√")
+        bot.reply_to(a, "◍ تم رفع المستخدم ليصبح ادمن\n√")
 
 @bot.message_handler(commands=['تنزيل ادمن'])
 def demote_admin(a):
@@ -59,45 +59,45 @@ def demote_admin(a):
             user = bot.get_chat(target)
             user_id = str(user.id)
         except:
-            a.reply_text("لا يمكن العثور على المستخدم")
+            bot.reply_to(a, "لا يمكن العثور على المستخدم")
             return
     else:
-        a.reply_text("يرجى الرد على رسالة المستخدم أو إدخال معرفه.")
+        bot.reply_to(a, "يرجى الرد على رسالة المستخدم أو إدخال معرفه.")
         return
 
     chat_id = str(a.chat.id)
     ali_admin = load_ali_admin()
 
-    if (not Ali(bot, a) and not basic_dev(bot, a) and not OWNER_ID(bot, a) and not dev(bot, a) and not is_basic_creator(bot, a) and not owner(bot, a) and not creator(bot, a)):
-        a.reply_text("◍ يجب ان تكون منشئ على الاقل لكى تستطيع تنزيل ادمن\n√")
+    if not is_authorized_user(a.from_user.id, a):  # استخدام الدالة من ملف main
+        bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لكى تستطيع تنزيل ادمن\n√")
         return
 
     if chat_id not in ali_admin['admin']:
-        a.reply_text("لا يوجد مشرفين حتى الأن")
+        bot.reply_to(a, "لا يوجد مشرفين حتى الأن")
         return
 
     if user_id not in ali_admin['admin'][chat_id]['admin_id']:
-        a.reply_text("◍ هذا المستخدم ليس ادمن لتنزيله\n√")
+        bot.reply_to(a, "◍ هذا المستخدم ليس ادمن لتنزيله\n√")
     else:
         ali_admin['admin'][chat_id]['admin_id'].remove(user_id)
         dump_ali_admin(ali_admin)
-        a.reply_text("◍ تم تنزيل المستخدم من الادمن بنجاح\n√")
+        bot.reply_to(a, "◍ تم تنزيل المستخدم من الادمن بنجاح\n√")
 
 @bot.message_handler(commands=['مسح الادمنيه'])
 def clear_admins(a):
     chat_id = str(a.chat.id)
     ali_admin = load_ali_admin()
 
-    if (not Ali(bot, a) and not basic_dev(bot, a) and not OWNER_ID(bot, a) and not dev(bot, a) and not is_basic_creator(bot, a) and not owner(bot, a) and not creator(bot, a)):
-        a.reply_text("◍ يجب ان تكون منشئ على الاقل لستخدام الامر\n√")
+    if not is_authorized_user(a.from_user.id, a):  # استخدام الدالة من ملف main
+        bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لاستخدام الامر\n√")
         return
 
     if chat_id in ali_admin['admin']:
         ali_admin['admin'][chat_id]['admin_id'] = []
         dump_ali_admin(ali_admin)
-        a.reply_text("◍ تم مسح الادمنيه بنجاح\n√")
+        bot.reply_to(a, "◍ تم مسح الادمنيه بنجاح\n√")
     else:
-        a.reply_text("لا يوجد ادمنيه ليتم مسحهم")
+        bot.reply_to(a, "لا يوجد ادمنيه ليتم مسحهم")
 
 @bot.message_handler(commands=['الادمنيه'])
 def get_admins(a):
@@ -105,12 +105,12 @@ def get_admins(a):
     ali_admin = load_ali_admin()
 
     if chat_id not in ali_admin['admin']:
-        a.reply_text("لا يوجد مشرفين في هذه الدردشة")
+        bot.reply_to(a, "لا يوجد مشرفين في هذه الدردشة")
         return
 
     admins = ali_admin['admin'][chat_id]['admin_id']
     if not admins:
-        a.reply_text("لا يوجد مشرفين في هذه الدردشة")
+        bot.reply_to(a, "لا يوجد مشرفين في هذه الدردشة")
     else:
         admin_names = []
         for admin_id in admins:
@@ -122,6 +122,6 @@ def get_admins(a):
 
         if admin_names:
             admin_list = "\n".join(admin_names)
-            a.reply_text(f"◍ قائمة المشرفين:\n\n{admin_list}", parse_mode='Markdown')
+            bot.reply_to(a, f"◍ قائمة المشرفين:\n\n{admin_list}", parse_mode='Markdown')
         else:
-            a.reply_text("تعذر العثور على معلومات المشرفين")
+            bot.reply_to(a, "تعذر العثور على معلومات المشرفين")
