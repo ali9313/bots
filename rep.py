@@ -1,11 +1,8 @@
 from config import *  # تأكد من أن mute_user و unmute_user مستوردتان من الملف المناسب
 from mut import *
-from rtb import *
 from rdod import *
 def reply_func(a):
-    if a.text.startswith("رفع "):
-        promote_user(a)  
-    elif a.text == "اهلا":
+    if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
     elif a.text == "باي":
         bot.reply_to(a, "الله ياخذك")
@@ -30,15 +27,7 @@ def reply_func(a):
     elif a.text in ["كتم", "لصم"]:
         mute_user(a)  # استدعاء دالة كتم المستخدم
     elif a.text in ["الغاء كتم", "الغاء لصم"]:
-        unmute_user(a)  # استدعاء دالة إلغاء كتم المستخدم
-    elif a.text == "رتبته":
-        check_user_role(a)
-    elif a.text == "رتبتي":
-    	check_sender_role(a)
-    elif a.text in ["ايدي", "ا"]:
-    	send_user_info(a)
-    elif a.text == "تنزيل":
-    	demote_user(a)
+        unmute_user(a) 
     elif a.text == "اضف رد":
     	start_adding_response(a)
     elif a.text == "حذف رد":
