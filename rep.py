@@ -36,7 +36,6 @@ def reply_func(a):
         elif a.text == "الردود":
             show_responses(a)
 
-    except Exception as e:
-        print(f"حدث خطأ: {e}")
+   
 
 # تأكد من إضافة الدالة is_authorized_user إلى الكود كما في الكود السابق.
