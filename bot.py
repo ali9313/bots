@@ -9,8 +9,13 @@ from mnshaas import *
 from mtor import *
 from tfael import *
 from thanoe import *
+
 # معالج الرسائل العامة
 @bot.message_handler(func=lambda a: True)
 def echo_message(a):
-            reply_func(a)  
+    try:
+        reply_func(a)  
+    except Exception as e:
+        print(f"حدث خطأ: {e}")
+
 bot.polling(none_stop=True)
