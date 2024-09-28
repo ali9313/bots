@@ -1,7 +1,6 @@
-from config import *  # إذا كانت تحتوي على إعدادات البوت مثل التوكن
-from rep import *  # إذا كانت تحتوي على الدالة reply_func
-
-# معالج الرسائل العامة
+from config import *  
+from rep import * 
+from ali_json import *
 @bot.message_handler(func=lambda a: True)
 def echo_message(a):
     try:
