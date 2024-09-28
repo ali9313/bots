@@ -3,14 +3,6 @@ from mut import *
 from rdod import *
 
 def reply_func(a):
-    try:
-        user_id = a.from_user.id
-
-        # التحقق من صلاحيات المستخدم
-        if not is_authorized_user(user_id, a):
-            bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
-            return
-
         if a.text == "اهلا":
             bot.reply_to(a, "مرحبا")
         elif a.text == "باي":
