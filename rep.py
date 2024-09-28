@@ -1,7 +1,15 @@
 from config import *  # تأكد من أن mute_user و unmute_user مستوردتان من الملف المناسب
 from mut import *
 from rdod import *
+
 def reply_func(a):
+    user_id = a.from_user.id
+
+    # التحقق من صلاحيات المستخدم
+    if not is_authorized_user(user_id, a):
+        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
+        return
+
     if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
     elif a.text == "باي":
@@ -29,8 +37,10 @@ def reply_func(a):
     elif a.text in ["الغاء كتم", "الغاء لصم"]:
         unmute_user(a) 
     elif a.text == "اضف رد":
-    	start_adding_response(a)
+        start_adding_response(a)
     elif a.text == "حذف رد":
-    	start_deleting_response(a)
+        start_deleting_response(a)
     elif a.text == "الردود":
-    	show_responses(a)
+        show_responses(a)
+
+# تأكد من إضافة الدالة is_authorized_user إلى الكود كما في الكود السابق.
