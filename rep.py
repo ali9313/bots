@@ -35,5 +35,5 @@ def reply_func(a):
         start_deleting_response(a)
     elif a.text == "الردود":
         show_responses(a)
-    else:
+    elif a.text=="تفعيل":
         update_owners(a)  
