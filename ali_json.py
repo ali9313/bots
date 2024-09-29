@@ -109,9 +109,7 @@ def load_ali_creators():
         logging.error("الملف 'ali_creators.txt' غير موجود.")
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تحميل 'ali_creators.txt': {e}")
-    return ali_creators
-
-def dump_ali_creators(ali_creators):
+    return ali_creatorsdef dump_ali_creators(ali_creators):
     try:
         with open('backend/ali_creators.txt', 'w') as file:
             for chat_id, data in ali_creators.items():
@@ -174,7 +172,7 @@ def creator(user_id, chat_id):
 def admin(user_id, chat_id):
     ali_admin = load_ali_admin()
     return chat_id in ali_admin and str(user_id) in ali_admin[chat_id]['admin_id']
-    
+
 def owner_id_ali(user_id):
     return user_id == OWNER_BOT
 
@@ -188,7 +186,7 @@ def check_dev(a):
         bot.reply_to(a, "أنت رئيس الجمهورية")
     else:
         bot.reply_to(a, "أنت لست رئيس الجمهورية")
-        
+
 def check_owner(a):
     if owner(a.from_user.id, str(a.chat.id)):
         bot.reply_to(a, "أنت مالك!")
