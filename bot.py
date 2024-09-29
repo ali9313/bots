@@ -11,4 +11,4 @@ def echo_message(a):
         print(f"حدث خطأ: {e}")
         traceback.print_exc()  # لطباعة التفاصيل الكاملة للخطأ
 
-bot.polling(none_stop=True)
+bot.polling(none_stop=True, timeout=60)
