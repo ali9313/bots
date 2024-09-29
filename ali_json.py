@@ -110,7 +110,7 @@ def load_ali_creators():
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تحميل 'ali_creators.txt': {e}")
     return ali_creators
-    def dump_ali_creators(ali_creators):
+def dump_ali_creators(ali_creators):
     try:
         with open('backend/ali_creators.txt', 'w') as file:
             for chat_id, data in ali_creators.items():
