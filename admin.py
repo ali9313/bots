@@ -101,7 +101,7 @@ def promote_admin(a):
             )
             user_info = bot.get_chat(user_id)
             user_name = user_info.first_name
-            bot.reply_to(a, f"◍ تم رفع  [{user_name}](tg://user?id={user_id}) كأدمن بنجاح.\n")
+            bot.reply_to(a, f"◍ تم رفع  {user_name} كأدمن بنجاح.\n")
             logging.info(f"المستخدم {user_id} تم رفعه كأدمن في المحادثة {chat_id}.")
         except Exception as e:
             logging.error(f"حدث خطأ أثناء رفع المستخدم {user_id} كأدمن: {e}")
