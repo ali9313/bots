@@ -1,12 +1,24 @@
 from config import *
-def load_ali_owners():
-    with open('backend/ali_owners.txt', 'r') as file:
-        return eval(file.read()) if file.read() else {"owners": {}}
 
+# تحميل المالكين من الملف النصي
+def load_ali_owners():
+    owners_dict = {"owners": {}}
+    try:
+        with open('backend/ali_owners.txt', 'r') as file:
+            for line in file:
+                chat_id, owners = line.strip().split(':')
+                owners_dict['owners'][chat_id] = {'owner_id': owners.split(',') if owners else []}
+    except FileNotFoundError:
+        # في حال لم يكن الملف موجودًا، نعيد قاموس فارغ
+        pass
+    return owners_dict
+
+# حفظ المالكين في الملف النصي
 def dump_ali_owners(data):
     with open('backend/ali_owners.txt', 'w') as file:
-        file.write(str(data))
-
+        for chat_id, info in data['owners'].items():
+            owners = ','.join(info['owner_id'])
+            file.write(f"{chat_id}:{owners}\n")
 
 
 def promote_owner(a):
@@ -15,10 +27,10 @@ def promote_owner(a):
         user_id = str(target)
     elif len(a.text.split()) > 1:
         target = a.text.split()[1].strip("@")
-        user = bot.get_chat_member(a.chat.id, target)
-        if user:
+        try:
+            user = bot.get_chat_member(a.chat.id, target)
             user_id = str(user.user.id)
-        else:
+        except:
             bot.reply_to(a, "لا يمكن العثور على المستخدم")
             return
     else:
@@ -39,17 +51,16 @@ def promote_owner(a):
         bot.reply_to(a, "◍ تم رفع المستخدم ليصبح مالك\n√")
 
 
-
 def demote_owner(a):
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
     elif len(a.text.split()) > 1:
         target = a.text.split()[1].strip("@")
-        user = bot.get_chat_member(a.chat.id, target)
-        if user:
+        try:
+            user = bot.get_chat_member(a.chat.id, target)
             user_id = str(user.user.id)
-        else:
+        except:
             bot.reply_to(a, "لا يمكن العثور على المستخدم")
             return
     else:
@@ -97,9 +108,11 @@ def get_owner(a):
     else:
         owner_names = []
         for owner_id in owners:
-            user = bot.get_chat_member(a.chat.id, int(owner_id))
-            if user:
+            try:
+                user = bot.get_chat_member(a.chat.id, int(owner_id))
                 owner_names.append(f"[{user.user.first_name}](tg://user?id={user.user.id})")
+            except:
+                continue
 
         if owner_names:
             owner_list = "\n".join(owner_names)
