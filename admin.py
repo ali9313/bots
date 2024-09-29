@@ -155,7 +155,7 @@ def demote_admin(a):
             )
             user_info = bot.get_chat(user_id)
             user_name = user_info.first_name
-            bot.reply_to(a, f"◍ تم تنزيل  [{user_name}](tg://user?id={user_id}) من الأدمن بنجاح.\n")
+            bot.reply_to(a, f"◍ تم تنزيل  {user_name} من الأدمن بنجاح.\n")
             logging.info(f"المستخدم {user_id} تم تنزيله من الأدمن في المحادثة {chat_id}.")
         except Exception as e:
             logging.error(f"حدث خطأ أثناء تنزيل المستخدم {user_id} من الأدمن: {e}")
