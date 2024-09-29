@@ -89,6 +89,7 @@ def promote_admin(a):
         logging.info(f"المستخدم {user_id} تم رفعه كأدمن في المحادثة {chat_id}.")
 
 def demote_admin(a):
+    ali_admin = load_ali_admin()  # تحميل بيانات الأدمن
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
@@ -106,7 +107,7 @@ def demote_admin(a):
         return
 
     chat_id = str(a.chat.id)
-    
+
     if not is_authorized_user(a.from_user.id, a):
         bot.reply_to(a, "◍ يجب أن تكون منشئ على الأقل لكي تستطيع تنزيل أدمن.\n√")
         return
