@@ -6,6 +6,7 @@ from mtor import *
 from mmez import *
 from malk import *
 from mnsha import *
+from mnshaas import *
 
 def reply_func(a):
     if a.text == "اهلا":
@@ -74,3 +75,11 @@ def reply_func(a):
         clear_creators(a)
     elif a.text == "المنشئين":
         get_creators(a)
+    elif a.text == "رفع منشئ اساسي":
+        promote_basic_creator(a)
+    elif a.text == "تنزيل منشئ اساسي":
+        demote_basic_creator(a)
+    elif a.text == "المنشئين الاساسيين":
+        get_basic_creators(a)
+    elif a.text == "مسح المنشئين الاساسيين":
+        clear_basic_creators(a)
