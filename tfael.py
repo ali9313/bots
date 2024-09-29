@@ -11,8 +11,11 @@ def load_ali_owners():
             lines = file.read().splitlines()  # قراءة كل الأسطر
             owners = {}
             for line in lines:
-                chat_id, owner_id = line.split(':')
-                owners[chat_id] = {'owner_id': [owner_id]}
+                try:
+                    chat_id, owner_id = line.split(':')
+                    owners[chat_id] = {'owner_id': [owner_id]}
+                except ValueError:
+                    print(f"خطأ في تنسيق السطر: {line}")  # طباعة السطر الغير صحيح
             return owners
     except FileNotFoundError:
         print(f"خطأ: الملف {ALI_OWNERS_FILE} غير موجود.")
@@ -30,11 +33,12 @@ def dump_ali_owners(ali_owners):
     except Exception as e:
         print(f"حدث خطأ أثناء تفريغ بيانات المالكين: {e}")
 
-@bot.message_handler(commands=['تفعيل'])
+@bot.message_handler(func=lambda message: message.text == "تفعيل")
 def update_owners(a):
     try:
         chat_id = str(a.chat.id)
         Ali = a.from_user
+        print(f"Received activation command from chat: {chat_id}")  # تسجيل الرسالة
         ali_owners = load_ali_owners()
         owner_id = None
 
