@@ -1,4 +1,8 @@
+import logging
 from config import *
+
+# إعداد سجل الأخطاء
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # قائمة المطورين، يمكن تعديلها كما تحتاج
 DEVELOPERS = [232499688]
@@ -13,7 +17,9 @@ def load_ali_basic_devs():
                 dev_id = line.strip()
                 ali_basic_devs[dev_id] = True
     except FileNotFoundError:
-        print("الملف 'ali_basic_devs.txt' غير موجود.")
+        logging.error("الملف 'ali_basic_devs.txt' غير موجود.")
+    except Exception as e:
+        logging.error(f"حدث خطأ أثناء تحميل 'ali_basic_devs.txt': {e}")
     return ali_basic_devs
 
 def dump_ali_basic_devs(ali_basic_devs):
@@ -22,7 +28,7 @@ def dump_ali_basic_devs(ali_basic_devs):
             for dev_id in ali_basic_devs:
                 file.write(f"{dev_id}\n")
     except Exception as e:
-        print(f"حدث خطأ أثناء تفريغ 'ali_basic_devs.txt': {e}")
+        logging.error(f"حدث خطأ أثناء تفريغ 'ali_basic_devs.txt': {e}")
 
 def load_ali_devs():
     ali_devs = {}
@@ -32,7 +38,9 @@ def load_ali_devs():
                 dev_id = line.strip()
                 ali_devs[dev_id] = True
     except FileNotFoundError:
-        print("الملف 'ali_devs.txt' غير موجود.")
+        logging.error("الملف 'ali_devs.txt' غير موجود.")
+    except Exception as e:
+        logging.error(f"حدث خطأ أثناء تحميل 'ali_devs.txt': {e}")
     return ali_devs
 
 def dump_ali_devs(ali_devs):
@@ -41,7 +49,7 @@ def dump_ali_devs(ali_devs):
             for dev_id in ali_devs:
                 file.write(f"{dev_id}\n")
     except Exception as e:
-        print(f"حدث خطأ أثناء تفريغ 'ali_devs.txt': {e}")
+        logging.error(f"حدث خطأ أثناء تفريغ 'ali_devs.txt': {e}")
 
 def load_ali_basic_creators():
     ali_basic_creators = {}
@@ -51,7 +59,9 @@ def load_ali_basic_creators():
                 creator_id = line.strip()
                 ali_basic_creators[creator_id] = True
     except FileNotFoundError:
-        print("الملف 'ali_basic_creators.txt' غير موجود.")
+        logging.error("الملف 'ali_basic_creators.txt' غير موجود.")
+    except Exception as e:
+        logging.error(f"حدث خطأ أثناء تحميل 'ali_basic_creators.txt': {e}")
     return ali_basic_creators
 
 def dump_ali_basic_creators(ali_basic_creators):
@@ -60,7 +70,7 @@ def dump_ali_basic_creators(ali_basic_creators):
             for creator_id in ali_basic_creators:
                 file.write(f"{creator_id}\n")
     except Exception as e:
-        print(f"حدث خطأ أثناء تفريغ 'ali_basic_creators.txt': {e}")
+        logging.error(f"حدث خطأ أثناء تفريغ 'ali_basic_creators.txt': {e}")
 
 def load_ali_owners():
     ali_owners = {}
@@ -72,7 +82,9 @@ def load_ali_owners():
                     ali_owners[chat_id] = {'owner_id': []}
                 ali_owners[chat_id]['owner_id'].append(owner_id)
     except FileNotFoundError:
-        print("الملف 'ali_owners.txt' غير موجود.")
+        logging.error("الملف 'ali_owners.txt' غير موجود.")
+    except Exception as e:
+        logging.error(f"حدث خطأ أثناء تحميل 'ali_owners.txt': {e}")
     return ali_owners
 
 def dump_ali_owners(ali_owners):
@@ -82,7 +94,7 @@ def dump_ali_owners(ali_owners):
                 for owner_id in data['owner_id']:
                     file.write(f"{chat_id}:{owner_id}\n")
     except Exception as e:
-        print(f"حدث خطأ أثناء تفريغ 'ali_owners.txt': {e}")
+        logging.error(f"حدث خطأ أثناء تفريغ 'ali_owners.txt': {e}")
 
 def load_ali_creators():
     ali_creators = {}
@@ -94,7 +106,9 @@ def load_ali_creators():
                     ali_creators[chat_id] = {'creator_id': []}
                 ali_creators[chat_id]['creator_id'].append(creator_id)
     except FileNotFoundError:
-        print("الملف 'ali_creators.txt' غير موجود.")
+        logging.error("الملف 'ali_creators.txt' غير موجود.")
+    except Exception as e:
+        logging.error(f"حدث خطأ أثناء تحميل 'ali_creators.txt': {e}")
     return ali_creators
 
 def dump_ali_creators(ali_creators):
@@ -104,7 +118,7 @@ def dump_ali_creators(ali_creators):
                 for creator_id in data['creator_id']:
                     file.write(f"{chat_id}:{creator_id}\n")
     except Exception as e:
-        print(f"حدث خطأ أثناء تفريغ 'ali_creators.txt': {e}")
+        logging.error(f"حدث خطأ أثناء تفريغ 'ali_creators.txt': {e}")
 
 def load_ali_admin():
     ali_admin = {}
@@ -116,7 +130,9 @@ def load_ali_admin():
                     ali_admin[chat_id] = {'admin_id': []}
                 ali_admin[chat_id]['admin_id'].append(admin_id)
     except FileNotFoundError:
-        print("الملف 'ali_admin.txt' غير موجود.")
+        logging.error("الملف 'ali_admin.txt' غير موجود.")
+    except Exception as e:
+        logging.error(f"حدث خطأ أثناء تحميل 'ali_admin.txt': {e}")
     return ali_admin
 
 def dump_ali_admin(ali_admin):
@@ -126,7 +142,7 @@ def dump_ali_admin(ali_admin):
                 for admin_id in data['admin_id']:
                     file.write(f"{chat_id}:{admin_id}\n")
     except Exception as e:
-        print(f"حدث خطأ أثناء تفريغ 'ali_admin.txt': {e}")
+        logging.error(f"حدث خطأ أثناء تفريغ 'ali_admin.txt': {e}")
 
 def basic_dev(user_id):
     ali_basic_devs = load_ali_basic_devs()
@@ -160,7 +176,7 @@ def programmer_ali(user_id):
 
 # دالة للتحقق من المطورين
 def check_dev(a):
-    print(f"Received command /check_dev from user: {a.from_user.id}")
+    logging.info(f"Received command /check_dev from user: {a.from_user.id}")
     if programmer_ali(a.from_user.id):
         bot.reply_to(a, "أنت رئيس الجمهورية")
     else:
@@ -173,21 +189,21 @@ def check_owner(a):
         bot.reply_to(a, "أنت لست مالك.")
 
 def check_basic_creator(a):
-    print(f"Received command /check_basic_creator from user: {a.from_user.id}")
+    logging.info(f"Received command /check_basic_creator from user: {a.from_user.id}")
     if is_basic_creator(a.from_user.id):
         bot.reply_to(a, "أنت منشئ أساسي!")
     else:
         bot.reply_to(a, "أنت لست منشئ أساسي.")
 
 def check_admin(a):
-    print(f"Received command /check_admin from user: {a.from_user.id}, chat: {a.chat.id}")
+    logging.info(f"Received command /check_admin from user: {a.from_user.id}, chat: {a.chat.id}")
     if admin(a.from_user.id, str(a.chat.id)):
         bot.reply_to(a, "أنت أدمن!")
     else:
         bot.reply_to(a, "أنت لست أدمن.")
 
 def check_owner_id(a):
-    print(f"Received command /check_owner_id from user: {a.from_user.id}")
+    logging.info(f"Received command /check_owner_id from user: {a.from_user.id}")
     if owner_id_ali(a.from_user.id):
         bot.reply_to(a, "أنت مالك البوت!")
     else:
