@@ -1,4 +1,4 @@
-from config import *  
+from config import *
 from mut import *
 from rdod import *
 from tfael import *
@@ -30,9 +30,9 @@ def reply_func(a):
         with open("voice/vv.m4a", "rb") as audio:
             bot.send_audio(a.chat.id, audio)
     elif a.text in ["كتم", "لصم"]:
-        mute_user(a)  
+        mute_user(a)
     elif a.text in ["الغاء كتم", "الغاء لصم"]:
-        unmute_user(a) 
+        unmute_user(a)
     elif a.text == "اضف رد":
         start_adding_response(a)
     elif a.text == "حذف رد":
@@ -40,7 +40,7 @@ def reply_func(a):
     elif a.text == "الردود":
         show_responses(a)
     elif a.text == "تفعيل":
-        update_owners(a)  
+        update_owners(a)
     elif a.text == "رفع مطور":
         promote_devs(a)
     elif a.text == "المطورين":
@@ -57,11 +57,11 @@ def reply_func(a):
         clear_distinct(a)
     elif a.text == "المواطنين":
         get_distinct(a)
-	elif a.text=="رفع مالك":
-		promote_owner(a)
-	elif a.text=="تنزيل مالك":
-		demote_owner(a)
-	elif a.text=="مسح المالكين":
-		clear_owner(a)
-	elif a.text=="المالكين":
-		get_owner(a)
+    elif a.text == "رفع مالك":
+        promote_owner(a)
+    elif a.text == "تنزيل مالك":
+        demote_owner(a)
+    elif a.text == "مسح المالكين":
+        clear_owner(a)
+    elif a.text == "المالكين":
+        get_owner(a)
