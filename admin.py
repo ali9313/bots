@@ -167,17 +167,26 @@ def clear_admins(a):
         return
 
     if chat_id in ali_admin['admin']:
-        # مسح جميع الأدمنيه في المجموعة
+        # مسح جميع الأدمنيه
         ali_admin['admin'][chat_id]['admin_id'] = []
         dump_ali_admin(ali_admin)
         
-        # يمكن إضافة كود لتنزيل جميع الأدمنيه إذا لزم الأمر
+        # إزالة صلاحيات الأدمنيه من المجموعة
         for admin_id in ali_admin['admin'][chat_id]['admin_id']:
             try:
-                bot.promote_chat_member(chat_id, admin_id, can_change_info=False, can_post_messages=False, can_edit_messages=False, can_delete_messages=False, can_invite_users=False, can_restrict_members=False, can_pin_messages=False, can_promote_members=False)
+                bot.promote_chat_member(chat_id, admin_id,
+                    can_change_info=False,
+                    can_post_messages=False,
+                    can_edit_messages=False,
+                    can_delete_messages=False,
+                    can_invite_users=False,
+                    can_restrict_members=False,
+                    can_pin_messages=False,
+                    can_promote_members=False
+                )
             except Exception as e:
                 logging.error(f"خطأ أثناء تنزيل المستخدم {admin_id} من الأدمن: {e}")
-        
+
         bot.reply_to(a, "◍ تم مسح الأدمنيه بنجاح.\n√")
         logging.info(f"تم مسح جميع الأدمنيه في المحادثة {chat_id}.")
     else:
