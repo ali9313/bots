@@ -11,7 +11,14 @@ def load_ali_admin():
             lines = file.readlines()
             admin_data = {'admin': {}}
             for line in lines:
-                chat_id, admins = line.strip().split(':')
+                line = line.strip()
+                if not line:  # تجاهل السطور الفارغة
+                    continue
+                parts = line.split(':')
+                if len(parts) != 2:  # التأكد من أن السطر يحتوي على جزئين
+                    logging.warning(f"تنسيق غير صحيح في السطر: {line}")
+                    continue
+                chat_id, admins = parts
                 admin_data['admin'][chat_id] = {'admin_id': admins.split(',') if admins else []}
             logging.info("تم تحميل بيانات الأدمن بنجاح.")
             return admin_data
