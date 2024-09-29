@@ -3,6 +3,7 @@ from mut import *
 from rdod import *
 from tfael import *
 from mtor import *
+from mmez import *
 
 def reply_func(a):
     if a.text == "اهلا":
