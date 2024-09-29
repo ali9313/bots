@@ -1,5 +1,6 @@
 from config import *
 
+# قائمة المطورين، يمكن تعديلها كما تحتاج
 DEVELOPERS = [232499688]
 OWNER_BOT = 232499688
 
@@ -127,7 +128,6 @@ def dump_ali_admin(ali_admin):
     except Exception as e:
         print(f"حدث خطأ أثناء تفريغ 'ali_admin.txt': {e}")
 
-# دوال للتحقق من الرتب باستخدام المتغير a بدلاً من message
 def basic_dev(user_id):
     ali_basic_devs = load_ali_basic_devs()
     return str(user_id) in ali_basic_devs
@@ -151,22 +151,22 @@ def creator(user_id, chat_id):
 def admin(user_id, chat_id):
     ali_admin = load_ali_admin()
     return chat_id in ali_admin and str(user_id) in ali_admin[chat_id]['admin_id']
-
-# فحص ما إذا كان المستخدم مطورًا أو مالكًا باستخدام المتغير a
+    
 def owner_id_ali(user_id):
     return user_id == OWNER_BOT
 
 def programmer_ali(user_id):
     return user_id in DEVELOPERS
+
+# دالة للتحقق من المطورين
 def check_dev(a):
     print(f"Received command /check_dev from user: {a.from_user.id}")
-    if dev(a.from_user.id):
-        bot.reply_to(a, "أنت مطور!")
+    if programmer_ali(a.from_user.id):
+        bot.reply_to(a, "أنت رئيس الجمهورية")
     else:
-        bot.reply_to(a, "أنت لست مطور.")
+        bot.reply_to(a, "أنت لست رئيس الجمهورية")
         
 def check_owner(a):
-    print(f"Received command /check_owner from user: {a.from_user.id}, chat: {a.chat.id}")
     if owner(a.from_user.id, str(a.chat.id)):
         bot.reply_to(a, "أنت مالك!")
     else:

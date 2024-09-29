@@ -1,4 +1,6 @@
 from config import *
+from ali_json import is_basic_creator, owner, dev, basic_dev, programmer_ali  # إضافة دوال التحقق هنا
+
 def load_ali_admin():
     try:
         with open('backend/ali_admin.txt', 'r') as file:
@@ -24,6 +26,16 @@ def dump_ali_admin(ali_admin):
     except Exception as e:
         print(f"حدث خطأ أثناء تفريغ البيانات إلى 'ali_admin.txt': {e}")
 
+def is_authorized_user(user_id, a):
+    chat_id = str(a.chat.id)
+    return (
+        owner(user_id, chat_id) or
+        is_basic_creator(user_id) or
+        dev(user_id) or
+        basic_dev(user_id) or
+        programmer_ali(user_id)  # إضافة التحقق من مطور السورس هنا
+    )
+
 def promote_admin(a):
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
@@ -43,8 +55,6 @@ def promote_admin(a):
 
     chat_id = str(a.chat.id)
     ali_admin = load_ali_admin()
-
-    # تحقق من الصلاحيات (ضع دوال التحقق الخاصة بك هنا)
     if not is_authorized_user(a.from_user.id, a):
         bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لكى تستطيع رفع ادمن\n√")
         return
@@ -75,10 +85,8 @@ def demote_admin(a):
     else:
         bot.reply_to(a, "يرجى الرد على رسالة المستخدم أو إدخال معرفه.")
         return
-
     chat_id = str(a.chat.id)
-    ali_admin = load_ali_admin()
-
+    
     if not is_authorized_user(a.from_user.id, a):
         bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لكى تستطيع تنزيل ادمن\n√")
         return
@@ -94,7 +102,6 @@ def demote_admin(a):
         dump_ali_admin(ali_admin)
         bot.reply_to(a, "◍ تم تنزيل المستخدم من الادمن بنجاح\n√")
 
-
 def clear_admins(a):
     chat_id = str(a.chat.id)
     ali_admin = load_ali_admin()
@@ -109,7 +116,6 @@ def clear_admins(a):
         bot.reply_to(a, "◍ تم مسح الادمنيه بنجاح\n√")
     else:
         bot.reply_to(a, "لا يوجد ادمنيه ليتم مسحهم")
-
 
 def get_admins(a):
     chat_id = str(a.chat.id)
