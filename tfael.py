@@ -32,8 +32,6 @@ def dump_ali_owners(ali_owners):
                 file.write(f"{chat_id}:{owner_id}\n")  # كتابة كل زوج من معرف المجموعة والمالك
     except Exception as e:
         print(f"حدث خطأ أثناء تفريغ بيانات المالكين: {e}")
-
-@bot.message_handler(func=lambda message: message.text == "تفعيل")
 def update_owners(a):
     try:
         chat_id = str(a.chat.id)
