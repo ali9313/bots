@@ -7,6 +7,7 @@ from mmez import *
 from malk import *
 from mnsha import *
 from mnshaas import *
+from thanoe import *
 
 def reply_func(a):
     if a.text == "اهلا":
@@ -83,3 +84,11 @@ def reply_func(a):
         get_basic_creators(a)
     elif a.text == "مسح المنشئين الاساسيين":
         clear_basic_creators(a)
+    elif a.text == "رفع ثانوي":
+        promote_basic_dev(a)
+    elif a.text == "الثانويين":
+        list_basic_devs(a)
+    elif a.text == "تنزيل ثانوي":
+        demote_basic_dev(a)
+    elif a.text == "مسح الثانويين":
+        clear_basic_devs(a)
