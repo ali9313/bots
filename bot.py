@@ -7,7 +7,7 @@ import traceback  # لاستيراد مكتبة تتبع الأخطاء
 def echo_message(a):
     try:
         # تحقق مما إذا كانت الرسالة تحتوي على الأمر 'تفعيل'
-        if a.text == "/تفعيل":
+        if a.text == "تفعيل":
             update_owners(a)  # استدعاء دالة update_owners مباشرة
         else:
             reply_func(a)  # استدعاء الدالة reply_func لبقية الرسائل
