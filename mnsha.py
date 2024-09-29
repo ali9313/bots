@@ -1,20 +1,26 @@
 from config import *
-import json
 from telebot import types
+
+# تحميل المنشئين من ملف نصي
 def load_ali_creators():
-    # قم بتحميل البيانات من ملف JSON
+    creators_dict = {"creators": {}}
     try:
-        with open('ali_creators.json', 'r', encoding='utf-8') as file:
-            return json.load(file)
+        with open('backend/ali_creators.txt', 'r', encoding='utf-8') as file:
+            for line in file:
+                chat_id, creators = line.strip().split(':')
+                creators_dict['creators'][chat_id] = {'creator_id': creators.split(',') if creators else []}
     except FileNotFoundError:
-        return {'creators': {}}
+        # إذا كان الملف غير موجود، نعيد قاموس فارغ
+        pass
+    return creators_dict
 
+# حفظ المنشئين في ملف نصي
 def dump_ali_creators(data):
-    # قم بحفظ البيانات في ملف JSON
-    with open('ali_creators.json', 'w', encoding='utf-8') as file:
-        json.dump(data, file, ensure_ascii=False, indent=4)
+    with open('backend/ali_creators.txt', 'w', encoding='utf-8') as file:
+        for chat_id, info in data['creators'].items():
+            creators = ','.join(info['creator_id'])
+            file.write(f"{chat_id}:{creators}\n")
 
-@bot.message_handler(commands=["رفع", "رفع_منشئ"])
 def promote_creator(a):
     user_id = None
     if a.reply_to_message and a.reply_to_message.from_user:
@@ -50,7 +56,6 @@ def promote_creator(a):
         dump_ali_creators(ali_creators)
         bot.reply_to(a, "◍ تم رفع المستخدم ليصبح منشئ\n√")
 
-@bot.message_handler(commands=["تنزيل", "تنزيل_منشئ"])
 def demote_creator(a):
     user_id = None
     if a.reply_to_message and a.reply_to_message.from_user:
@@ -87,7 +92,6 @@ def demote_creator(a):
         dump_ali_creators(ali_creators)
         bot.reply_to(a, "◍ تم تنزيل المستخدم من المنشئين بنجاح\n√")
 
-@bot.message_handler(commands=["مسح", "مسح_المنشئين"])
 def clear_creators(a):
     chat_id = str(a.chat.id)
     ali_creators = load_ali_creators()
@@ -104,7 +108,6 @@ def clear_creators(a):
     else:
         bot.reply_to(a, "◍ لا يوجد منشئين\n√")
 
-@bot.message_handler(commands=["المنشئين"])
 def get_creators(a):
     chat_id = str(a.chat.id)
     ali_creators = load_ali_creators()
