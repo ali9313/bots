@@ -1,49 +1,28 @@
 from config import *
-import json
-from telebot import TeleBot, types
-
-# تحميل وتفريغ بيانات المالكين
 def load_ali_owners():
-    try:
-        with open('backend/ali_owners.json', 'r') as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {'owners': {}}
+    with open('ali_owners.txt', 'r') as file:
+        return eval(file.read()) if file.read() else {"owners": {}}
 
-def dump_ali_owners(ali_owners):
-    with open('backend/ali_owners.json', 'w') as file:
-        json.dump(ali_owners, file)
+def dump_ali_owners(data):
+    with open('ali_owners.txt', 'w') as file:
+        file.write(str(data))
 
-# دالة للتحقق من صلاحيات المستخدم
-def is_authorized_user(user_id, a):
-    return (
-        ALI(bot, a) or 
-        basic_dev(bot, a) or 
-        OWNER_ID(bot, a) or 
-        dev(bot, a) or 
-        is_basic_creator(bot, a)
-    )
 
-# معالج لرفع المالك
-@bot.message_handler(commands=['رفع مالك'])
+
 def promote_owner(a):
-    if not is_authorized_user(a.from_user.id, a):
-        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
-        return
-
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
     elif len(a.text.split()) > 1:
         target = a.text.split()[1].strip("@")
-        try:
-            user = bot.get_chat(target)
-            user_id = str(user.id)
-        except:
+        user = bot.get_chat_member(a.chat.id, target)
+        if user:
+            user_id = str(user.user.id)
+        else:
             bot.reply_to(a, "لا يمكن العثور على المستخدم")
             return
     else:
-        bot.reply_to(a, "يرجى الرد على رسالة المستخدم أو إدخال معرفه.")
+        bot.reply_to(a, "يرجى تحديد مستخدم")
         return
 
     chat_id = str(a.chat.id)
@@ -59,26 +38,22 @@ def promote_owner(a):
         dump_ali_owners(ali_owners)
         bot.reply_to(a, "◍ تم رفع المستخدم ليصبح مالك\n√")
 
-# معالج لتنزيل المالك
-@bot.message_handler(commands=['تنزيل مالك'])
-def demote_owner(a):
-    if not is_authorized_user(a.from_user.id, a):
-        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
-        return
 
+
+def demote_owner(a):
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
     elif len(a.text.split()) > 1:
         target = a.text.split()[1].strip("@")
-        try:
-            user = bot.get_chat(target)
-            user_id = str(user.id)
-        except:
+        user = bot.get_chat_member(a.chat.id, target)
+        if user:
+            user_id = str(user.user.id)
+        else:
             bot.reply_to(a, "لا يمكن العثور على المستخدم")
             return
     else:
-        bot.reply_to(a, "يرجى الرد على رسالة المستخدم أو إدخال معرفه.")
+        bot.reply_to(a, "يرجى تحديد مستخدم")
         return
 
     chat_id = str(a.chat.id)
@@ -95,13 +70,8 @@ def demote_owner(a):
         dump_ali_owners(ali_owners)
         bot.reply_to(a, "◍ تم تنزيل المستخدم من المالكين بنجاح\n√")
 
-# معالج لمسح المالكين
-@bot.message_handler(commands=['مسح المالكين'])
-def clear_owner(a):
-    if not is_authorized_user(a.from_user.id, a):
-        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
-        return
 
+def clear_owner(a):
     chat_id = str(a.chat.id)
     ali_owners = load_ali_owners()
 
@@ -112,13 +82,8 @@ def clear_owner(a):
     else:
         bot.reply_to(a, "لا يوجد مالكين ليتم مسحهم")
 
-# معالج للحصول على قائمة المالكين
-@bot.message_handler(commands=['المالكين'])
-def get_owner(a):
-    if not is_authorized_user(a.from_user.id, a):
-        bot.reply_to(a, "◍ أنت لست مخولًا للقيام بهذه العملية\n√")
-        return
 
+def get_owner(a):
     chat_id = str(a.chat.id)
     ali_owners = load_ali_owners()
 
@@ -132,14 +97,12 @@ def get_owner(a):
     else:
         owner_names = []
         for owner_id in owners:
-            try:
-                user = bot.get_chat(owner_id)
-                owner_names.append(f"[{user.first_name}](tg://user?id={user.id})")
-            except:
-                continue
+            user = bot.get_chat_member(a.chat.id, int(owner_id))
+            if user:
+                owner_names.append(f"[{user.user.first_name}](tg://user?id={user.user.id})")
 
         if owner_names:
             owner_list = "\n".join(owner_names)
-            bot.reply_to(a, f"◍ قائمة المالكين:\n\n{owner_list}", parse_mode='Markdown')
+            bot.reply_to(a, f"◍ قائمة المالكين:\n\n{owner_list}")
         else:
             bot.reply_to(a, "تعذر العثور على معلومات المالكين")
