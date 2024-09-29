@@ -47,3 +47,11 @@ def reply_func(a):
         demote_devs(a)
     elif a.text == "مسح المطورين":
         clear_devs(a)
+    elif a.text == "رفع مواطن":
+        promote_distinct(a)
+    elif a.text == "تنزيل مواطن":
+        demote_distinct(a)
+    elif a.text == "مسح المواطنين":
+        clear_distinct(a)
+    elif a.text == "المواطنين":
+        get_distinct(a)
