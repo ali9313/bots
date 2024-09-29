@@ -77,10 +77,23 @@ def load_ali_owners():
     try:
         with open('backend/ali_owners.txt', 'r') as file:
             for line in file:
-                chat_id, owner_id = line.strip().split(':')
-                if chat_id not in ali_owners:
-                    ali_owners[chat_id] = {'owner_id': []}
-                ali_owners[chat_id]['owner_id'].append(owner_id)
+                line = line.strip()  # إزالة الفراغات في البداية والنهاية
+                if not line:  # تجاهل السطور الفارغة
+                    continue
+
+                parts = line.split(':')
+                if len(parts) != 2:  # تحقق من أن هناك جزئين
+                    logging.warning(f"تنسيق غير صحيح في السطر: {line}")
+                    continue
+
+                chat_id, owner_id = parts
+                if chat_id and owner_id:  # تحقق من أن القيم ليست فارغة
+                    if chat_id not in ali_owners:
+                        ali_owners[chat_id] = {'owner_id': []}
+                    ali_owners[chat_id]['owner_id'].append(owner_id)
+                else:
+                    logging.warning(f"سطر يحتوي على قيم فارغة: {line}")
+
     except FileNotFoundError:
         logging.error("الملف 'ali_owners.txt' غير موجود.")
     except Exception as e:
