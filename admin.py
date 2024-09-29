@@ -137,27 +137,34 @@ def demote_admin(a):
 
     if user_id not in ali_admin['admin'][chat_id]['admin_id']:
         bot.reply_to(a, "◍ هذا المستخدم ليس أدمن لتنزيله.\n√")
-    else:
+        return
+
+    # محاولة تنزيل المستخدم كأدمن فعليًا
+    try:
+        bot.promote_chat_member(chat_id, user_id,
+            can_change_info=False,
+            can_post_messages=False,
+            can_edit_messages=False,
+            can_delete_messages=False,
+            can_invite_users=False,
+            can_restrict_members=False,
+            can_pin_messages=False,
+            can_promote_members=False
+        )
+        user_info = bot.get_chat(user_id)
+        user_name = user_info.first_name
+        bot.reply_to(a, f"◍ تم تنزيل {user_name} من الأدمن بنجاح.\n")
+        logging.info(f"المستخدم {user_id} تم تنزيله من الأدمن في المحادثة {chat_id}.")
+        
+        # إزالة المستخدم من قائمة الأدمن في ملف ali_admin.txt
         ali_admin['admin'][chat_id]['admin_id'].remove(user_id)
         dump_ali_admin(ali_admin)
 
-        # تنزيل المستخدم كأدمن فعليًا
-        try:
-            bot.promote_chat_member(chat_id, user_id,
-                can_change_info=False,
-                can_post_messages=False,
-                can_edit_messages=False,
-                can_delete_messages=False,
-                can_invite_users=False,
-                can_restrict_members=False,
-                can_pin_messages=False,
-                can_promote_members=False
-            )
-            user_info = bot.get_chat(user_id)
-            user_name = user_info.first_name
-            bot.reply_to(a, f"◍ تم تنزيل  {user_name} من الأدمن بنجاح.\n")
-            logging.info(f"المستخدم {user_id} تم تنزيله من الأدمن في المحادثة {chat_id}.")
-        except Exception as e:
+    except Exception as e:
+        # التحقق إذا كان الخطأ هو "CHAT_ADMIN_REQUIRED"
+        if 'CHAT_ADMIN_REQUIRED' in str(e):
+            bot.reply_to(a, "◍ عذرًا، لا أستطيع تنزيل هذا الأدمن لأنه لم يتم رفعه بواسطة البوت.\n√")
+        else:
             logging.error(f"حدث خطأ أثناء تنزيل المستخدم {user_id} من الأدمن: {e}")
             bot.reply_to(a, "◍ حدث خطأ أثناء تنزيل المستخدم.\n√")
 
