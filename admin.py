@@ -99,7 +99,9 @@ def promote_admin(a):
                 can_pin_messages=True,
                 can_promote_members=True
             )
-            bot.reply_to(a, "◍ تم رفع المستخدم ليصبح أدمن.\n√")
+            user_info = bot.get_chat(user_id)
+            user_name = user_info.first_name
+            bot.reply_to(a, f"◍ تم رفع المستخدم [{user_name}](tg://user?id={user_id}) كأدمن بنجاح.\n")
             logging.info(f"المستخدم {user_id} تم رفعه كأدمن في المحادثة {chat_id}.")
         except Exception as e:
             logging.error(f"حدث خطأ أثناء رفع المستخدم {user_id} كأدمن: {e}")
@@ -151,7 +153,9 @@ def demote_admin(a):
                 can_pin_messages=False,
                 can_promote_members=False
             )
-            bot.reply_to(a, "◍ تم تنزيل المستخدم من الأدمن بنجاح.\n√")
+            user_info = bot.get_chat(user_id)
+            user_name = user_info.first_name
+            bot.reply_to(a, f"◍ تم تنزيل المستخدم [{user_name}](tg://user?id={user_id}) من الأدمن بنجاح.\n")
             logging.info(f"المستخدم {user_id} تم تنزيله من الأدمن في المحادثة {chat_id}.")
         except Exception as e:
             logging.error(f"حدث خطأ أثناء تنزيل المستخدم {user_id} من الأدمن: {e}")
@@ -168,11 +172,12 @@ def clear_admins(a):
 
     if chat_id in ali_admin['admin']:
         # مسح جميع الأدمنيه
+        admin_ids = ali_admin['admin'][chat_id]['admin_id']  # احفظ قائمة الأدمنية الحالية
         ali_admin['admin'][chat_id]['admin_id'] = []
         dump_ali_admin(ali_admin)
         
         # إزالة صلاحيات الأدمنيه من المجموعة
-        for admin_id in ali_admin['admin'][chat_id]['admin_id']:
+        for admin_id in admin_ids:
             try:
                 bot.promote_chat_member(chat_id, admin_id,
                     can_change_info=False,
