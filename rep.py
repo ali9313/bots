@@ -5,6 +5,7 @@ from tfael import *
 from mtor import *
 from mmez import *
 from malk import *
+from mnsha import *
 
 def reply_func(a):
     if a.text == "اهلا":
@@ -65,3 +66,11 @@ def reply_func(a):
         clear_owner(a)
     elif a.text == "المالكين":
         get_owner(a)
+    elif a.text == "رفع منشئ":
+        promote_creator(a)
+    elif a.text == "تنزيل منشئ":
+        demote_creator(a)
+    elif a.text == "مسح المنشئين":
+        clear_creators(a)
+    elif a.text == "المنشئين":
+        get_creators(a)
