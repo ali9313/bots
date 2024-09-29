@@ -1,10 +1,10 @@
 from config import *
 def load_ali_owners():
-    with open('ali_owners.txt', 'r') as file:
+    with open('backend/ali_owners.txt', 'r') as file:
         return eval(file.read()) if file.read() else {"owners": {}}
 
 def dump_ali_owners(data):
-    with open('ali_owners.txt', 'w') as file:
+    with open('backend/ali_owners.txt', 'w') as file:
         file.write(str(data))
 
 
