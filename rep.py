@@ -8,6 +8,7 @@ from malk import *
 from mnsha import *
 from mnshaas import *
 from thanoe import *
+from admin import *
 
 def reply_func(a):
     if a.text == "اهلا":
@@ -92,3 +93,11 @@ def reply_func(a):
         demote_basic_dev(a)
     elif a.text == "مسح الثانويين":
         clear_basic_devs(a)
+    elif a.text == "رفع ادمن":
+        promote_admin(a)
+    elif a.text == "تنزيل ادمن":
+        demote_admin(a)
+    elif a.text == "مسح الادمنيه":
+        clear_admins(a)
+    elif a.text == "الادمنيه":
+        get_admins(a)
