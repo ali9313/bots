@@ -1,17 +1,15 @@
 from config import *
-import json
-from telebot import TeleBot, types
-
-# تحميل وتفريغ بيانات المدراء
 def load_ali_admin():
     try:
-        with open('backend/ali_admin.json', 'r') as file:
-            return json.load(file)
+        with open('backend/ali_admin.txt', 'r') as file:
+            lines = file.readlines()
+            admin_data = {'admin': {}}
+            for line in lines:
+                chat_id, admins = line.strip().split(':')
+                admin_data['admin'][chat_id] = {'admin_id': admins.split(',') if admins else []}
+            return admin_data
     except FileNotFoundError:
-        print("الملف 'ali_admin.json' غير موجود.")
-        return {'admin': {}}
-    except json.JSONDecodeError:
-        print("خطأ في قراءة بيانات JSON من 'ali_admin.json'.")
+        print("الملف 'ali_admin.txt' غير موجود.")
         return {'admin': {}}
     except Exception as e:
         print(f"حدث خطأ غير متوقع أثناء تحميل البيانات: {e}")
@@ -19,18 +17,19 @@ def load_ali_admin():
 
 def dump_ali_admin(ali_admin):
     try:
-        with open('backend/ali_admin.json', 'w') as file:
-            json.dump(ali_admin, file)
+        with open('backend/ali_admin.txt', 'w') as file:
+            for chat_id, data in ali_admin['admin'].items():
+                admin_ids = ','.join(data['admin_id'])
+                file.write(f"{chat_id}:{admin_ids}\n")
     except Exception as e:
-        print(f"حدث خطأ أثناء تفريغ البيانات إلى 'ali_admin.json': {e}")
+        print(f"حدث خطأ أثناء تفريغ البيانات إلى 'ali_admin.txt': {e}")
 
-@bot.message_handler(commands=['رفع ادمن'])
 def promote_admin(a):
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
-    elif len(a.text.split()) > 1:
-        target = a.text.split()[1].strip("@")
+    elif a.reply_to_message is None and len(a.text.split()) > 1:
+        target = a.text.split()[1]
         try:
             user = bot.get_chat(target)
             user_id = str(user.id)
@@ -45,7 +44,8 @@ def promote_admin(a):
     chat_id = str(a.chat.id)
     ali_admin = load_ali_admin()
 
-    if not is_authorized_user(a.from_user.id, a):  # استخدام الدالة من ملف main
+    # تحقق من الصلاحيات (ضع دوال التحقق الخاصة بك هنا)
+    if not is_authorized_user(a.from_user.id, a):
         bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لكى تستطيع رفع ادمن\n√")
         return
 
@@ -59,13 +59,12 @@ def promote_admin(a):
         dump_ali_admin(ali_admin)
         bot.reply_to(a, "◍ تم رفع المستخدم ليصبح ادمن\n√")
 
-@bot.message_handler(commands=['تنزيل ادمن'])
 def demote_admin(a):
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
-    elif len(a.text.split()) > 1:
-        target = a.text.split()[1].strip("@")
+    elif a.reply_to_message is None and len(a.text.split()) > 1:
+        target = a.text.split()[1]
         try:
             user = bot.get_chat(target)
             user_id = str(user.id)
@@ -80,7 +79,7 @@ def demote_admin(a):
     chat_id = str(a.chat.id)
     ali_admin = load_ali_admin()
 
-    if not is_authorized_user(a.from_user.id, a):  # استخدام الدالة من ملف main
+    if not is_authorized_user(a.from_user.id, a):
         bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لكى تستطيع تنزيل ادمن\n√")
         return
 
@@ -95,12 +94,12 @@ def demote_admin(a):
         dump_ali_admin(ali_admin)
         bot.reply_to(a, "◍ تم تنزيل المستخدم من الادمن بنجاح\n√")
 
-@bot.message_handler(commands=['مسح الادمنيه'])
+
 def clear_admins(a):
     chat_id = str(a.chat.id)
     ali_admin = load_ali_admin()
 
-    if not is_authorized_user(a.from_user.id, a):  # استخدام الدالة من ملف main
+    if not is_authorized_user(a.from_user.id, a):
         bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لاستخدام الامر\n√")
         return
 
@@ -111,7 +110,7 @@ def clear_admins(a):
     else:
         bot.reply_to(a, "لا يوجد ادمنيه ليتم مسحهم")
 
-@bot.message_handler(commands=['الادمنيه'])
+
 def get_admins(a):
     chat_id = str(a.chat.id)
     ali_admin = load_ali_admin()
@@ -127,7 +126,7 @@ def get_admins(a):
         admin_names = []
         for admin_id in admins:
             try:
-                user = bot.get_chat_member(chat_id, admin_id).user
+                user = bot.get_chat(admin_id)
                 admin_names.append(f"[{user.first_name}](tg://user?id={user.id})")
             except Exception as e:
                 print(f"خطأ في استدعاء معلومات المشرف: {e}")
