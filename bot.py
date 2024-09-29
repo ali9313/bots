@@ -4,28 +4,28 @@ from tfael import *
 from ali_json import *
 import traceback  
 
-@bot.message_handler(func=lambda message: True)
-def echo_message(message):
+@bot.message_handler(func=lambda a: True)
+def echo_message(a):
     try:
-        reply_func(message)  
+        reply_func(a)  
     except Exception as e:
         print(f"حدث خطأ: {e}")
         traceback.print_exc()  
 
 @bot.message_handler(commands=['check_dev', 'check_owner', 'check_basic_creator', 'check_admin', 'check_owner_id'])
-def handle_commands(message):
+def handle_commands(a):
     try:
-        command = message.text.split()[0]  
+        command = a.text.split()[0]  
         if command == '/check_owner_id':
-            check_owner_id(message)
+            check_owner_id(a)
         elif command == '/check_admin':
-            check_admin(message)
+            check_admin(a)
         elif command == '/check_basic_creator':
-            check_basic_creator(message)
+            check_basic_creator(a)
         elif command == '/check_owner':
-            check_owner(message)
+            check_owner(a)
         elif command == '/check_dev':
-            check_dev(message)
+            check_dev(a)
     except Exception as e:
         print(f"حدث خطأ أثناء معالجة الأمر: {e}")
         traceback.print_exc()
