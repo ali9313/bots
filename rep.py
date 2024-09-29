@@ -1,6 +1,7 @@
 from config import *  
 from mut import *
 from rdod import *
+from tfael import *
 def reply_func(a):
     if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
