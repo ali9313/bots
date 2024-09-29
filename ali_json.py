@@ -125,7 +125,14 @@ def load_ali_admin():
     try:
         with open('backend/ali_admin.txt', 'r') as file:
             for line in file:
-                chat_id, admin_id = line.strip().split(':')
+                line = line.strip()
+                if not line:  # تجاهل الأسطر الفارغة
+                    continue
+                parts = line.split(':')
+                if len(parts) != 2:  # تحقق من وجود جزئين
+                    logging.warning(f"تنسيق غير صحيح في السطر: {line}")
+                    continue  # تجاهل السطر إذا لم يكن بالشكل الصحيح
+                chat_id, admin_id = parts
                 if chat_id not in ali_admin:
                     ali_admin[chat_id] = {'admin_id': []}
                 ali_admin[chat_id]['admin_id'].append(admin_id)
@@ -207,4 +214,4 @@ def check_owner_id(a):
     if owner_id_ali(a.from_user.id):
         bot.reply_to(a, "أنت مالك البوت!")
     else:
-        bot.reply_to(a, "أنت لست مالك البوت.")
+        bot.reply_to(a, "أنت لست مالك البوت")
