@@ -213,4 +213,4 @@ def check_owner_id(a):
     if owner_id_ali(a.from_user.id):
         bot.reply_to(a, "أنت مالك البوت!")
     else:
-        bot.reply_to(a, "أنت لست مالك
+        bot.reply_to(a, "أنت لست مالك البوت")
