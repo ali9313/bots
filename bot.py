@@ -1,5 +1,6 @@
 from config import *  
 from rep import * 
+from tfael import *
 import traceback  # لاستيراد مكتبة تتبع الأخطاء
 
 @bot.message_handler(func=lambda a: True)
