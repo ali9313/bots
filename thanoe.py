@@ -1,18 +1,22 @@
 from config import *
-import json
 from telebot import TeleBot, types
+
 def load_ali_basic_devs():
+    ali_basic_devs = {'basic_devs': {}}
     try:
-        with open('backend/ali_basic_devs.json', 'r') as file:
-            return json.load(file)
+        with open('backend/ali_basic_devs.txt', 'r') as file:
+            for line in file:
+                user_id = line.strip()
+                ali_basic_devs['basic_devs'][user_id] = True
     except FileNotFoundError:
-        return {'basic_devs': {}}
+        pass
+    return ali_basic_devs
 
 def dump_ali_basic_devs(ali_basic_devs):
-    with open('backend/ali_basic_devs.json', 'w') as file:
-        json.dump(ali_basic_devs, file)
+    with open('backend/ali_basic_devs.txt', 'w') as file:
+        for user_id in ali_basic_devs['basic_devs']:
+            file.write(f"{user_id}\n")
 
-@bot.message_handler(commands=['رفع ثانوي'])
 def promote_basic_dev(a):
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
@@ -40,7 +44,6 @@ def promote_basic_dev(a):
         dump_ali_basic_devs(ali_basic_devs)
         bot.reply_to(a, "◍ تم رفع المستخدم ليصبح مطور ثانوي\n√")
 
-@bot.message_handler(commands=['الثانويين'])
 def list_basic_devs(a):
     ali_basic_devs = load_ali_basic_devs()
 
@@ -66,7 +69,6 @@ def list_basic_devs(a):
         else:
             bot.reply_to(a, "تعذر العثور على معلومات المطورين الثانويين")
 
-@bot.message_handler(commands=['تنزيل ثانوي'])
 def demote_basic_dev(a):
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
@@ -96,7 +98,6 @@ def demote_basic_dev(a):
         dump_ali_basic_devs(ali_basic_devs)
         bot.reply_to(a, "◍ تم تنزيل المستخدم من الثانويين بنجاح\n√")
 
-@bot.message_handler(commands=['مسح الثانويين'])
 def clear_basic_devs(a):
     ali_basic_devs = load_ali_basic_devs()
 
@@ -104,12 +105,6 @@ def clear_basic_devs(a):
         bot.reply_to(a, "◍ انت لست المطور الاساسي\n√")
         return
 
-    if 'basic_devs' in ali_basic_devs:
-        ali_basic_devs['basic_devs'] = {}
-        dump_ali_basic_devs(ali_basic_devs)
-        bot.reply_to(a, "◍ تم مسح الثانويين بنجاح\n√")
-    else:
-        bot.reply_to(a, "لا يوجد ثانويين ليتم مسحهم")
-
-# بدء تشغيل البوت
-bot.polling(none_stop=True)
+    ali_basic_devs['basic_devs'] = {}
+    dump_ali_basic_devs(ali_basic_devs)
+    bot.reply_to(a, "◍ تم مسح الثانويين بنجاح\n√")
