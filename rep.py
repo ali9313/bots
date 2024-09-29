@@ -2,6 +2,7 @@ from config import *
 from mut import *
 from rdod import *
 from tfael import *
+from mtor import *
 def reply_func(a):
     if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
@@ -37,3 +38,11 @@ def reply_func(a):
         show_responses(a)
     elif a.text=="تفعيل":
         update_owners(a)  
+	elif a.text=="رفع مطور":
+		promote_devs(a)
+	elif a.text=="المطورين":
+		get_devs(a)
+	elif a.text=="تنزيل مطور":
+		demote_devs(a)
+	elif a.text=="مسح المطورين":
+		clear_devs(a)
