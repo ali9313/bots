@@ -4,6 +4,7 @@ from rdod import *
 from tfael import *
 from mtor import *
 from mmez import *
+from malk import *
 
 def reply_func(a):
     if a.text == "اهلا":
@@ -56,3 +57,11 @@ def reply_func(a):
         clear_distinct(a)
     elif a.text == "المواطنين":
         get_distinct(a)
+	elif a.text=="رفع مالك":
+		promote_owner(a)
+	elif a.text=="تنزيل مالك":
+		demote_owner(a)
+	elif a.text=="مسح المالكين":
+		clear_owner(a)
+	elif a.text=="المالكين":
+		get_owner(a)
