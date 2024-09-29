@@ -44,7 +44,7 @@ def reply_func(a):
     elif a.text == "الردود":
         show_responses(a)
     elif a.text == "تفعيل":
-        update_owners(a)
+        update_admins_and_owner(a)
     elif a.text == "رفع مطور":
         promote_devs(a)
     elif a.text == "المطورين":
