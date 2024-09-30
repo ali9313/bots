@@ -14,37 +14,36 @@ ALI_OWNERS_FILE = 'backend/ali_owners.txt'
 def load_ali_admin():
     try:
         with open(ALI_ADMINS_FILE, 'r') as file:
-            lines = file.read().splitlines()
-            admins = {}
+            lines = file.readlines()
+            admins = {'admin': {}}
             for line in lines:
                 line = line.strip()
                 if not line:
                     continue
-                try:
-                    chat_id, admin_id = line.split(',')  # تغيير هنا إلى فاصلة
-                    if chat_id not in admins:
-                        admins[chat_id] = {'admin_id': []}
-                    admins[chat_id]['admin_id'].append(admin_id)
-                except ValueError:
-                    logging.error(f"خطأ في تنسيق السطر: {line}")
+                parts = line.split(':')  # استخدام النقطتين
+                if len(parts) != 2:
+                    logging.warning(f"تنسيق غير صحيح في السطر: {line}")
+                    continue
+                chat_id, admin_id = parts
+                if chat_id not in admins['admin']:
+                    admins['admin'][chat_id] = {'admin_id': []}
+                admins['admin'][chat_id]['admin_id'].append(admin_id)
             logging.info(f"تم تحميل بيانات الادمنية بنجاح من {ALI_ADMINS_FILE}")
             return admins
     except FileNotFoundError:
         logging.error(f"خطأ: الملف {ALI_ADMINS_FILE} غير موجود.")
-        return {}
+        return {'admin': {}}
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تحميل الادمنية: {e}")
-        return {}
+        return {'admin': {}}
 
 # تفريغ بيانات الادمنية إلى ملف نصي
 def dump_ali_admin(ali_admins):
     try:
-        # فتح الملف في وضع الإضافة 'a' بدلاً من 'w'
-        with open(ALI_ADMINS_FILE, 'a') as file:
-            for chat_id, admin_data in ali_admins.items():
-                for admin_id in admin_data['admin_id']:
-                    # كتابة كل إدمن جديد فقط إذا لم يكن قد تمت إضافته سابقاً
-                    file.write(f"{chat_id},{admin_id}\n")  # تغيير هنا إلى فاصلة
+        with open(ALI_ADMINS_FILE, 'w') as file:  # استخدام 'w' بدلاً من 'a'
+            for chat_id, admin_data in ali_admins['admin'].items():
+                admin_ids = ','.join(admin_data['admin_id'])
+                file.write(f"{chat_id}:{admin_ids}\n")  # استخدام النقطتين
         logging.info(f"تم تفريغ بيانات الادمنية بنجاح إلى {ALI_ADMINS_FILE}")
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تفريغ بيانات الادمنية: {e}")
@@ -53,35 +52,36 @@ def dump_ali_admin(ali_admins):
 def load_ali_owners():
     try:
         with open(ALI_OWNERS_FILE, 'r') as file:
-            lines = file.read().splitlines()
-            owners = {}
+            lines = file.readlines()
+            owners = {'owner': {}}
             for line in lines:
                 line = line.strip()
                 if not line:
                     continue
-                try:
-                    chat_id, owner_id = line.split(',')  # تغيير هنا إلى فاصلة
-                    if chat_id not in owners:
-                        owners[chat_id] = {'owner_id': []}
-                    owners[chat_id]['owner_id'].append(owner_id)
-                except ValueError:
-                    logging.error(f"خطأ في تنسيق السطر: {line}")
+                parts = line.split(':')  # استخدام النقطتين
+                if len(parts) != 2:
+                    logging.warning(f"تنسيق غير صحيح في السطر: {line}")
+                    continue
+                chat_id, owner_id = parts
+                if chat_id not in owners['owner']:
+                    owners['owner'][chat_id] = {'owner_id': []}
+                owners['owner'][chat_id]['owner_id'].append(owner_id)
             logging.info(f"تم تحميل بيانات المالكين بنجاح من {ALI_OWNERS_FILE}")
             return owners
     except FileNotFoundError:
         logging.error(f"خطأ: الملف {ALI_OWNERS_FILE} غير موجود.")
-        return {}
+        return {'owner': {}}
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تحميل بيانات المالكين: {e}")
-        return {}
+        return {'owner': {}}
 
 # تفريغ بيانات المالكين إلى ملف نصي
 def dump_ali_owners(ali_owners):
     try:
-        with open(ALI_OWNERS_FILE, 'a') as file:
-            for chat_id, owner_data in ali_owners.items():
-                for owner_id in owner_data['owner_id']:
-                    file.write(f"{chat_id},{owner_id}\n")  # تغيير هنا إلى فاصلة
+        with open(ALI_OWNERS_FILE, 'w') as file:  # استخدام 'w' بدلاً من 'a'
+            for chat_id, owner_data in ali_owners['owner'].items():
+                owner_ids = ','.join(owner_data['owner_id'])
+                file.write(f"{chat_id}:{owner_ids}\n")  # استخدام النقطتين
         logging.info(f"تم تفريغ بيانات المالكين بنجاح إلى {ALI_OWNERS_FILE}")
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تفريغ بيانات المالكين: {e}")
@@ -93,9 +93,6 @@ def update_admins_and_owner(a):
         Ali = a.from_user
         logging.info(f"Received activation command from chat: {chat_id}, by user: {Ali.id}")
         
-        # إضافة تتبع لمخرجات الطباعة لزيادة وضوح الخطأ
-        print(f"Received activation command from chat: {chat_id}, by user: {Ali.id}")
-
         ali_admins = load_ali_admin()
         ali_owners = load_ali_owners()
 
@@ -107,32 +104,27 @@ def update_admins_and_owner(a):
             chat_members = bot.get_chat_administrators(chat_id)
         except Exception as e:
             logging.error(f"خطأ في الحصول على المشرفين: {e}")
-            print(f"خطأ في الحصول على المشرفين: {e}")
             return
 
         logging.info(f"عدد المشرفين في المجموعة {chat_id}: {len(chat_members)}")
-        print(f"عدد المشرفين في المجموعة {chat_id}: {len(chat_members)}")
 
         # إضافة جميع المشرفين إلى قائمة الأدمنية والعثور على المالك
         for admin in chat_members:
             admin_id = str(admin.user.id)
             logging.info(f"فحص: {admin.user.first_name} (ID: {admin_id}), الحالة: {admin.status}")
-            print(f"فحص: {admin.user.first_name} (ID: {admin_id}), الحالة: {admin.status}")
 
             if admin.status == 'creator':  # المالك
                 owner_id = admin_id
                 ali_owner = admin.user
-                if chat_id not in ali_owners:
-                    ali_owners[chat_id] = {'owner_id': [owner_id]}
+                if chat_id not in ali_owners['owner']:
+                    ali_owners['owner'][chat_id] = {'owner_id': [owner_id]}
                 logging.info(f"تم إضافة المالك: {ali_owner.first_name} (ID: {owner_id}) إلى المجموعة {chat_id}")
-                print(f"تم إضافة المالك: {ali_owner.first_name} (ID: {owner_id}) إلى المجموعة {chat_id}")
             elif admin.status in ['administrator', 'creator']:  # المدراء والمشرفين
-                if chat_id not in ali_admins:
-                    ali_admins[chat_id] = {'admin_id': []}
-                if admin_id not in ali_admins[chat_id]['admin_id']:  # تجنب التكرار
-                    ali_admins[chat_id]['admin_id'].append(admin_id)
+                if chat_id not in ali_admins['admin']:
+                    ali_admins['admin'][chat_id] = {'admin_id': []}
+                if admin_id not in ali_admins['admin'][chat_id]['admin_id']:  # تجنب التكرار
+                    ali_admins['admin'][chat_id]['admin_id'].append(admin_id)
                     logging.info(f"تم إضافة المشرف: {admin.user.first_name} (ID: {admin_id}) إلى المجموعة {chat_id}")
-                    print(f"تم إضافة المشرف: {admin.user.first_name} (ID: {admin_id}) إلى المجموعة {chat_id}")
 
         # حفظ التغييرات في الملفات النصية
         dump_ali_admin(ali_admins)
@@ -144,7 +136,5 @@ def update_admins_and_owner(a):
         else:
             bot.send_message(chat_id, "لا يوجد مالك في الدردشة.")
             logging.warning(f"لا يوجد مالك للمجموعة {chat_id}.")
-            print(f"لا يوجد مالك للمجموعة {chat_id}.")
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تحديث المالكين والمدراء: {e}")
-        print(f"حدث خطأ أثناء تحديث المالكين والمدراء: {e}")
