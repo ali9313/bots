@@ -97,8 +97,9 @@ def update_admins_and_owner(a):
 
         # إضافة المدراء إلى قائمة الأدمنية والعثور على المالك
         for admin in chat_members:
+            admin_id = str(admin.user.id)
             if admin.status == 'creator':  # المالك
-                owner_id = str(admin.user.id)
+                owner_id = admin_id
                 ali_owner = admin.user
                 if chat_id not in ali_owners:
                     ali_owners[chat_id] = {'owner_id': [owner_id]}
@@ -107,7 +108,6 @@ def update_admins_and_owner(a):
                         ali_owners[chat_id]['owner_id'].append(owner_id)
                 logging.info(f"تم إضافة المالك: {ali_owner.first_name} (ID: {owner_id}) إلى المجموعة {chat_id}")
             elif admin.status == 'administrator':  # المدراء
-                admin_id = str(admin.user.id)
                 if chat_id not in ali_admins:
                     ali_admins[chat_id] = {'admin_id': []}  # استخدم قائمة فارغة لبدء الإدخال
                 if admin_id not in ali_admins[chat_id]['admin_id']:  # تأكد من عدم وجود الإدخال بالفعل
