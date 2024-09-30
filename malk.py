@@ -21,11 +21,11 @@ def dump_ali_owners(data):
             owners = ','.join(info['owner_id'])
             file.write(f"{chat_id}:{owners}\n")
 
-def is_authorized_user(user_id, message):
+def is_authorized_user(user_id):
     return (programmer_ali(user_id) or 
             dev(user_id) or 
             is_basic_creator(user_id) or 
-            owner(user_id, str(message.chat.id)))
+            owner(user_id)
 
 def promote_owner(a):
     if not is_authorized_user(a.from_user.id, a):  # تحقق من صلاحيات المستخدم
