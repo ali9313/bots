@@ -94,10 +94,13 @@ def update_admins_and_owner(a):
 
         # الحصول على قائمة المدراء في المجموعة
         chat_members = bot.get_chat_administrators(chat_id)
+        logging.info(f"عدد المدراء في المجموعة {chat_id}: {len(chat_members)}")
 
         # إضافة المدراء إلى قائمة الأدمنية والعثور على المالك
         for admin in chat_members:
             admin_id = str(admin.user.id)
+            logging.info(f"فحص: {admin.user.first_name} (ID: {admin_id}), الحالة: {admin.status}")
+            
             if admin.status == 'creator':  # المالك
                 owner_id = admin_id
                 ali_owner = admin.user
@@ -112,7 +115,9 @@ def update_admins_and_owner(a):
                     ali_admins[chat_id] = {'admin_id': []}  # استخدم قائمة فارغة لبدء الإدخال
                 if admin_id not in ali_admins[chat_id]['admin_id']:  # تأكد من عدم وجود الإدخال بالفعل
                     ali_admins[chat_id]['admin_id'].append(admin_id)  # أضف الإدمن
-                logging.info(f"تم إضافة الادمن: {admin.user.first_name} (ID: {admin_id}) إلى المجموعة {chat_id}")
+                    logging.info(f"تم إضافة الادمن: {admin.user.first_name} (ID: {admin_id}) إلى المجموعة {chat_id}")
+                else:
+                    logging.info(f"الادمن: {admin.user.first_name} (ID: {admin_id}) موجود بالفعل في المجموعة {chat_id}")
 
         # حفظ التغييرات في الملفات النصية
         dump_ali_admin(ali_admins)
