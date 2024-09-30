@@ -1,5 +1,6 @@
 import logging
 from config import *
+from ali_json import *
 from telebot import types
 
 # إعداد نظام تسجيل الأخطاء ليتم الطباعة إلى وحدة التحكم أيضًا
