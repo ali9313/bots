@@ -39,13 +39,52 @@ def load_ali_admin():
 # تفريغ بيانات الادمنية إلى ملف نصي
 def dump_ali_admin(ali_admins):
     try:
-        with open(ALI_ADMINS_FILE, 'w') as file:
+        # فتح الملف في وضع الإضافة 'a' بدلاً من 'w'
+        with open(ALI_ADMINS_FILE, 'a') as file:
             for chat_id, admin_data in ali_admins.items():
                 for admin_id in admin_data['admin_id']:
+                    # كتابة كل إدمن جديد فقط إذا لم يكن قد تمت إضافته سابقاً
                     file.write(f"{chat_id}:{admin_id}\n")
         logging.info(f"تم تفريغ بيانات الادمنية بنجاح إلى {ALI_ADMINS_FILE}")
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تفريغ بيانات الادمنية: {e}")
+
+# تحميل بيانات المالكين من ملف نصي
+def load_ali_owners():
+    try:
+        with open(ALI_OWNERS_FILE, 'r') as file:
+            lines = file.read().splitlines()
+            owners = {}
+            for line in lines:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    chat_id, owner_id = line.split(':')
+                    if chat_id not in owners:
+                        owners[chat_id] = {'owner_id': []}
+                    owners[chat_id]['owner_id'].append(owner_id)
+                except ValueError:
+                    logging.error(f"خطأ في تنسيق السطر: {line}")
+            logging.info(f"تم تحميل بيانات المالكين بنجاح من {ALI_OWNERS_FILE}")
+            return owners
+    except FileNotFoundError:
+        logging.error(f"خطأ: الملف {ALI_OWNERS_FILE} غير موجود.")
+        return {}
+    except Exception as e:
+        logging.error(f"حدث خطأ أثناء تحميل بيانات المالكين: {e}")
+        return {}
+
+# تفريغ بيانات المالكين إلى ملف نصي
+def dump_ali_owners(ali_owners):
+    try:
+        with open(ALI_OWNERS_FILE, 'a') as file:
+            for chat_id, owner_data in ali_owners.items():
+                for owner_id in owner_data['owner_id']:
+                    file.write(f"{chat_id}:{owner_id}\n")
+        logging.info(f"تم تفريغ بيانات المالكين بنجاح إلى {ALI_OWNERS_FILE}")
+    except Exception as e:
+        logging.error(f"حدث خطأ أثناء تفريغ بيانات المالكين: {e}")
 
 # دالة التفعيل التي تقوم بإضافة المالك إلى ملف المالكين والمدراء إلى ملف الادمنية
 def update_admins_and_owner(a):
@@ -90,9 +129,10 @@ def update_admins_and_owner(a):
             elif admin.status in ['administrator', 'creator']:  # المدراء والمشرفين
                 if chat_id not in ali_admins:
                     ali_admins[chat_id] = {'admin_id': []}
-                ali_admins[chat_id]['admin_id'].append(admin_id)
-                logging.info(f"تم إضافة المشرف: {admin.user.first_name} (ID: {admin_id}) إلى المجموعة {chat_id}")
-                print(f"تم إضافة المشرف: {admin.user.first_name} (ID: {admin_id}) إلى المجموعة {chat_id}")
+                if admin_id not in ali_admins[chat_id]['admin_id']:  # تجنب التكرار
+                    ali_admins[chat_id]['admin_id'].append(admin_id)
+                    logging.info(f"تم إضافة المشرف: {admin.user.first_name} (ID: {admin_id}) إلى المجموعة {chat_id}")
+                    print(f"تم إضافة المشرف: {admin.user.first_name} (ID: {admin_id}) إلى المجموعة {chat_id}")
 
         # حفظ التغييرات في الملفات النصية
         dump_ali_admin(ali_admins)
