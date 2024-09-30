@@ -3,7 +3,7 @@ from config import *
 from telebot import types
 
 # إعداد نظام تسجيل الأخطاء
-logging.basicConfig(filename='bot.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='bot.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # مسارات الملفات النصية
 ALI_ADMINS_FILE = 'backend/ali_admin.txt'
