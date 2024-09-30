@@ -109,10 +109,9 @@ def update_admins_and_owner(a):
             elif admin.status == 'administrator':  # المدراء
                 admin_id = str(admin.user.id)
                 if chat_id not in ali_admins:
-                    ali_admins[chat_id] = {'admin_id': [admin_id]}
-                else:
-                    if admin_id not in ali_admins[chat_id]['admin_id']:
-                        ali_admins[chat_id]['admin_id'].append(admin_id)
+                    ali_admins[chat_id] = {'admin_id': []}  # استخدم قائمة فارغة لبدء الإدخال
+                if admin_id not in ali_admins[chat_id]['admin_id']:  # تأكد من عدم وجود الإدخال بالفعل
+                    ali_admins[chat_id]['admin_id'].append(admin_id)  # أضف الإدمن
                 logging.info(f"تم إضافة الادمن: {admin.user.first_name} (ID: {admin_id}) إلى المجموعة {chat_id}")
 
         # حفظ التغييرات في الملفات النصية
