@@ -42,7 +42,7 @@ def dump_ali_admin(ali_admin):
 def is_authorized_user(user_id, a):
     chat_id = str(a.chat.id)
     authorized = (
-        owner(user_id, chat_id) or
+        owner(user_id) or
         is_basic_creator(user_id) or
         dev(user_id) or
         basic_dev(user_id) or
