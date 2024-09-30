@@ -1,4 +1,5 @@
 from config import *
+from ali_json import is_basic_creator, owner, dev, basic_dev, programmer_ali  # تأكد من استيراد الدوال اللازمة
 
 # تحميل المالكين من الملف النصي
 def load_ali_owners():
@@ -20,8 +21,17 @@ def dump_ali_owners(data):
             owners = ','.join(info['owner_id'])
             file.write(f"{chat_id}:{owners}\n")
 
+def is_authorized_user(user_id, message):
+    return (programmer_ali(user_id) or 
+            dev(user_id) or 
+            is_basic_creator(user_id) or 
+            owner(user_id, str(message.chat.id)))
 
 def promote_owner(a):
+    if not is_authorized_user(a.from_user.id, a):  # تحقق من صلاحيات المستخدم
+        bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لكى تستطيع رفع مالك\n√")
+        return
+
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
@@ -52,6 +62,10 @@ def promote_owner(a):
 
 
 def demote_owner(a):
+    if not is_authorized_user(a.from_user.id, a):  # تحقق من صلاحيات المستخدم
+        bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لكى تستطيع تنزيل مالك\n√")
+        return
+
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
         user_id = str(target)
@@ -83,6 +97,10 @@ def demote_owner(a):
 
 
 def clear_owner(a):
+    if not is_authorized_user(a.from_user.id, a):  # تحقق من صلاحيات المستخدم
+        bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لاستخدام الامر\n√")
+        return
+
     chat_id = str(a.chat.id)
     ali_owners = load_ali_owners()
 
@@ -110,7 +128,7 @@ def get_owner(a):
         for owner_id in owners:
             try:
                 user = bot.get_chat_member(a.chat.id, int(owner_id))
-                owner_names.append(f"[{user.user.first_name}](tg://user?id={user.user.id})")
+                owner_names.append(f"[{user.user.first_name}](tg://user?id={user.user.id})" if user.user.username else f"{user.user.first_name}")
             except:
                 continue
 
