@@ -1,6 +1,6 @@
 import logging
 from config import *
-from ali_json import is_basic_creator, owner, dev, basic_dev, programmer_ali  # إضافة دوال التحقق هنا
+from ali_json import *
 
 # إعداد سجل الأخطاء
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
