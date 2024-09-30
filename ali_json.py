@@ -123,6 +123,7 @@ def load_ali_creators():
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تحميل 'ali_creators.txt': {e}")
     return ali_creators
+
 def dump_ali_creators(ali_creators):
     try:
         with open('backend/ali_creators.txt', 'w') as file:
@@ -177,7 +178,7 @@ def is_basic_creator(user_id):
 
 def owner(user_id):
     ali_owners = load_ali_owners()
-            return str(user_id) in ali_owners()
+    return str(user_id) in ali_owners()
 
 def creator(user_id, chat_id):
     ali_creators = load_ali_creators()
