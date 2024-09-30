@@ -134,6 +134,6 @@ def get_owner(a):
 
         if owner_names:
             owner_list = "\n".join(owner_names)
-            bot.reply_to(a, f"◍ قائمة المالكين:\n\n{owner_list}")
+            bot.reply_to(a, f"◍ قائمة المالكين:\n\n{owner_list}", parse_mode='Markdown')
         else:
             bot.reply_to(a, "تعذر العثور على معلومات المالكين")
