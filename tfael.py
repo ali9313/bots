@@ -21,7 +21,7 @@ def load_ali_admin():
                 if not line:
                     continue
                 try:
-                    chat_id, admin_id = line.split(':')
+                    chat_id, admin_id = line.split(',')  # تغيير هنا إلى فاصلة
                     if chat_id not in admins:
                         admins[chat_id] = {'admin_id': []}
                     admins[chat_id]['admin_id'].append(admin_id)
@@ -44,7 +44,7 @@ def dump_ali_admin(ali_admins):
             for chat_id, admin_data in ali_admins.items():
                 for admin_id in admin_data['admin_id']:
                     # كتابة كل إدمن جديد فقط إذا لم يكن قد تمت إضافته سابقاً
-                    file.write(f"{chat_id}:{admin_id}\n")
+                    file.write(f"{chat_id},{admin_id}\n")  # تغيير هنا إلى فاصلة
         logging.info(f"تم تفريغ بيانات الادمنية بنجاح إلى {ALI_ADMINS_FILE}")
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تفريغ بيانات الادمنية: {e}")
@@ -60,7 +60,7 @@ def load_ali_owners():
                 if not line:
                     continue
                 try:
-                    chat_id, owner_id = line.split(':')
+                    chat_id, owner_id = line.split(',')  # تغيير هنا إلى فاصلة
                     if chat_id not in owners:
                         owners[chat_id] = {'owner_id': []}
                     owners[chat_id]['owner_id'].append(owner_id)
@@ -81,7 +81,7 @@ def dump_ali_owners(ali_owners):
         with open(ALI_OWNERS_FILE, 'a') as file:
             for chat_id, owner_data in ali_owners.items():
                 for owner_id in owner_data['owner_id']:
-                    file.write(f"{chat_id}:{owner_id}\n")
+                    file.write(f"{chat_id},{owner_id}\n")  # تغيير هنا إلى فاصلة
         logging.info(f"تم تفريغ بيانات المالكين بنجاح إلى {ALI_OWNERS_FILE}")
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تفريغ بيانات المالكين: {e}")
