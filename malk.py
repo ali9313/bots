@@ -25,11 +25,11 @@ def is_authorized_user(user_id):
     return (programmer_ali(user_id) or 
             dev(user_id) or 
             is_basic_creator(user_id) or 
-            owner(user_id)
+            owner(user_id))
 
 def promote_owner(a):
-    if not is_authorized_user(a.from_user.id, a):  # تحقق من صلاحيات المستخدم
-        bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لكى تستطيع رفع مالك\n√")
+    if not is_authorized_user(a.from_user.id):  # تحقق من صلاحيات المستخدم
+        bot.reply_to(a, "◍ يجب أن تكون منشئًا على الأقل لكي تستطيع رفع مالك\n√")
         return
 
     if a.reply_to_message and a.reply_to_message.from_user:
@@ -62,8 +62,8 @@ def promote_owner(a):
 
 
 def demote_owner(a):
-    if not is_authorized_user(a.from_user.id, a):  # تحقق من صلاحيات المستخدم
-        bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لكى تستطيع تنزيل مالك\n√")
+    if not is_authorized_user(a.from_user.id):  # تحقق من صلاحيات المستخدم
+        bot.reply_to(a, "◍ يجب أن تكون منشئًا على الأقل لكي تستطيع تنزيل مالك\n√")
         return
 
     if a.reply_to_message and a.reply_to_message.from_user:
@@ -85,11 +85,11 @@ def demote_owner(a):
     ali_owners = load_ali_owners()
 
     if chat_id not in ali_owners['owners']:
-        bot.reply_to(a, "لا يوجد مالكين في هذه الدردشة حتى الأن")
+        bot.reply_to(a, "لا يوجد مالكين في هذه الدردشة حتى الآن")
         return
 
     if user_id not in ali_owners['owners'][chat_id]['owner_id']:
-        bot.reply_to(a, "◍ هذا المستخدم ليس مالك لتنزيله\n√")
+        bot.reply_to(a, "◍ هذا المستخدم ليس مالكًا لتنزيله\n√")
     else:
         ali_owners['owners'][chat_id]['owner_id'].remove(user_id)
         dump_ali_owners(ali_owners)
@@ -97,8 +97,8 @@ def demote_owner(a):
 
 
 def clear_owner(a):
-    if not is_authorized_user(a.from_user.id, a):  # تحقق من صلاحيات المستخدم
-        bot.reply_to(a, "◍ يجب ان تكون منشئ على الاقل لاستخدام الامر\n√")
+    if not is_authorized_user(a.from_user.id):  # تحقق من صلاحيات المستخدم
+        bot.reply_to(a, "◍ يجب أن تكون منشئًا على الأقل لاستخدام الأمر\n√")
         return
 
     chat_id = str(a.chat.id)
@@ -117,12 +117,12 @@ def get_owner(a):
     ali_owners = load_ali_owners()
 
     if chat_id not in ali_owners['owners']:
-        bot.reply_to(a, "لا يوجد مالكين حتى الأن")
+        bot.reply_to(a, "لا يوجد مالكين حتى الآن")
         return
 
     owners = ali_owners['owners'][chat_id]['owner_id']
     if not owners:
-        bot.reply_to(a, "لا يوجد مالكين حتى الأن")
+        bot.reply_to(a, "لا يوجد مالكين حتى الآن")
     else:
         owner_names = []
         for owner_id in owners:
