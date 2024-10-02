@@ -6,20 +6,33 @@ def load_ali_owners():
     owners_dict = {"owners": {}}
     try:
         with open('backend/ali_owners.txt', 'r') as file:
-            for line in file:
-                chat_id, owners = line.strip().split(':')
+            for line_num, line in enumerate(file, 1):
+                line = line.strip()
+                if not line:
+                    continue  # تخطي الأسطر الفارغة
+                parts = line.split(':', 1)  # تقسيم السطر على أول رمز ':'
+                if len(parts) != 2:
+                    print(f"⚠️ خطأ في التنسيق بالسطر {line_num} في ali_owners.txt: {line}")
+                    continue  # تخطي السطور ذات التنسيق غير الصحيح
+                chat_id, owners = parts
                 owners_dict['owners'][chat_id] = {'owner_id': owners.split(',') if owners else []}
     except FileNotFoundError:
         # في حال لم يكن الملف موجودًا، نعيد قاموس فارغ
-        pass
+        print("⚠️ ملف ali_owners.txt غير موجود. سيتم إنشاء ملف جديد عند إضافة مالكين.")
+    except Exception as e:
+        # التعامل مع أي أخطاء أخرى قد تحدث
+        print(f"⚠️ حدث خطأ أثناء تحميل المالكين: {e}")
     return owners_dict
 
 # حفظ المالكين في الملف النصي
 def dump_ali_owners(data):
-    with open('backend/ali_owners.txt', 'w') as file:
-        for chat_id, info in data['owners'].items():
-            owners = ','.join(info['owner_id'])
-            file.write(f"{chat_id}:{owners}\n")
+    try:
+        with open('backend/ali_owners.txt', 'w') as file:
+            for chat_id, info in data['owners'].items():
+                owners = ','.join(info['owner_id'])
+                file.write(f"{chat_id}:{owners}\n")
+    except Exception as e:
+        print(f"⚠️ حدث خطأ أثناء حفظ المالكين: {e}")
 
 def is_authorized_user(user_id):
     return (programmer_ali(user_id) or 
@@ -60,7 +73,6 @@ def promote_owner(a):
         dump_ali_owners(ali_owners)
         bot.reply_to(a, "◍ تم رفع المستخدم ليصبح مالك\n√")
 
-
 def demote_owner(a):
     if not is_authorized_user(a.from_user.id):  # تحقق من صلاحيات المستخدم
         bot.reply_to(a, "◍ يجب أن تكون منشئًا على الأقل لكي تستطيع تنزيل مالك\n√")
@@ -95,7 +107,6 @@ def demote_owner(a):
         dump_ali_owners(ali_owners)
         bot.reply_to(a, "◍ تم تنزيل المستخدم من المالكين بنجاح\n√")
 
-
 def clear_owner(a):
     if not is_authorized_user(a.from_user.id):  # تحقق من صلاحيات المستخدم
         bot.reply_to(a, "◍ يجب أن تكون منشئًا على الأقل لاستخدام الأمر\n√")
@@ -110,7 +121,6 @@ def clear_owner(a):
         bot.reply_to(a, "◍ تم مسح المالكين بنجاح\n√")
     else:
         bot.reply_to(a, "لا يوجد مالكين ليتم مسحهم")
-
 
 def get_owner(a):
     chat_id = str(a.chat.id)
