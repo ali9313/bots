@@ -176,10 +176,10 @@ def is_basic_creator(user_id):
     ali_basic_creators = load_ali_basic_creators()
     return str(user_id) in ali_basic_creators
 
-def owner(user_id):
+def owner(user_id, chat_id):
     ali_owners = load_ali_owners()
-    return any(user_id in owners['owner_id'] for owners in ali_owners.values())  # التعديل هنا
-
+    return chat_id in ali_owners and str(user_id) in ali_owners[chat_id]['owner_id']
+    
 def creator(user_id, chat_id):
     ali_creators = load_ali_creators()
     return chat_id in ali_creators and str(user_id) in ali_creators[chat_id]['creator_id']
