@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 # قائمة المطورين، يمكن تعديلها كما تحتاج
 DEVELOPERS = [232499688]
-OWNER_BOT = 232499688
+OWNER_BOT = 6205825809
 
 # دوال تحميل وتفريغ الملفات النصية
 def load_ali_basic_devs():
