@@ -195,8 +195,7 @@ def demote_admin(a):
         user_name = user_info.first_name
         bot.reply_to(a, f"◍ تم تنزيل {user_name} من الأدمن بنجاح.\n")
         logging.info(f"المستخدم {user_id} تم تنزيله من الأدمن في المحادثة {chat_id}.")
-        
-ali_admin['admin'][chat_id]['admin_id'].remove(user_id)
+        ali_admin['admin'][chat_id]['admin_id'].remove(user_id)
         dump_ali_admin(ali_admin)
 
     except Exception as e:
