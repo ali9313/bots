@@ -1,5 +1,10 @@
 from config import *
 from telebot import TeleBot, types
+from ali_json import programmer_ali, basic_dev
+import logging
+
+# إعداد سجل الأخطاء
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def load_ali_devs():
     try:
@@ -13,28 +18,16 @@ def dump_ali_devs(ali_devs):
         for dev in ali_devs:
             file.write(f"{dev}\n")  # كتابة كل معرف مستخدم في سطر جديد
 
-def load_ali_owners():
-    try:
-        with open('backend/ali_owners.txt', 'r', encoding='utf-8') as file:
-            return file.read().splitlines()  # قراءة كل سطر كمعرف مالك
-    except FileNotFoundError:
-        return []  # في حالة عدم وجود الملف، نعيد قائمة فارغة
+def is_authorized_user(user_id, a):
+    # تحقق مما إذا كان المستخدم هو مبرمج السورس أو المطور الثانوي فقط
+    authorized = (
+        programmer_ali(user_id) or  # التحقق من إذا كان مبرمج السورس
+        basic_dev(user_id)  # التحقق من إذا كان مطورًا ثانويًا
+    )
+    
+    logging.info(f"التحقق من الصلاحيات للمستخدم {user_id}: {'مؤهل' if authorized else 'غير مؤهل'}")
+    return authorized
 
-def is_owner(user_id):
-    owners = load_ali_owners()
-    return str(user_id) in owners  # التحقق مما إذا كان المعرف موجودًا في القائمة
-
-def ALI(bot, a):
-    # تحقق من أن المستخدم هو المطور الأساسي
-    return False  # يمكن تعديلها لاحقاً حسب الحاجة
-
-def OWNER_ID(bot, a):
-    # تحقق مما إذا كان المستخدم هو المالك
-    return is_owner(a.from_user.id)
-
-def basic_dev(bot, a):
-    # تحقق مما إذا كان المستخدم مطوراً ثانوياً
-    return False  # يمكن تعديلها لاحقاً حسب الحاجة
 def promote_devs(a):
     if a.reply_to_message and a.reply_to_message.from_user:
         target = a.reply_to_message.from_user.id
@@ -53,8 +46,8 @@ def promote_devs(a):
 
     ali_devs = load_ali_devs()
 
-    if not (ALI(bot, a) or OWNER_ID(bot, a)):
-        bot.reply_to(a, "◍ انت لست المطور الثانوي\n√")
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ يجب أن تكون مالكًا أو مطورًا لكي تستطيع رفع مستخدم.\n√")
         return
 
     if user_id in ali_devs:
@@ -64,11 +57,10 @@ def promote_devs(a):
         dump_ali_devs(ali_devs)  # حفظ التعديلات إلى الملف
         bot.reply_to(a, "◍ تم رفع المستخدم ليصبح مطور\n√")
 
-
 def get_devs(a):
     ali_devs = load_ali_devs()
 
-    if not (ALI(bot, a) or OWNER_ID(bot, a)):
+    if not is_authorized_user(a.from_user.id, a):
         bot.reply_to(a, "◍ انت لست المطور\n√")
         return
 
@@ -76,20 +68,19 @@ def get_devs(a):
         bot.reply_to(a, "لا يوجد مطورين حتى الأن")
         return
 
-    admin_names = []
-    for admin_id in ali_devs:
+    dev_names = []
+    for dev_id in ali_devs:
         try:
-            user = bot.get_chat(int(admin_id))
-            admin_names.append(f"[{user.first_name}](tg://user?id={user.id})")
+            user = bot.get_chat(int(dev_id))
+            dev_names.append(f"[{user.first_name}](tg://user?id={user.id})")
         except:
             continue
 
-    if admin_names:
-        admin_list = "\n".join(admin_names)
-        bot.reply_to(a, f"◍ قائمة المطورين:\n\n{admin_list}", parse_mode='Markdown')
+    if dev_names:
+        dev_list = "\n".join(dev_names)
+        bot.reply_to(a, f"◍ قائمة المطورين:\n\n{dev_list}", parse_mode='Markdown')
     else:
         bot.reply_to(a, "تعذر العثور على معلومات المطورين")
-
 
 def demote_devs(a):
     if a.reply_to_message and a.reply_to_message.from_user:
@@ -109,7 +100,7 @@ def demote_devs(a):
 
     ali_devs = load_ali_devs()
 
-    if not (ALI(bot, a) or OWNER_ID(bot, a)):
+    if not is_authorized_user(a.from_user.id, a):
         bot.reply_to(a, "◍ انت لست المطور الثانوي\n√")
         return
 
@@ -120,11 +111,10 @@ def demote_devs(a):
         dump_ali_devs(ali_devs)  # حفظ التعديلات إلى الملف
         bot.reply_to(a, "◍ تم تنزيل المستخدم من المطورين بنجاح\n√")
 
-
 def clear_devs(a):
     ali_devs = load_ali_devs()
 
-    if not (ALI(bot, a) or OWNER_ID(bot, a)):
+    if not is_authorized_user(a.from_user.id, a):
         bot.reply_to(a, "◍ انت لست المطور الثانوي\n√")
         return
 
