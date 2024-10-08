@@ -113,7 +113,7 @@ def promote_admin(a):
 
     # التأكد من أن المستخدم لديه صلاحيات كافية
     if not is_authorized_user(a.from_user.id, a):
-        bot.reply_to(a, "◍ يجب أن تكون منشئ على الأقل لكي تستطيع رفع أدمن.\n√")
+        bot.reply_to(a, "◍ يجب أن تكون منشئ على الأقل لكي تستطيع رفع مشرف.\n√")
         return
 
     # إضافة المستخدم كأدمن إذا لم يكن موجوداً
@@ -141,11 +141,11 @@ def promote_admin(a):
             )
             user_info = bot.get_chat(user_id)
             user_name = user_info.first_name
-            bot.reply_to(a, f"◍ تم رفع  {user_name} كأدمن بنجاح.\n")
-            logging.info(f"المستخدم {user_id} تم رفعه كأدمن في المحادثة {chat_id}.")
+            bot.reply_to(a, f"◍ تم رفع  {user_name} كمشرف بنجاح.\n")
+            logging.info(f"المستخدم {user_id} تم رفعه كمشرف في المحادثة {chat_id}.")
         except Exception as e:
             logging.error(f"حدث خطأ أثناء رفع المستخدم {user_id} كأدمن: {e}")
-            bot.reply_to(a, "◍ حدث خطأ أثناء رفع المستخدم كأدمن.\n√")
+            bot.reply_to(a, "◍ حدث خطأ أثناء رفع المستخدم كمشرف\n√")
 
 def demote_admin(a):
     ali_admin = load_ali_admin()  # تحميل بيانات الأدمن
@@ -168,7 +168,7 @@ def demote_admin(a):
     chat_id = str(a.chat.id)
 
     if not is_authorized_user(a.from_user.id, a):
-        bot.reply_to(a, "◍ يجب أن تكون منشئ على الأقل لكي تستطيع تنزيل أدمن.\n√")
+        bot.reply_to(a, "◍ يجب أن تكون منشئ على الأقل لكي تستطيع تنزيل مشرف.\n√")
         return
 
     if chat_id not in ali_admin['admin']:
@@ -176,7 +176,7 @@ def demote_admin(a):
         return
 
     if user_id not in ali_admin['admin'][chat_id]['admin_id']:
-        bot.reply_to(a, "◍ هذا المستخدم ليس أدمن لتنزيله.\n√")
+        bot.reply_to(a, "◍ هذا المستخدم ليس مشرف لتنزيله.\n√")
         return
 
     # محاولة تنزيل المستخدم كأدمن فعليًا
@@ -193,15 +193,15 @@ def demote_admin(a):
         )
         user_info = bot.get_chat(user_id)
         user_name = user_info.first_name
-        bot.reply_to(a, f"◍ تم تنزيل {user_name} من الأدمن بنجاح.\n")
-        logging.info(f"المستخدم {user_id} تم تنزيله من الأدمن في المحادثة {chat_id}.")
+        bot.reply_to(a, f"◍ تم تنزيل {user_name} من المشرفين بنجاح.\n")
+        logging.info(f"المستخدم {user_id} تم تنزيله من المشرفين في الكروب {chat_id}.")
         ali_admin['admin'][chat_id]['admin_id'].remove(user_id)
         dump_ali_admin(ali_admin)
 
     except Exception as e:
         # التحقق إذا كان الخطأ هو "CHAT_ADMIN_REQUIRED"
         if 'CHAT_ADMIN_REQUIRED' in str(e):
-            bot.reply_to(a, "◍ عذرًا، لا أستطيع تنزيل هذا الأدمن لأنه لم يتم رفعه بواسطة البوت.\n√")
+            bot.reply_to(a, "◍ عذرًا، لا أستطيع تنزيل هذا المشرف لانه لم يتم رفعه بواسطة البوت.\n√")
         else:
             logging.error(f"حدث خطأ أثناء تنزيل المستخدم {user_id} من الأدمن: {e}")
             bot.reply_to(a, "◍ حدث خطأ أثناء تنزيل المستخدم.\n√")
@@ -237,10 +237,10 @@ def clear_admins(a):
             except Exception as e:
                 logging.error(f"خطأ أثناء تنزيل المستخدم {admin_id} من الأدمن: {e}")
 
-        bot.reply_to(a, "◍ تم مسح الأدمنيه بنجاح.\n√")
+        bot.reply_to(a, "◍ تم مسح المشرفين بنجاح.\n√")
         logging.info(f"تم مسح جميع الأدمنيه في المحادثة {chat_id}.")
     else:
-        bot.reply_to(a, "لا يوجد أدمنيه ليتم مسحهم.")
+        bot.reply_to(a, "لا يوجد مشرفين ليتم مسحهم.")
 
 def get_admins(a):
     chat_id = str(a.chat.id)
