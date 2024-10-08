@@ -1,5 +1,10 @@
 from config import *
 from telebot import TeleBot, types
+from ali_json import programmer_ali, owner_id_ali  # حذف استيراد basic_dev
+import logging
+
+# إعداد سجل الأخطاء
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def load_ali_basic_devs():
     ali_basic_devs = {'basic_devs': {}}
@@ -16,6 +21,16 @@ def dump_ali_basic_devs(ali_basic_devs):
     with open('backend/ali_basic_devs.txt', 'w') as file:
         for user_id in ali_basic_devs['basic_devs']:
             file.write(f"{user_id}\n")
+
+# حذف التحقق من المطور الثانوي (basic_dev)
+def is_authorized_user(user_id, a):
+    authorized = (
+        programmer_ali(user_id) or
+        owner_id_ali(user_id)
+    )
+    
+    logging.info(f"التحقق من الصلاحيات للمستخدم {user_id}: {'مؤهل' if authorized else 'غير مؤهل'}")
+    return authorized
 
 def promote_basic_dev(a):
     if a.reply_to_message and a.reply_to_message.from_user:
@@ -35,8 +50,8 @@ def promote_basic_dev(a):
 
     ali_basic_devs = load_ali_basic_devs()
 
-    if not (ALI(bot, a) or OWNER_ID(bot, a)):
-        bot.reply_to(a, "◍ انت لست المطور الاساسي\n√")
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ هذا الامر خاص بالمطور الاساسي\n√")
     elif user_id in ali_basic_devs['basic_devs']:
         bot.reply_to(a, "◍ هذا المستخدم مطور ثانوي بالفعل\n√")
     else:
@@ -47,8 +62,8 @@ def promote_basic_dev(a):
 def list_basic_devs(a):
     ali_basic_devs = load_ali_basic_devs()
 
-    if not (ALI(bot, a) or basic_dev(bot, a) or OWNER_ID(bot, a)):
-        bot.reply_to(a, "◍ انت لست المطور الثانوي\n√")
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ هذا الامر خاص بالمطور الاساسي\n√")
         return
 
     basic_devs = ali_basic_devs['basic_devs']
@@ -87,8 +102,8 @@ def demote_basic_dev(a):
 
     ali_basic_devs = load_ali_basic_devs()
 
-    if not (ALI(bot, a) or OWNER_ID(bot, a)):
-        bot.reply_to(a, "◍ انت لست المطور الاساسي\n√")
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ هذا الامر خاص بالمطور الاساسي\n√")
         return
 
     if user_id not in ali_basic_devs['basic_devs']:
@@ -101,8 +116,8 @@ def demote_basic_dev(a):
 def clear_basic_devs(a):
     ali_basic_devs = load_ali_basic_devs()
 
-    if not (ALI(bot, a) or OWNER_ID(bot, a)):
-        bot.reply_to(a, "◍ انت لست المطور الاساسي\n√")
+    if not is_authorized_user(a.from_user.id, a):
+        bot.reply_to(a, "◍ هذا الامر خاص بالمطور الاساسي\n√")
         return
 
     ali_basic_devs['basic_devs'] = {}
