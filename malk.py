@@ -1,5 +1,5 @@
 from config import *
-from ali_json import is_basic_creator, owner, dev, basic_dev, programmer_ali, owner_id_ali  # تأكد من استيراد الدوال اللازمة
+from ali_json import is_basic_creator, owner, dev, basic_dev, programmer_ali, owner_id_ali
 
 # تحميل المالكين من الملف النصي
 def load_ali_owners():
@@ -34,15 +34,18 @@ def dump_ali_owners(data):
     except Exception as e:
         print(f"⚠️ حدث خطأ أثناء حفظ المالكين: {e}")
 
-def is_authorized_user(user_id):
-    return (programmer_ali(user_id) or 
-            dev(user_id) or 
-            is_basic_creator(user_id) or 
-            owner(user_id) or owner_id_ali(user_id) or basic_dev(user_id))
+# استبدال دالة التحقق بالدالة المحفوظة
+def is_authorized_user(user_id, a):
+    authorized = (
+        programmer_ali(user_id) or
+        basic_dev(user_id) or owner_id_ali(user_id) or dev(user_id) or is_basic_creator(user_id)
+    )
+    logging.info(f"التحقق من الصلاحيات للمستخدم {user_id}: {'مؤهل' if authorized else 'غير مؤهل'}")
+    return authorized
 
 def promote_owner(a):
-    if not is_authorized_user(a.from_user.id):  # تحقق من صلاحيات المستخدم
-        bot.reply_to(a, "◍ يجب أن تكون منشئًا على الأقل لكي تستطيع رفع مالك\n√")
+    if not is_authorized_user(a.from_user.id, a):  # تحقق من صلاحيات المستخدم
+        bot.reply_to(a, "◍ يجب أن تكون مطورًا أساسيًا لكي تستطيع رفع مالك\n√")
         return
 
     if a.reply_to_message and a.reply_to_message.from_user:
@@ -74,8 +77,8 @@ def promote_owner(a):
         bot.reply_to(a, "◍ تم رفع المستخدم ليصبح مالك\n√")
 
 def demote_owner(a):
-    if not is_authorized_user(a.from_user.id):  # تحقق من صلاحيات المستخدم
-        bot.reply_to(a, "◍ يجب أن تكون منشئًا على الأقل لكي تستطيع تنزيل مالك\n√")
+    if not is_authorized_user(a.from_user.id, a):  # تحقق من صلاحيات المستخدم
+        bot.reply_to(a, "◍ يجب أن تكون مطورًا أساسيًا لكي تستطيع تنزيل مالك\n√")
         return
 
     if a.reply_to_message and a.reply_to_message.from_user:
@@ -108,8 +111,8 @@ def demote_owner(a):
         bot.reply_to(a, "◍ تم تنزيل المستخدم من المالكين بنجاح\n√")
 
 def clear_owner(a):
-    if not is_authorized_user(a.from_user.id):  # تحقق من صلاحيات المستخدم
-        bot.reply_to(a, "◍ يجب أن تكون منشئًا على الأقل لاستخدام الأمر\n√")
+    if not is_authorized_user(a.from_user.id, a):  # تحقق من صلاحيات المستخدم
+        bot.reply_to(a, "◍ يجب أن تكون مطورًا أساسيًا لاستخدام الأمر\n√")
         return
 
     chat_id = str(a.chat.id)
