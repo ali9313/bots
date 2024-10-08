@@ -1,6 +1,6 @@
 import logging
 from config import *
-from ali_json import *
+from ali_json import is_basic_creator, owner, dev, basic_dev, programmer_ali
 
 # إعداد سجل الأخطاء
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -39,15 +39,55 @@ def dump_ali_admin(ali_admin):
     except Exception as e:
         logging.error(f"حدث خطأ أثناء تفريغ البيانات إلى 'ali_admin.txt': {e}")
 
+# تحميل المالكين من الملف النصي
+def load_ali_owners():
+    owners_dict = {"owners": {}}
+    try:
+        with open('backend/ali_owners.txt', 'r') as file:
+            for line_num, line in enumerate(file, 1):
+                line = line.strip()
+                if not line:
+                    continue  # تخطي الأسطر الفارغة
+                parts = line.split(':', 1)  # تقسيم السطر على أول رمز ':'
+                if len(parts) != 2:
+                    print(f"⚠️ خطأ في التنسيق بالسطر {line_num} في ali_owners.txt: {line}")
+                    continue  # تخطي السطور ذات التنسيق غير الصحيح
+                chat_id, owners = parts
+                owners_dict['owners'][chat_id] = {'owner_id': owners.split(',') if owners else []}
+    except FileNotFoundError:
+        # في حال لم يكن الملف موجودًا، نعيد قاموس فارغ
+        print("⚠️ ملف ali_owners.txt غير موجود. سيتم إنشاء ملف جديد عند إضافة مالكين.")
+    except Exception as e:
+        # التعامل مع أي أخطاء أخرى قد تحدث
+        print(f"⚠️ حدث خطأ أثناء تحميل المالكين: {e}")
+    return owners_dict
+
+# حفظ المالكين في الملف النصي
+def dump_ali_owners(data):
+    try:
+        with open('backend/ali_owners.txt', 'w') as file:
+            for chat_id, info in data['owners'].items():
+                owners = ','.join(info['owner_id'])
+                file.write(f"{chat_id}:{owners}\n")
+    except Exception as e:
+        print(f"⚠️ حدث خطأ أثناء حفظ المالكين: {e}")
+
+# تعديل دالة is_authorized_user للتحقق من "مالك البوت"
 def is_authorized_user(user_id, a):
+    ali_owners = load_ali_owners()
     chat_id = str(a.chat.id)
+    
+    # التحقق مما إذا كان المستخدم موجودًا في قائمة المالكين
+    is_owner = chat_id in ali_owners['owners'] and str(user_id) in ali_owners['owners'][chat_id]['owner_id']
+
     authorized = (
-        owner(user_id) or
-        is_basic_creator(user_id) or
-        dev(user_id) or
-        basic_dev(user_id) or
-        programmer_ali(user_id)  # إضافة التحقق من مطور السورس هنا
+        is_owner or  # التحقق مما إذا كان المستخدم مالكًا في البوت
+        is_basic_creator(user_id) or  # التحقق من إذا كان منشئًا في المجموعة
+        dev(user_id) or  # التحقق من إذا كان مطورًا
+        basic_dev(user_id) or  # التحقق من إذا كان مطورًا أساسيًا
+        programmer_ali(user_id)  # التحقق من إذا كان مطور السورس
     )
+    
     logging.info(f"التحقق من الصلاحيات للمستخدم {user_id}: {'مؤهل' if authorized else 'غير مؤهل'}")
     return authorized
 
@@ -156,8 +196,7 @@ def demote_admin(a):
         bot.reply_to(a, f"◍ تم تنزيل {user_name} من الأدمن بنجاح.\n")
         logging.info(f"المستخدم {user_id} تم تنزيله من الأدمن في المحادثة {chat_id}.")
         
-        # إزالة المستخدم من قائمة الأدمن في ملف ali_admin.txt
-        ali_admin['admin'][chat_id]['admin_id'].remove(user_id)
+ali_admin['admin'][chat_id]['admin_id'].remove(user_id)
         dump_ali_admin(ali_admin)
 
     except Exception as e:
