@@ -47,7 +47,7 @@ def promote_devs(a):
     ali_devs = load_ali_devs()
 
     if not is_authorized_user(a.from_user.id, a):
-        bot.reply_to(a, "◍ يجب أن تكون مالكًا أو مطورًا لكي تستطيع رفع مستخدم.\n√")
+        bot.reply_to(a, "◍ يجب أن تكون مطور ثانوي لكي تستطيع رفع مستخدم.\n√")
         return
 
     if user_id in ali_devs:
@@ -61,7 +61,7 @@ def get_devs(a):
     ali_devs = load_ali_devs()
 
     if not is_authorized_user(a.from_user.id, a):
-        bot.reply_to(a, "◍ انت لست المطور\n√")
+        bot.reply_to(a, "◍ انت لست المطور الثانوي لكي تستخدم الامر\n√")
         return
 
     if not ali_devs:
