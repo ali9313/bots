@@ -1,6 +1,6 @@
 from config import *
 from telebot import TeleBot, types
-from ali_json import programmer_ali, basic_dev
+from ali_json import programmer_ali, basic_dev, owner_id_ali
 import logging
 
 # إعداد سجل الأخطاء
@@ -19,10 +19,9 @@ def dump_ali_devs(ali_devs):
             file.write(f"{dev}\n")  # كتابة كل معرف مستخدم في سطر جديد
 
 def is_authorized_user(user_id, a):
-    # تحقق مما إذا كان المستخدم هو مبرمج السورس أو المطور الثانوي فقط
     authorized = (
-        programmer_ali(user_id) or  # التحقق من إذا كان مبرمج السورس
-        basic_dev(user_id)  # التحقق من إذا كان مطورًا ثانويًا
+        programmer_ali(user_id) or
+        basic_dev(user_id) or owner_id_ali(user_id)
     )
     
     logging.info(f"التحقق من الصلاحيات للمستخدم {user_id}: {'مؤهل' if authorized else 'غير مؤهل'}")
