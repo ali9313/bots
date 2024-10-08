@@ -93,11 +93,11 @@ def reply_func(a):
         demote_basic_dev(a)
     elif a.text == "مسح الثانويين":
         clear_basic_devs(a)
-    elif a.text == "رفع ادمن":
+    elif a.text == "رفع مشرف":
         promote_admin(a)
-    elif a.text == "تنزيل ادمن":
+    elif a.text == "تنزيل مشرف":
         demote_admin(a)
-    elif a.text == "مسح الادمنيه":
+    elif a.text == "مسح المشرفين":
         clear_admins(a)
-    elif a.text == "الادمنيه":
+    elif a.text == "المشرفين":
         get_admins(a)
