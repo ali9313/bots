@@ -1,6 +1,6 @@
 import logging
 from config import *
-from ali_json import is_basic_creator, owner, dev, basic_dev, programmer_ali
+from ali_json import is_basic_creator, owner, dev, basic_dev, programmer_ali, owner_id_ali
 
 # إعداد سجل الأخطاء
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -85,7 +85,7 @@ def is_authorized_user(user_id, a):
         is_basic_creator(user_id) or  # التحقق من إذا كان منشئًا في المجموعة
         dev(user_id) or  # التحقق من إذا كان مطورًا
         basic_dev(user_id) or  # التحقق من إذا كان مطورًا أساسيًا
-        programmer_ali(user_id)  # التحقق من إذا كان مطور السورس
+        programmer_ali(user_id) or owner_id_ali(user_id)
     )
     
     logging.info(f"التحقق من الصلاحيات للمستخدم {user_id}: {'مؤهل' if authorized else 'غير مؤهل'}")
