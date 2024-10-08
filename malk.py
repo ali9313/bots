@@ -1,5 +1,5 @@
 from config import *
-from ali_json import is_basic_creator, owner, dev, basic_dev, programmer_ali  # تأكد من استيراد الدوال اللازمة
+from ali_json import is_basic_creator, owner, dev, basic_dev, programmer_ali, owner_id_ali  # تأكد من استيراد الدوال اللازمة
 
 # تحميل المالكين من الملف النصي
 def load_ali_owners():
@@ -38,7 +38,7 @@ def is_authorized_user(user_id):
     return (programmer_ali(user_id) or 
             dev(user_id) or 
             is_basic_creator(user_id) or 
-            owner(user_id))
+            owner(user_id) or owner_id_ali(user_id) or basic_dev(user_id))
 
 def promote_owner(a):
     if not is_authorized_user(a.from_user.id):  # تحقق من صلاحيات المستخدم
