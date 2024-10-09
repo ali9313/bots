@@ -5,8 +5,6 @@ from telebot import TeleBot
 
 api_key = "3514c40a2ff64c0e9290c2fbba7a4dda"  # Your API Key
 api_url = "http://api.voicerss.org/"
-bot = TeleBot('YOUR_BOT_TOKEN')  # استبدل هذا بالتوكن الخاص بالبوت
-
 def handle_message(a):
     # تحقق مما إذا كان هناك رد على رسالة
     if a.reply_to_message:
