@@ -11,6 +11,7 @@ from thanoe import *
 from admin import *
 from ide import *
 from translate import *
+from sond import *
 
 def reply_func(a):
     if a.text == "اهلا":
@@ -109,3 +110,5 @@ def reply_func(a):
     	send_user_photo(a)
     elif a.text =="لعربي":
     	handle_translation(a)
+    elif a.text =="لصوت":
+    	handle_message(a)
