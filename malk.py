@@ -1,5 +1,9 @@
+import logging
 from config import *
 from ali_json import is_basic_creator, owner, dev, basic_dev, programmer_ali, owner_id_ali
+
+# إعداد logging
+logging.basicConfig(filename='app.log', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # تحميل المالكين من الملف النصي
 def load_ali_owners():
@@ -12,16 +16,14 @@ def load_ali_owners():
                     continue  # تخطي الأسطر الفارغة
                 parts = line.split(':', 1)  # تقسيم السطر على أول رمز ':'
                 if len(parts) != 2:
-                    print(f"⚠️ خطأ في التنسيق بالسطر {line_num} في ali_owners.txt: {line}")
+                    logging.error(f"خطأ في التنسيق بالسطر {line_num} في ali_owners.txt: {line}")
                     continue  # تخطي السطور ذات التنسيق غير الصحيح
                 chat_id, owners = parts
                 owners_dict['owners'][chat_id] = {'owner_id': owners.split(',') if owners else []}
     except FileNotFoundError:
-        # في حال لم يكن الملف موجودًا، نعيد قاموس فارغ
-        print("⚠️ ملف ali_owners.txt غير موجود. سيتم إنشاء ملف جديد عند إضافة مالكين.")
+        logging.error("ملف ali_owners.txt غير موجود. سيتم إنشاء ملف جديد عند إضافة مالكين.")
     except Exception as e:
-        # التعامل مع أي أخطاء أخرى قد تحدث
-        print(f"⚠️ حدث خطأ أثناء تحميل المالكين: {e}")
+        logging.error(f"حدث خطأ أثناء تحميل المالكين: {e}")
     return owners_dict
 
 # حفظ المالكين في الملف النصي
@@ -32,7 +34,7 @@ def dump_ali_owners(data):
                 owners = ','.join(info['owner_id'])
                 file.write(f"{chat_id}:{owners}\n")
     except Exception as e:
-        print(f"⚠️ حدث خطأ أثناء حفظ المالكين: {e}")
+        logging.error(f"حدث خطأ أثناء حفظ المالكين: {e}")
 
 # استبدال دالة التحقق بالدالة المحفوظة
 def is_authorized_user(user_id, a):
