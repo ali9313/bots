@@ -1,9 +1,29 @@
 import logging
+import requests
 from config import *
 from telebot.types import Message
 
 # إعداد logging لتسجيل الأخطاء في ملف log.txt
 logging.basicConfig(filename='log.txt', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# دالة لجلب تاريخ إنشاء الحساب
+def fetch_zelzal(user_id):
+    headers = {
+        'Host': 'restore-access.indream.app',
+        'Connection': 'keep-alive',
+        'x-api-key': 'e758fb28-79be-4d1c-af6b-066633ded128',
+        'Accept': '*/*',
+        'Accept-Language': 'ar',
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
+    data = '{"telegramId":' + str(user_id) + '}'
+    try:
+        response = requests.post('https://restore-access.indream.app/regdate', headers=headers, data=data).json()
+        zelzal_date = response['data']['date']
+        return zelzal_date
+    except Exception as e:
+        logging.error("Error fetching account creation date: %s", e)
+        return "لا يمكن الحصول على تاريخ الإنشاء."
 
 # دالة لجلب معلومات المستخدم
 def fetch_info(a: Message):
@@ -17,8 +37,8 @@ def fetch_info(a: Message):
         user_chat = bot.get_chat(user_id)
         user_bio = user_chat.bio if user_chat.bio else "لا يـوجـد"
         
-        # مثال ثابت لتاريخ الإنشاء (يمكنك تعديل fetch_zelzal لاستخدام تاريخ حقيقي)
-        zelzal_sinc = "2023-01-01"
+        # جلب تاريخ الإنشاء
+        zelzal_sinc = fetch_zelzal(user_id)  # جلب تاريخ الإنشاء
         
         # بيانات إضافية للمستخدم
         zzz = 500  # هذا العدد يجب أن يمثل عدد الرسائل (يمكنك استدعاء دالة لإحضار العدد الفعلي)
@@ -71,3 +91,4 @@ def send_user_info_with_photo(a: Message):
     except Exception as e:
         logging.error("Error in send_user_info_with_photo function: %s", e)
         bot.send_message(a.chat.id, "حدث خطأ أثناء جلب صورة المستخدم.", parse_mode="HTML")
+
