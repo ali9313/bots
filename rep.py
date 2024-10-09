@@ -10,6 +10,7 @@ from mnshaas import *
 from thanoe import *
 from admin import *
 from ide import *
+from translate import *
 
 def reply_func(a):
     if a.text == "اهلا":
@@ -106,3 +107,5 @@ def reply_func(a):
     	send_user_info_with_photo(a)
     elif a.text =="صورته":
     	send_user_photo(a)
+    elif a.text =="لعربي":
+    	handle_translation(a)
