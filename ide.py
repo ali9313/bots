@@ -36,11 +36,14 @@ def fetch_info(a: Message):
         user_id = user.id
         username = f"@{user.username}" if user.username else "لا يـوجـد"
         
+        # جلب معلومات البايو باستخدام get_chat
+        user_chat = bot.get_chat(user_id)
+        user_bio = user_chat.bio if user_chat.bio else "لا يـوجـد"
+        
         # مثال ثابت لتاريخ الإنشاء (يمكنك تعديل fetch_zelzal لاستخدام تاريخ حقيقي)
         zelzal_sinc = "2023-01-01"
         
         # بيانات إضافية للمستخدم
-        user_bio = "لا يـوجـد" if not user.bio else user.bio
         zzz = 500  # هذا العدد يجب أن يمثل عدد الرسائل (يمكنك استدعاء دالة لإحضار العدد الفعلي)
         common_chat = 5  # عدد المجموعات المشتركة
         
