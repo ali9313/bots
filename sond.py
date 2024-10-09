@@ -4,9 +4,6 @@ from telebot import TeleBot
 
 api_key = "3514c40a2ff64c0e9290c2fbba7a4dda"  # Your API Key
 api_url = "http://api.voicerss.org/"
-bot = TeleBot("YOUR_TELEGRAM_BOT_API_KEY")  # ضع هنا مفتاح البوت الخاص بك
-
-@bot.message_handler(func=lambda a: True, content_types=['text'])
 def handle_message(a):
     # تحقق مما إذا كان هناك رد على رسالة
     if a.reply_to_message:
@@ -37,5 +34,3 @@ def handle_message(a):
 
     else:
         bot.send_message(a.chat.id, "يرجى الرد على رسالة لتحويلها إلى صوت.")
-
-bot.polling()
