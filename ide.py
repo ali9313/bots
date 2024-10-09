@@ -64,8 +64,9 @@ def send_user_info_with_photo(a: Message):
             # إرسال الصورة مع الكابشن
             bot.send_photo(a.chat.id, photo_file_id, caption=caption, parse_mode="HTML")
         else:
-            # في حالة عدم وجود صورة شخصية
-            bot.send_message(a.chat.id, "المستخدم لا يملك صورة شخصية.", parse_mode="HTML")
+            # في حالة عدم وجود صورة شخصية، يتم إرسال المعلومات فقط
+            caption = fetch_info(a)
+            bot.send_message(a.chat.id, caption, parse_mode="HTML")
     
     except Exception as e:
         logging.error("Error in send_user_info_with_photo function: %s", e)
