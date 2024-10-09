@@ -9,6 +9,7 @@ from mnsha import *
 from mnshaas import *
 from thanoe import *
 from admin import *
+from ide import *
 
 def reply_func(a):
     if a.text == "اهلا":
@@ -101,3 +102,7 @@ def reply_func(a):
         clear_admins(a)
     elif a.text == "المشرفين":
         get_admins(a)
+    elif a.text in ["ا","ايدي"]:
+    	send_user_info(a)
+    elif a.text =="صورته":
+    	send_user_photo(a)
