@@ -5,29 +5,6 @@ from telebot.types import Message
 # إعداد logging لتسجيل الأخطاء في ملف log.txt
 logging.basicConfig(filename='log.txt', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# دالة لجلب معلومات الإنشاء
-def zzz_info(a: Message):
-    try:
-        user = a.reply_to_message.from_user if a.reply_to_message else a.from_user
-        full_name = user.first_name + ' ' + user.last_name if user.last_name else user.first_name
-        user_id = user.id
-        username = f"@{user.username}" if user.username else "لا يـوجـد"
-        
-        # هنا يجب استدعاء الدالة fetch_zelzal لجلب تاريخ الإنشاء (يمكن استبدالها ببيانات ثابتة للاختبار)
-        zelzal_sinc = "2023-01-01"  # استبدال هذه القيمة بالدالة الفعلية
-
-        ZThon = f'<a href="T.me/ZThon">ᯓ 𝗭𝗧𝗵𝗼𝗻 𝗧𝗲𝗹𝗲𝗴𝗿𝗮𝗺 𝗗𝗮𝘁𝗮 📟</a>'
-        ZThon += f"\n<b>⋆─┄─┄─┄─┄─┄─┄─⋆</b>\n\n"
-        ZThon += f"<b>• معلومـات إنشـاء حسـاب تيليجـرام 📑 :</b>\n"
-        ZThon += f"<b>- الاسـم    ⤎ </b> <a href='tg://user?id={user_id}'>{full_name}</a>"
-        ZThon += f"\n<b>- الايــدي   ⤎ </b> <code>{user_id}</code>"
-        ZThon += f"\n<b>- اليـوزر    ⤎  {username}</b>\n"
-        ZThon += f"<b>- الإنشـاء   ⤎</b>  {zelzal_sinc}  🗓"
-        return ZThon
-    except Exception as e:
-        logging.error("Error in zzz_info function: %s", e)
-        return "حدث خطأ أثناء جلب معلومات الإنشاء."
-
 # دالة لجلب معلومات المستخدم
 def fetch_info(a: Message):
     try:
@@ -61,15 +38,35 @@ def fetch_info(a: Message):
         caption += f"<b>{ZEDM}الـمجموعات المشتـركة ⤎  {common_chat}</b>\n"
         caption += f"<b>{ZEDM}الإنشـاء  ⤎</b>  {zelzal_sinc}  🗓\n" 
         caption += f"<b>{ZEDM}البايـو     ⤎  {user_bio}</b>\n"
+        
         return caption
     except Exception as e:
         logging.error("Error in fetch_info function: %s", e)
         return "حدث خطأ أثناء جلب معلومات المستخدم."
 
-def send_zzz_info(a: Message):
-    zzz_message = zzz_info(a)
-    bot.send_message(a.chat.id, zzz_message, parse_mode="HTML")
-
-def send_user_info(a: Message):
-    info_message = fetch_info(a)
-    bot.send_message(a.chat.id, info_message, parse_mode="HTML")
+# دالة لإرسال صورة الملف الشخصي مع الكابشن
+def send_user_info_with_photo(a: Message):
+    try:
+        user = a.reply_to_message.from_user if a.reply_to_message else a.from_user
+        user_id = user.id
+        
+        # جلب صورة الملف الشخصي للمستخدم
+        photos = bot.get_user_profile_photos(user_id)
+        
+        # التحقق من وجود صور للمستخدم
+        if photos.total_count > 0:
+            # جلب أول صورة من الصور المتاحة
+            photo_file_id = photos.photos[0][-1].file_id  # جلب أعلى جودة للصورة
+            
+            # جلب الكابشن (المعلومات) 
+            caption = fetch_info(a)
+            
+            # إرسال الصورة مع الكابشن
+            bot.send_photo(a.chat.id, photo_file_id, caption=caption, parse_mode="HTML")
+        else:
+            # في حالة عدم وجود صورة شخصية
+            bot.send_message(a.chat.id, "المستخدم لا يملك صورة شخصية.", parse_mode="HTML")
+    
+    except Exception as e:
+        logging.error("Error in send_user_info_with_photo function: %s", e)
+        bot.send_message(a.chat.id, "حدث خطأ أثناء جلب صورة المستخدم.", parse_mode="HTML")
