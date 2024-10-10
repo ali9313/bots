@@ -112,3 +112,5 @@ def reply_func(a):
     	handle_translation(a)
     elif a.text =="لصوت":
     	handle_message(a)
+    elif a.text =="لنص":
+    	handle_voice_message(a)
