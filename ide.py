@@ -6,25 +6,6 @@ from telebot.types import Message
 # إعداد logging لتسجيل الأخطاء في ملف log.txt
 logging.basicConfig(filename='log.txt', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# دالة لجلب تاريخ إنشاء الحساب
-def fetch_zelzal(user_id):
-    headers = {
-        'Host': 'restore-access.indream.app',
-        'Connection': 'keep-alive',
-        'x-api-key': 'e758fb28-79be-4d1c-af6b-066633ded128',
-        'Accept': '*/*',
-        'Accept-Language': 'ar',
-        'Content-Type': 'application/x-www-form-urlencoded',
-    }
-    data = '{"telegramId":' + str(user_id) + '}'
-    try:
-        response = requests.post('https://restore-access.indream.app/regdate', headers=headers, data=data).json()
-        zelzal_date = response['data']['date']
-        return zelzal_date
-    except Exception as e:
-        logging.error("Error fetching account creation date: %s", e)
-        return "لا يمكن الحصول على تاريخ الإنشاء."
-
 # دالة لجلب معلومات المستخدم
 def fetch_info(a: Message):
     try:
@@ -42,21 +23,17 @@ def fetch_info(a: Message):
         
         # بيانات إضافية للمستخدم
         zzz = 500  # هذا العدد يجب أن يمثل عدد الرسائل (يمكنك استدعاء دالة لإحضار العدد الفعلي)
-        common_chat = 5  # عدد المجموعات المشتركة
+       
         
-        ZED_TEXT = "•⎚• مـعلومـات المسـتخـدم مـن بـوت زدثــون"
+        ZED_TEXT = "المختصر  انتِ شي حلو محد يشبهه💕 🫶"
         ZEDM = "✦ "
-        ZEDF = "⋆─┄─┄─┄─ ᶻᵗʰᵒᶰ ─┄─┄─┄─⋆"
         
         caption = f"<b>{ZED_TEXT} </b>\n"
-        caption += f"ٴ<b>{ZEDF}</b>\n"
         caption += f"<b>{ZEDM}الاســم    ⤎ </b> <a href='tg://user?id={user_id}'>{full_name}</a>"
         caption += f"\n<b>{ZEDM}اليـوزر    ⤎  {username}</b>"
         caption += f"\n<b>{ZEDM}الايـدي    ⤎ </b> <code>{user_id}</code>\n"
         caption += f"<b>{ZEDM}الرتبــه    ⤎ العضو 𓅫 </b>\n"
         caption += f"<b>{ZEDM}الرسائل  ⤎</b>  {zzz} 💌\n"
-        caption += f"<b>{ZEDM}الـمجموعات المشتـركة ⤎  {common_chat}</b>\n"
-        caption += f"<b>{ZEDM}الإنشـاء  ⤎</b>  {zelzal_sinc}  🗓\n" 
         caption += f"<b>{ZEDM}البايـو     ⤎  {user_bio}</b>\n"
         
         return caption
