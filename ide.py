@@ -2,12 +2,13 @@ import logging
 import requests
 import asyncio
 from config import *
+from telebot import TeleBot
 from telebot.types import Message
-from telethon.sync import TelegramClient
-from telethon import functions, types
+from telethon import TelegramClient
 
 # إعداد logging لتسجيل الأخطاء في ملف log.txt
 logging.basicConfig(filename='log.txt', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 # إعداد Telethon client
 api_id = "1747534"  # ضع هنا API ID الخاص بك
@@ -20,7 +21,7 @@ async def get_message_count(user_id, chat_id):
         zmsg = await client.get_messages(chat_id, from_user=user_id)
         return len(zmsg)
 
-# دالة لجلب معلومات المستخدم
+# دالة لجلب معلومات المستخدم (تكون غير متزامنة)
 async def fetch_info_async(a: Message):
     try:
         user = a.reply_to_message.from_user if a.reply_to_message else a.from_user
@@ -53,10 +54,8 @@ async def fetch_info_async(a: Message):
 
 # دالة لجلب معلومات المستخدم (تقوم بتشغيل الدالة غير المتزامنة)
 def fetch_info(a: Message):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
+    loop = asyncio.get_event_loop()
     result = loop.run_until_complete(fetch_info_async(a))
-    loop.close()
     return result
 
 # دالة لإرسال صورة الملف الشخصي مع الكابشن
