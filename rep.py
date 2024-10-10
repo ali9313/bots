@@ -105,7 +105,7 @@ def reply_func(a):
     elif a.text == "المشرفين":
         get_admins(a)
     elif a.text in ["ا","ايدي"]:
-    	send_user_info_with_photo_async(a)
+    	send_user_info_with_photo(a)
     elif a.text =="صورته":
     	send_user_photo(a)
     elif a.text =="لعربي":
