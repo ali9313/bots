@@ -1,6 +1,7 @@
 import logging
 from config import *
 from telebot.types import Message
+from ali_json import programmer_ali, owner, creator, owner_id_ali, is_basic_creator, dev, basic_dev
 
 # إعداد logging لتسجيل الأخطاء في ملف log.txt
 logging.basicConfig(filename='log.txt', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -14,6 +15,25 @@ def get_message_count(user_id, chat_id):
     if chat_id in message_counts:
         return message_counts[chat_id].get(user_id, 0)
     return 0
+
+# دالة للتحقق من رتبة المستخدم
+def check_user_rank(user_id, chat_id):
+    if programmer_ali(user_id):
+        return "مبرمج السورس"
+    elif owner(user_id, chat_id):
+        return "مالك"
+    elif creator(user_id, chat_id):
+        return "منشئ"
+    elif owner_id_ali(user_id, chat_id):
+        return "مطور اساسي"
+    elif is_basic_creator(user_id):
+        return "منشئ أساسي"
+    elif dev(user_id):
+        return "مطور"
+    elif basic_dev(user_id):
+        return "مطور ثانوي"
+    else:
+        return "عضو"
 
 # دالة لجلب معلومات المستخدم
 def fetch_info(a: Message):
@@ -48,6 +68,9 @@ def fetch_info(a: Message):
         else:
             zelzzz = "نار وشرر  🏆"
 
+        # الحصول على رتبة المستخدم
+        user_rank = check_user_rank(user_id, a.chat.id)
+
         ZED_TEXT = "المختصر انتِ شي حلو محد يشبهه💕 🫶"
         ZEDM = "✦ "
         
@@ -55,7 +78,7 @@ def fetch_info(a: Message):
         caption += f"<b>{ZEDM}الاســم    ⤎ </b> <a href='tg://user?id={user_id}'>{full_name}</a>"
         caption += f"\n<b>{ZEDM}اليـوزر    ⤎  {username}</b>"
         caption += f"\n<b>{ZEDM}الايـدي    ⤎ </b> <code>{user_id}</code>\n"
-        caption += f"<b>{ZEDM}الرتبــه    ⤎ العضو 𓅫 </b>\n"
+        caption += f"<b>{ZEDM}الرتبــه    ⤎ {user_rank} 𓅫 </b>\n"  # إضافة رتبة المستخدم
         caption += f"<b>{ZEDM}الرسائل  ⤎</b>  {zzz} 💌\n"
         caption += f"<b>{ZEDM}التفاعل  ⤎</b>  {zelzzz}\n"  # إضافة مستوى التفاعل
         caption += f"<b>{ZEDM}البايـو     ⤎  {user_bio}</b>\n"
