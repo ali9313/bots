@@ -74,11 +74,9 @@ def send_user_info_with_photo(a: Message):
         logging.error("Error in send_user_info_with_photo function: %s", e)
         bot.send_message(a.chat.id, "حدث خطأ أثناء جلب صورة المستخدم.", parse_mode="HTML")
 
-# مثال لتحديث عدد الرسائل عند إرسال رسالة جديدة
-@bot.message_handler(func=lambda message: True)
-def count_messages(message):
-    chat_id = message.chat.id
-    user_id = message.from_user.id
+def count_messages(a):
+    chat_id = a.chat.id
+    user_id = a.from_user.id
     if chat_id not in message_counts:
         message_counts[chat_id] = {}
     if user_id in message_counts[chat_id]:
