@@ -1,14 +1,19 @@
 import logging
-import requests
 from config import *
 from telebot.types import Message
 
 # إعداد logging لتسجيل الأخطاء في ملف log.txt
 logging.basicConfig(filename='log.txt', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# قاموس لتخزين عدد الرسائل لكل مستخدم في كل دردشة
+message_counts = {}
+
+# دالة لحساب عدد الرسائل الخاصة بالمستخدم
 def get_message_count(user_id, chat_id):
-    messages = bot.get_chat_history(chat_id)  # هذه دالة افتراضية
-    count = sum(1 for msg in messages if msg.from_user.id == user_id)
-    return count
+    # استخدام القاموس لتخزين عدد الرسائل
+    if chat_id in message_counts:
+        return message_counts[chat_id].get(user_id, 0)
+    return 0
 
 # دالة لجلب معلومات المستخدم
 def fetch_info(a: Message):
@@ -68,3 +73,15 @@ def send_user_info_with_photo(a: Message):
     except Exception as e:
         logging.error("Error in send_user_info_with_photo function: %s", e)
         bot.send_message(a.chat.id, "حدث خطأ أثناء جلب صورة المستخدم.", parse_mode="HTML")
+
+# مثال لتحديث عدد الرسائل عند إرسال رسالة جديدة
+@bot.message_handler(func=lambda message: True)
+def count_messages(message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+    if chat_id not in message_counts:
+        message_counts[chat_id] = {}
+    if user_id in message_counts[chat_id]:
+        message_counts[chat_id][user_id] += 1
+    else:
+        message_counts[chat_id][user_id] = 1
