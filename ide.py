@@ -18,8 +18,6 @@ def fetch_info(a: Message):
         user_chat = bot.get_chat(user_id)
         user_bio = user_chat.bio if user_chat.bio else "لا يـوجـد"
         
-        # جلب تاريخ الإنشاء
-        zelzal_sinc = fetch_zelzal(user_id)  # جلب تاريخ الإنشاء
         
         # بيانات إضافية للمستخدم
         zzz = 500  # هذا العدد يجب أن يمثل عدد الرسائل (يمكنك استدعاء دالة لإحضار العدد الفعلي)
