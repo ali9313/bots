@@ -21,7 +21,7 @@ async def get_message_count(user_id, chat_id):
         return len(zmsg)
 
 # دالة لجلب معلومات المستخدم
-def fetch_info(a: Message):
+async def fetch_info_async(a: Message):
     try:
         user = a.reply_to_message.from_user if a.reply_to_message else a.from_user
         full_name = user.first_name + ' ' + user.last_name if user.last_name else user.first_name
@@ -32,8 +32,8 @@ def fetch_info(a: Message):
         user_chat = bot.get_chat(user_id)
         user_bio = user_chat.bio if user_chat.bio else "لا يـوجـد"
         
-        # جلب عدد الرسائل الفعلي باستخدام Telethon في حدث غير متزامن
-        zzz = asyncio.run(get_message_count(user_id, a.chat.id))
+        # جلب عدد الرسائل الفعلي باستخدام Telethon
+        zzz = await get_message_count(user_id, a.chat.id)
         
         ZED_TEXT = "المختصر  انتِ شي حلو محد يشبهه💕 🫶"
         ZEDM = "✦ "
@@ -50,6 +50,14 @@ def fetch_info(a: Message):
     except Exception as e:
         logging.error("Error in fetch_info function: %s", e)
         return "حدث خطأ أثناء جلب معلومات المستخدم."
+
+# دالة لجلب معلومات المستخدم (تقوم بتشغيل الدالة غير المتزامنة)
+def fetch_info(a: Message):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    result = loop.run_until_complete(fetch_info_async(a))
+    loop.close()
+    return result
 
 # دالة لإرسال صورة الملف الشخصي مع الكابشن
 def send_user_info_with_photo(a: Message):
