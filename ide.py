@@ -9,7 +9,6 @@ from telethon import TelegramClient
 # إعداد logging لتسجيل الأخطاء في ملف log.txt
 logging.basicConfig(filename='log.txt', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
 # إعداد Telethon client
 api_id = "1747534"  # ضع هنا API ID الخاص بك
 api_hash = "5a2684512006853f2e48aca9652d83ea"  # ضع هنا API Hash الخاص بك
@@ -59,7 +58,7 @@ def fetch_info(a: Message):
     return result
 
 # دالة لإرسال صورة الملف الشخصي مع الكابشن
-def send_user_info_with_photo(a: Message):
+async def send_user_info_with_photo_async(a: Message):
     try:
         user = a.reply_to_message.from_user if a.reply_to_message else a.from_user
         user_id = user.id
@@ -73,15 +72,20 @@ def send_user_info_with_photo(a: Message):
             photo_file_id = photos.photos[0][-1].file_id  # جلب أعلى جودة للصورة
             
             # جلب الكابشن (المعلومات) 
-            caption = fetch_info(a)
+            caption = await fetch_info_async(a)
             
             # إرسال الصورة مع الكابشن
             bot.send_photo(a.chat.id, photo_file_id, caption=caption, parse_mode="HTML")
         else:
             # في حالة عدم وجود صورة شخصية، يتم إرسال المعلومات فقط
-            caption = fetch_info(a)
+            caption = await fetch_info_async(a)
             bot.send_message(a.chat.id, caption, parse_mode="HTML")
     
     except Exception as e:
         logging.error("Error in send_user_info_with_photo function: %s", e)
         bot.send_message(a.chat.id, "حدث خطأ أثناء جلب صورة المستخدم.", parse_mode="HTML")
+
+# دالة لإرسال صورة المستخدم مع المعلومات
+def send_user_info_with_photo(a: Message):
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(send_user_info_with_photo_async(a))
