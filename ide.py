@@ -2,9 +2,21 @@ import logging
 import requests
 from config import *
 from telebot.types import Message
+from telethon.sync import TelegramClient
 
 # إعداد logging لتسجيل الأخطاء في ملف log.txt
 logging.basicConfig(filename='log.txt', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# إعداد Telethon client
+api_id = "1747534"  # ضع هنا API ID الخاص بك
+api_hash = "5a2684512006853f2e48aca9652d83ea"  # ضع هنا API Hash الخاص بك
+client = TelegramClient('session_name', api_id, api_hash)
+
+# دالة لحساب عدد الرسائل الخاصة بالمستخدم باستخدام Telethon
+def get_message_count(user_id, chat_id):
+    with client:
+        zmsg = client.get_messages(chat_id, from_user=user_id)
+        return len(zmsg)
 
 # دالة لجلب معلومات المستخدم
 def fetch_info(a: Message):
@@ -18,10 +30,8 @@ def fetch_info(a: Message):
         user_chat = bot.get_chat(user_id)
         user_bio = user_chat.bio if user_chat.bio else "لا يـوجـد"
         
-        
-        # بيانات إضافية للمستخدم
-        zzz = 500  # هذا العدد يجب أن يمثل عدد الرسائل (يمكنك استدعاء دالة لإحضار العدد الفعلي)
-       
+        # جلب عدد الرسائل الفعلي باستخدام Telethon
+        zzz = get_message_count(user_id, a.chat.id)
         
         ZED_TEXT = "المختصر  انتِ شي حلو محد يشبهه💕 🫶"
         ZEDM = "✦ "
@@ -66,4 +76,3 @@ def send_user_info_with_photo(a: Message):
     except Exception as e:
         logging.error("Error in send_user_info_with_photo function: %s", e)
         bot.send_message(a.chat.id, "حدث خطأ أثناء جلب صورة المستخدم.", parse_mode="HTML")
-
