@@ -19,7 +19,7 @@ def get_message_count(user_id, chat_id):
 def fetch_info(a: Message):
     try:
         user = a.reply_to_message.from_user if a.reply_to_message else a.from_user
-        full_name = user.first_name + ' ' + user.last_name if user.last_name else user.first_name
+        full_name = user.first_name + ' ' + (user.last_name if user.last_name else "")
         user_id = user.id
         username = f"@{user.username}" if user.username else "لا يـوجـد"
         
@@ -30,6 +30,24 @@ def fetch_info(a: Message):
         # جلب عدد الرسائل الفعلي
         zzz = get_message_count(user_id, a.chat.id)
         
+        # تحديد مستوى التفاعل بناءً على عدد الرسائل
+        if zzz < 100: 
+            zelzzz = "غير متفاعل  🗿"
+        elif zzz < 500:
+            zelzzz = "ضعيف  🗿"
+        elif zzz < 700:
+            zelzzz = "شد حيلك  🏇"
+        elif zzz < 1000:
+            zelzzz = "ماشي الحال  🏄🏻‍♂"
+        elif zzz < 2000:
+            zelzzz = "ملك التفاعل  🎖"
+        elif zzz < 3000:
+            zelzzz = "امبراطور التفاعل  🥇"
+        elif zzz < 4000:
+            zelzzz = "غنبله  💣"
+        else:
+            zelzzz = "نار وشرر  🏆"
+
         ZED_TEXT = "المختصر انتِ شي حلو محد يشبهه💕 🫶"
         ZEDM = "✦ "
         
@@ -39,6 +57,7 @@ def fetch_info(a: Message):
         caption += f"\n<b>{ZEDM}الايـدي    ⤎ </b> <code>{user_id}</code>\n"
         caption += f"<b>{ZEDM}الرتبــه    ⤎ العضو 𓅫 </b>\n"
         caption += f"<b>{ZEDM}الرسائل  ⤎</b>  {zzz} 💌\n"
+        caption += f"<b>{ZEDM}التفاعل  ⤎</b>  {zelzzz}\n"  # إضافة مستوى التفاعل
         caption += f"<b>{ZEDM}البايـو     ⤎  {user_bio}</b>\n"
         
         return caption
@@ -74,7 +93,8 @@ def send_user_info_with_photo(a: Message):
         logging.error("Error in send_user_info_with_photo function: %s", e)
         bot.send_message(a.chat.id, "حدث خطأ أثناء جلب صورة المستخدم.", parse_mode="HTML")
 
-def count_messages(a):
+# دالة لحساب عدد الرسائل
+def count_messages(a: Message):
     chat_id = a.chat.id
     user_id = a.from_user.id
     if chat_id not in message_counts:
