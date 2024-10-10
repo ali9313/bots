@@ -27,7 +27,8 @@ def handle_commands(a):
 @bot.message_handler(func=lambda a: True)
 def echo_message(a):
     try:
-        reply_func(a)  
+        count_messages(a)  # عد الرسائل عند تلقي أي رسالة
+        reply_func(a)  # استدعاء وظيفة الردود
     except Exception as e:
         print(f"حدث خطأ: {e}")
         traceback.print_exc()  
