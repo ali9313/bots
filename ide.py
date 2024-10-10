@@ -17,6 +17,7 @@ def get_message_count(user_id, chat_id):
     return 0
 
 # دالة للتحقق من رتبة المستخدم
+# دالة للتحقق من رتبة المستخدم
 def check_user_rank(user_id, chat_id):
     if programmer_ali(user_id):
         return "مبرمج السورس"
@@ -24,7 +25,7 @@ def check_user_rank(user_id, chat_id):
         return "مالك"
     elif creator(user_id, chat_id):
         return "منشئ"
-    elif owner_id_ali(user_id, chat_id):
+    elif owner_id_ali(user_id):  # تم تمرير user_id فقط
         return "مطور اساسي"
     elif is_basic_creator(user_id):
         return "منشئ أساسي"
