@@ -115,7 +115,8 @@ def reply_func(a):
         elif a.text == "تغ":
             send_template_options(a)
         elif a.text.startswith("اضف رسائله"):
-            handle_add_message_command(a)
+    logging.info(f"تم التعرف على الأمر 'اضف رسائله' من قبل المستخدم {a.from_user.id} في الدردشة {a.chat.id}")
+    handle_add_message_command(a)
     
     except Exception as e:
         logging.error(f"Error in reply_func: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
