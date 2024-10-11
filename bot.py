@@ -1,10 +1,13 @@
+import logging
+import traceback
 from config import *  
 from rep import * 
 from tfael import *
 from ali_json import *
 from tger import *
-from ttt import *
-import traceback  
+
+# إعداد تسجيل الأخطاء في ملف
+logging.basicConfig(filename='log.txt', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # معالج للأوامر
 @bot.message_handler(commands=['check_dev', 'check_owner', 'check_basic_creator', 'check_admin', 'check_owner_id'])
@@ -22,7 +25,7 @@ def handle_commands(a):
         elif command == '/check_dev':
             check_dev(a)
     except Exception as e:
-        print(f"حدث خطأ أثناء معالجة الأمر: {e}")
+        logging.error(f"Error in handle_commands: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
         traceback.print_exc()
 
 # معالج للرسائل العامة
@@ -32,8 +35,8 @@ def echo_message(a):
         count_messages(a)  # عد الرسائل عند تلقي أي رسالة
         reply_func(a)
     except Exception as e:
-        print(f"حدث خطأ: {e}")
-        traceback.print_exc()  
+        logging.error(f"Error in echo_message: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
+        traceback.print_exc()
 
 # بدء البوت
 bot.polling(none_stop=True, timeout=60)
