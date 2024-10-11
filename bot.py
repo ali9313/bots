@@ -2,6 +2,8 @@ from config import *
 from rep import * 
 from tfael import *
 from ali_json import *
+from tger import *
+from ttt import *
 import traceback  
 
 # معالج للأوامر
@@ -28,7 +30,7 @@ def handle_commands(a):
 def echo_message(a):
     try:
         count_messages(a)  # عد الرسائل عند تلقي أي رسالة
-        reply_func(a)  # استدعاء وظيفة الردود
+        reply_func(a)
     except Exception as e:
         print(f"حدث خطأ: {e}")
         traceback.print_exc()  
