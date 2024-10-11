@@ -19,33 +19,7 @@ def check_command_and_execute(a):
         if len(words) == 3 and words[0] == "اضف" and words[1] == "رسائله" and words[2].isdigit():
             count = int(words[2])  # تحويل الجزء الثالث (العدد) إلى عدد صحيح
             print(f"تم التعرف على الأمر 'اضف رسائله' مع العدد {count}")
-
-            # استدعاء الدالة لإضافة عدد الرسائل للمستخدم
             handle_add_message_command(a)
-
-        else:
-            print("الرسالة لا تطابق النمط المطلوب.")
-    except Exception as e:
-        logging.error(f"Error in check_command_and_execute: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
-        traceback.print_exc()
-
-# دالة استدعاء افتراضية لإضافة عدد الرسائل (يمكنك تخصيصها لاحقًا)
-def handle_add_message_command(a):
-    try:
-        user_id = a.reply_to_message.from_user.id if a.reply_to_message else a.from_user.id
-        chat_id = a.chat.id
-
-        if chat_id not in message_counts:
-            message_counts[chat_id] = {}
-        if user_id in message_counts[chat_id]:
-            message_counts[chat_id][user_id] += 1
-        else:
-            message_counts[chat_id][user_id] = 1
-
-        bot.send_message(a.chat.id, f"تم إضافة رسائل.")
-    except Exception as e:
-        logging.error(f"Error in handle_add_message_command: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
-        traceback.print_exc()
 
 # معالج للأوامر
 @bot.message_handler(commands=['check_dev', 'check_owner', 'check_basic_creator', 'check_admin', 'check_owner_id'])
