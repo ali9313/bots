@@ -9,7 +9,6 @@ from mnsha import *
 from mnshaas import *
 from thanoe import *
 from admin import *
-from ide import *
 from translate import *
 from sond import *
 from ttt import *
