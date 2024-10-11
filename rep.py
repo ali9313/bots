@@ -12,6 +12,7 @@ from admin import *
 from ide import *
 from translate import *
 from sond import *
+from ttt import *
 
 def reply_func(a):
     if a.text == "اهلا":
@@ -115,4 +116,4 @@ def reply_func(a):
     elif a.text =="لنص":
     	handle_voice_message(a)
     elif a.text =="تغ":
-    	generate_custom_message(a)
+    	send_template_options(a)
