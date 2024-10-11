@@ -31,22 +31,26 @@ def get_message_count(user_id, chat_id):
     return 0
 
 def check_user_rank(user_id, chat_id):
-    if programmer_ali(user_id):
-        return "مبرمج السورس"
-    elif owner(user_id, chat_id):
-        return "مالك"
-    elif creator(user_id, chat_id):
-        return "منشئ"
-    elif owner_id_ali(user_id):
-        return "مطور اساسي"
-    elif is_basic_creator(user_id):
-        return "منشئ أساسي"
-    elif dev(user_id):
-        return "مطور"
-    elif basic_dev(user_id):
-        return "مطور ثانوي"
-    else:
-        return "عضو"
+    try:
+        if programmer_ali(user_id):
+            return "مبرمج السورس"
+        elif owner(user_id, chat_id):
+            return "مالك"
+        elif creator(user_id, chat_id):
+            return "منشئ"
+        elif owner_id_ali(user_id):
+            return "مطور اساسي"
+        elif is_basic_creator(user_id):
+            return "منشئ أساسي"
+        elif dev(user_id):
+            return "مطور"
+        elif basic_dev(user_id):
+            return "مطور ثانوي"
+        else:
+            return "عضو"
+    except Exception as e:
+        logging.error(f"Error in check_user_rank function: {e}, user_id: {user_id}, chat_id: {chat_id}")
+        return "حدث خطأ أثناء التحقق من رتبة المستخدم."
 
 def fetch_info(a: Message):
     try:
@@ -59,7 +63,6 @@ def fetch_info(a: Message):
         user_bio = user_chat.bio if user_chat.bio else "لا يـوجـد"
         
         aaa = get_message_count(user_id, a.chat.id)
-        
         
         if aaa < 100: 
             al = "غير متفاعل  🗿"
@@ -78,10 +81,8 @@ def fetch_info(a: Message):
         else:
             al = "نار وشرر  🏆"
 
-        # الحصول على رتبة المستخدم
         user_rank = check_user_rank(user_id, a.chat.id)
 
-        # اختيار نص وزخرفة عشوائية
         ali_text, adot = get_random_style()
         
         caption = f"<b>{ali_text} </b>\n"
@@ -95,7 +96,7 @@ def fetch_info(a: Message):
         
         return caption
     except Exception as e:
-        logging.error("Error in fetch_info function: %s", e)
+        logging.error(f"Error in fetch_info function: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
         return "حدث خطأ أثناء جلب معلومات المستخدم."
 
 def send_user_info_with_photo(a: Message):
@@ -116,18 +117,21 @@ def send_user_info_with_photo(a: Message):
             bot.send_message(a.chat.id, caption, parse_mode="HTML")
     
     except Exception as e:
-        logging.error("Error in send_user_info_with_photo function: %s", e)
+        logging.error(f"Error in send_user_info_with_photo function: {e}, user_id: {user_id}, chat_id: {a.chat.id}")
         bot.send_message(a.chat.id, "حدث خطأ أثناء جلب صورة المستخدم.", parse_mode="HTML")
 
 def count_messages(a: Message):
-    chat_id = a.chat.id
-    user_id = a.from_user.id
-    if chat_id not in message_counts:
-        message_counts[chat_id] = {}
-    if user_id in message_counts[chat_id]:
-        message_counts[chat_id][user_id] += 1
-    else:
-        message_counts[chat_id][user_id] = 1
+    try:
+        chat_id = a.chat.id
+        user_id = a.from_user.id
+        if chat_id not in message_counts:
+            message_counts[chat_id] = {}
+        if user_id in message_counts[chat_id]:
+            message_counts[chat_id][user_id] += 1
+        else:
+            message_counts[chat_id][user_id] = 1
+    except Exception as e:
+        logging.error(f"Error in count_messages function: {e}, user_id: {user_id}, chat_id: {chat_id}")
 
 def handle_add_message_command(a: Message):
     try:
@@ -139,7 +143,6 @@ def handle_add_message_command(a: Message):
                 count = int(parts[2])  
                 user_id = a.reply_to_message.from_user.id if a.reply_to_message else a.from_user.id
                 chat_id = a.chat.id
-                
                 
                 if chat_id not in message_counts:
                     message_counts[chat_id] = {}
@@ -155,5 +158,5 @@ def handle_add_message_command(a: Message):
             bot.send_message(a.chat.id, "الأمر غير صحيح.")
     
     except Exception as e:
-        logging.error("Error in handle_add_message_command function: %s", e)
+        logging.error(f"Error in handle_add_message_command function: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
         bot.send_message(a.chat.id, "حدث خطأ أثناء معالجة الأمر.", parse_mode="HTML")
