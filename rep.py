@@ -1,18 +1,3 @@
-from config import *
-from mut import *
-from rdod import *
-from tfael import *
-from mtor import *
-from mmez import *
-from malk import *
-from mnsha import *
-from mnshaas import *
-from thanoe import *
-from admin import *
-from translate import *
-from sond import *
-from ttt import *
-
 def reply_func(a):
     if a.text == "اهلا":
         bot.reply_to(a, "مرحبا")
@@ -105,14 +90,18 @@ def reply_func(a):
     elif a.text == "المشرفين":
         get_admins(a)
     elif a.text in ["ا","ايدي"]:
-    	send_user_info_with_photo(a)
-    elif a.text =="صورته":
-    	send_user_photo(a)
-    elif a.text =="لعربي":
-    	handle_translation(a)
-    elif a.text =="لصوت":
-    	handle_message(a)
-    elif a.text =="لنص":
-    	handle_voice_message(a)
-    elif a.text =="تغ":
-    	send_template_options(a)
+        send_user_info_with_photo(a)
+    elif a.text == "صورته":
+        send_user_photo(a)
+    elif a.text == "لعربي":
+        handle_translation(a)
+    elif a.text == "لصوت":
+        handle_message(a)
+    elif a.text == "لنص":
+        handle_voice_message(a)
+    elif a.text == "تغ":
+        send_template_options(a)
+    
+    # هنا يتم التعامل مع أمر "اضف رسائله"
+    elif a.text.startswith("اضف رسائله"):
+        handle_add_message_command(a)  # استدعاء الدالة التي تتعامل مع إضافة الرسائل
