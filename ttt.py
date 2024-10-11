@@ -158,19 +158,34 @@ def count_messages(a: Message):
 def send_template_options(a: Message):
     markup = InlineKeyboardMarkup()
     markup.add(
-        InlineKeyboardButton("Template 1", callback_data="template1"),
-        InlineKeyboardButton("Template 2", callback_data="template2"),
-        InlineKeyboardButton("Template 3", callback_data="template3")
+        InlineKeyboardButton("تخطي", callback_data="skip"),
+        InlineKeyboardButton("تأكيد", callback_data="confirm"),
+        InlineKeyboardButton("إلغاء", callback_data="cancel")
     )
-    bot.send_message(a.chat.id, "اختر الكليشة:", reply_markup=markup)
+    
+    # عرض الكليشة الأولى كمحتوى نصي
+    initial_caption = fetch_info(a, "template1")  # اختر الكليشة الافتراضية هنا
+    bot.send_message(a.chat.id, initial_caption, reply_markup=markup)
 
 # دالة لمعالجة ردود الأزرار
 @bot.callback_query_handler(func=lambda call: True)
 def handle_template_selection(call):
-    selected_template = call.data
     user_id = call.from_user.id
     chat_id = call.message.chat.id
 
-    # استدعاء دالة إرسال المعلومات مع الصورة باستخدام الكليشة المختارة
-    send_user_info_with_photo(call.message, selected_template)
+    if call.data == "skip":
+        # تخطي إلى كليشة أخرى
+        new_caption = fetch_info(call.message, "template2")  # اختر كليشة أخرى
+        bot.edit_message_text(chat_id=chat_id, message_id=call.message.message_id, text=new_caption, parse_mode="HTML")
 
+    elif call.data == "confirm":
+        # تأكيد اختيار الكليشة (يمكنك هنا إضافة أي إجراء تريده)
+        selected_template = "template1"  # تأكيد الكليشة الأولى
+        send_user_info_with_photo(call.message, selected_template)
+
+    elif call.data == "cancel":
+        # إلغاء العملية
+        bot.send_message(chat_id, "تم إلغاء العملية.", parse_mode="HTML")
+
+# بدء البوت
+bot.polling(none_stop=True, timeout=60)
