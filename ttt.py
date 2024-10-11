@@ -186,6 +186,3 @@ def handle_template_selection(call):
     elif call.data == "cancel":
         # إلغاء العملية
         bot.send_message(chat_id, "تم إلغاء العملية.", parse_mode="HTML")
-
-# بدء البوت
-bot.polling(none_stop=True, timeout=60)
