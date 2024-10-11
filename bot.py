@@ -20,6 +20,9 @@ def check_command_and_execute(a):
             count = int(words[2])  # تحويل الجزء الثالث (العدد) إلى عدد صحيح
             print(f"تم التعرف على الأمر 'اضف رسائله' مع العدد {count}")
             handle_add_message_command(a)
+    except Exception as e:
+        logging.error(f"Error in check_command_and_execute: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
+        traceback.print_exc()
 
 # معالج للأوامر
 @bot.message_handler(commands=['check_dev', 'check_owner', 'check_basic_creator', 'check_admin', 'check_owner_id'])
