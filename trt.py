@@ -1,5 +1,6 @@
 from config import *
 from telebot import types
+from ali_json import *
 # الوظيفة الرئيسية
 def cmd(a):
     text = a.text
@@ -45,7 +46,7 @@ def cmd(a):
         ''', parse_mode="Markdown", reply_markup=markup)
     
     elif text == 'م المطور':
-        if not is_dev(user_id):  # تحقق من صلاحيات المطور
+        if not owner_id_ali(user_id):  # تحقق من صلاحيات المطور
             bot.send_message(msg_chat_id, '• هذا الامر يخص المطورين فقط', parse_mode="Markdown")
             return
         
@@ -95,7 +96,3 @@ def is_subscribed(user_id, chat_id):
     # منطق التحقق من الاشتراك في القناة
     return True
 
-# دالة للتحقق من صلاحيات المطور
-def is_dev(user_id):
-    # تحقق من إذا كان المستخدم مطوراً
-    return True
