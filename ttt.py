@@ -4,7 +4,8 @@ from config import *
 from telebot.types import Message
 from ali_json import programmer_ali, owner, creator, owner_id_ali, is_basic_creator, dev, basic_dev
 
-logging.basicConfig(filename='log.txt', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+# إعداد تسجيل الأخطاء في ملف
+logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 message_counts = {}
 
