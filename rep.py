@@ -1,9 +1,13 @@
 import logging
 
-logging.basicConfig(filename='log.txt', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+# إعداد السجلات (Logging)
+logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def reply_func(a):
     try:
+        logging.info(f"Received message: {a.text} from user {a.from_user.id} in chat {a.chat.id}")
+        print(f"Received message: {a.text}")  # تتبع الرسائل الواردة
+        
         if a.text == "اهلا":
             bot.reply_to(a, "مرحبا")
         elif a.text == "باي":
@@ -116,8 +120,9 @@ def reply_func(a):
             send_template_options(a)
         elif a.text.startswith("اضف رسائله"):
             logging.info(f"تم التعرف على الأمر 'اضف رسائله' من قبل المستخدم {a.from_user.id} في الدردشة {a.chat.id}")
+            print("Handling 'اضف رسائله' command")  # تتبع تنفيذ الأمر
             handle_add_message_command(a)
-
+            
     except Exception as e:
         logging.error(f"Error in reply_func: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
         bot.reply_to(a, "حدث خطأ أثناء تنفيذ الطلب.")
