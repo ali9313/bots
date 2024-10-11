@@ -6,6 +6,7 @@ from tfael import *
 from ali_json import *
 from tger import *
 from ttt import *
+from trt import *
 
 # إعداد تسجيل الأخطاء في ملف
 logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -53,7 +54,7 @@ def echo_message(a):
     try:
         logging.info(f"Received message: {a.text} from user {a.from_user.id} in chat {a.chat.id}")  # تسجيل الرسائل المستقبلة
         print(f"Received message: {a.text}")  # طباعة الرسائل المستقبلة في الكونسول
-        
+        cmd(a)
         count_messages(a)  # عد الرسائل عند تلقي أي رسالة
         reply_func(a)  # الرد على الرسالة
         check_command_and_execute(a)  # التحقق من الأمر "اضف رسائله" وتنفيذ الدالة
