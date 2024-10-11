@@ -114,3 +114,5 @@ def reply_func(a):
     	handle_message(a)
     elif a.text =="لنص":
     	handle_voice_message(a)
+    elif a.text =="تغ":
+    	generate_custom_message(a)
