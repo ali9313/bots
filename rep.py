@@ -1,4 +1,18 @@
 import logging
+from config import *
+from mut import *
+from rdod import *
+from tfael import *
+from mtor import *
+from mmez import *
+from malk import *
+from mnsha import *
+from mnshaas import *
+from thanoe import *
+from admin import *
+from translate import *
+from sond import *
+from ttt import *
 
 # إعداد السجلات (Logging)
 logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -118,10 +132,6 @@ def reply_func(a):
             handle_voice_message(a)
         elif a.text == "تغ":
             send_template_options(a)
-        elif a.text.startswith("اضف رسائله"):
-            logging.info(f"تم التعرف على الأمر 'اضف رسائله' من قبل المستخدم {a.from_user.id} في الدردشة {a.chat.id}")
-            print("Handling 'اضف رسائله' command")  # تتبع تنفيذ الأمر
-            handle_add_message_command(a)
             
     except Exception as e:
         logging.error(f"Error in reply_func: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
