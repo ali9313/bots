@@ -1,6 +1,7 @@
 from config import *
 from telebot import types
 from ali_json import *
+
 # الوظيفة الرئيسية
 def cmd(a):
     text = a.text
@@ -32,7 +33,7 @@ def cmd(a):
         markup.row(types.InlineKeyboardButton("م3", callback_data='help3'),
                    types.InlineKeyboardButton("م4", callback_data='help4'))
         markup.row(types.InlineKeyboardButton("م المطور", callback_data='helpsudo'))
-        markup.row(types.InlineKeyboardButton("قناه السورس", url='http://t.me/YOUR_CHANNEL'))
+        markup.row(types.InlineKeyboardButton("قناه السورس", url='http://t.me/u_gg_u'))
 
         # إرسال قائمة الأوامر
         bot.send_message(msg_chat_id, '''
@@ -53,7 +54,7 @@ def cmd(a):
         # تحقق من الاشتراك في القناة
         if not is_subscribed(user_id, msg_chat_id):
             markup = types.InlineKeyboardMarkup()
-            markup.add(types.InlineKeyboardButton("الاشتراك", url='https://t.me/YOUR_CHANNEL'))
+            markup.add(types.InlineKeyboardButton("الاشتراك", url='https://t.me/u_gg_u'))
             bot.send_message(msg_chat_id, '• عليك الاشتراك في قناة البوت لأستخدام الاوامر', reply_markup=markup)
             return
         
@@ -84,7 +85,19 @@ def callback_query(call):
     elif call.data == "help4":
         bot.answer_callback_query(call.id, "عرض م4 - أوامر المنشئين")
     elif call.data == "helpsudo":
-        bot.answer_callback_query(call.id, "عرض أوامر المطور")
+        bot.send_message(call.message.chat.id, '''
+        • اوامر المطور الاساسي  
+        ┉ ┉ ┉ ┉ ┉ ┉ ┉ ┉ ┉
+        • تفعيل  ←  تعطيل
+        • رفع  تنزيل ← مطور اساسي
+        • المطورين الاساسيين
+        • مسح المطورين الاساسيين
+        • رفع  تنزيل ← مطور ثانوي
+        • المطورين الثانويين  
+        • مسح المطورين الثانويين
+        • رفع  تنزيل ← مطور
+        • المطورين ← مسح المطورين
+        *''', parse_mode="Markdown")
 
 # دالة للتحقق من صلاحيات الأدمن
 def is_admin(user_id):
@@ -95,4 +108,3 @@ def is_admin(user_id):
 def is_subscribed(user_id, chat_id):
     # منطق التحقق من الاشتراك في القناة
     return True
-
