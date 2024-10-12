@@ -97,7 +97,7 @@ def callback_query(call):
         • مسح المطورين الثانويين
         • رفع  تنزيل ← مطور
         • المطورين ← مسح المطورين
-        *''', parse_mode="Markdown")
+        ''', parse_mode="Markdown")
 
 # دالة للتحقق من صلاحيات الأدمن
 def is_admin(user_id):
