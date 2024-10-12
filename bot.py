@@ -49,19 +49,32 @@ def handle_commands(a):
         logging.error(f"Error in handle_commands: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
         traceback.print_exc()
 
-@bot.message_handler(func=lambda a: a.text.startswith("بوت"))  # التقاط الرسائل التي تبدأ بكلمة "بوت"
-def handle_chat_with_gpt(a):  # اسم الدالة المعالج
-    chat_with_gpt(a)  # استدعاء الدالة من الملف الآخر
 
 @bot.message_handler(func=lambda a: True)
 def echo_message(a):
     try:
         logging.info(f"Received message: {a.text} from user {a.from_user.id} in chat {a.chat.id}")  # تسجيل الرسائل المستقبلة
         print(f"Received message: {a.text}")  # طباعة الرسائل المستقبلة في الكونسول
+
+        # إذا كانت الرسالة هي فقط كلمة "بوت"
+        if a.text.strip() == "بوت":
+            print("Received single-word message: بوت")
+            reply_func(a)  # استدعاء دالة الرد فقط لهذه الحالة
+            return  # إنهاء التنفيذ هنا بعد الرد
+
+        # إذا كانت الرسالة تبدأ بكلمة "بوت" مع كلام إضافي
+        if a.text.startswith("بوت"):
+            chat_with_gpt(a)  # استدعاء الدالة للدردشة مع GPT
+        
+        # متابعة تنفيذ باقي الدوال للرسائل الأخرى
         cmd(a)
         count_messages(a)  # عد الرسائل عند تلقي أي رسالة
-        reply_func(a)  # الرد على الرسالة
-        check_command_and_execute(a)  # التحقق من الأمر "اضف رسائله" وتنفيذ الدالة
+        check_command_and_execute(a)
+        reply_func(a)  # التحقق من الأمر "اضف رسائله" وتنفيذ الدالة
+
+    except Exception as e:
+        logging.error(f"Error in echo_message: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
+        traceback.print_exc()
 
     except Exception as e:
         logging.error(f"Error in echo_message: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
