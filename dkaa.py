@@ -11,4 +11,4 @@ def chat_with_gpt(a):
     else:
         gpt_response = "عذرًا، لم أستطع الحصول على رد من API."
 
-    bot.reply_to(a, f"**{gpt_response}**", parse_mode='Markdown')
+    bot.reply_to(a, f"<b>{gpt_response}</b>", parse_mode='HTML')
