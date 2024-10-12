@@ -81,4 +81,4 @@ def echo_message(a):
         traceback.print_exc()
 
 # بدء البوت
-bot.polling(none_stop=True, timeout=60)
+bot.polling(none_stop=True)
