@@ -71,7 +71,7 @@ def cmd(a):
         • مسح المطورين الثانويين
         • رفع  تنزيل ← مطور
         • المطورين ← مسح المطورين
-        *''', parse_mode="Markdown")
+        ''', parse_mode="Markdown")
 
 # التعامل مع الضغط على الأزرار (Callback Queries)
 @bot.callback_query_handler(func=lambda call: True)
