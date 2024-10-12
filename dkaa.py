@@ -1,5 +1,6 @@
 import requests
 from config import *
+
 def chat_with_gpt(a):
     user_input = a.text[len("بوت "):]  # الحصول على السؤال بعد كلمة "بوت"
     api_url = f"http://ttrtt.serv00.net/API/it_bero.php?promt={user_input}"
@@ -10,4 +11,4 @@ def chat_with_gpt(a):
     else:
         gpt_response = "عذرًا، لم أستطع الحصول على رد من API."
 
-    bot.reply_to(a, gpt_response)
+    bot.reply_to(a, f"**{gpt_response}**", parse_mode='Markdown')
