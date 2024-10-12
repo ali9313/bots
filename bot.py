@@ -7,6 +7,7 @@ from ali_json import *
 from tger import *
 from ttt import *
 from trt import *
+from dkaa import *
 
 # إعداد تسجيل الأخطاء في ملف
 logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -48,7 +49,10 @@ def handle_commands(a):
         logging.error(f"Error in handle_commands: {e}, user_id: {a.from_user.id}, chat_id: {a.chat.id}")
         traceback.print_exc()
 
-# معالج للرسائل العامة
+@bot.message_handler(func=lambda a: a.text.startswith("بوت"))  # التقاط الرسائل التي تبدأ بكلمة "بوت"
+def handle_chat_with_gpt(a):  # اسم الدالة المعالج
+    chat_with_gpt(a)  # استدعاء الدالة من الملف الآخر
+
 @bot.message_handler(func=lambda a: True)
 def echo_message(a):
     try:
